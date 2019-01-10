@@ -12,6 +12,11 @@ How expensive is function "foo" across all pages, or on a specific page?
 What functions regressed most in the last day/week/month?
 What is the historical trend for execution time of a page/function? and so on.
 
+[![Build Status](https://travis-ci.org/badoo/liveprof-ui.svg?branch=master)](https://travis-ci.org/badoo/liveprof-ui)
+[![codecov](https://codecov.io/gh/badoo/liveprof-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/badoo/liveprof-ui)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/badoo/liveprof-ui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/badoo/liveprof-ui/?branch=master)
+[![GitHub license](https://img.shields.io/github/license/badoo/liveprof-ui.svg)](https://github.com/badoo/liveprof-ui/blob/master/LICENSE)
+
 System Requirements
 ===================
 
