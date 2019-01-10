@@ -1,0 +1,37 @@
+version: "2"
+services:
+  # mysql storage
+  db_mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+    - 3306:3306
+    volumes:
+      - "./db_data/mysql:/var/lib/mysql:rw"
+    environment:
+      MYSQL_ROOT_PASSWORD: db_password
+      MYSQL_DATABASE: Profiler
+
+  # postgresql storage
+  db_pgsql:
+    image: postgres
+    restart: always
+    ports:
+    - 5432:5432
+    volumes:
+      - "./db_data/pg:/var/lib/postgresql/data:rw"
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_password
+      POSTGRES_DB: Profiler
+
+  web:
+    restart: always
+    build: './docker/web72'
+    command:
+      php -S 0.0.0.0:8000 -t src/www/ src/www/router.php
+    ports:
+    - "8000:8000"
+    volumes:
+    - .:/app
+    - ./db_data:/app/db_data
