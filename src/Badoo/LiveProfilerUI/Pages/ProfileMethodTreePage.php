@@ -17,7 +17,7 @@ use Badoo\LiveProfilerUI\Interfaces\ViewInterface;
 class ProfileMethodTreePage extends BasePage
 {
     const STAT_INTERVAL_WEEK = 7;
-    const STAT_INTERVAL_MONTH = 21;
+    const STAT_INTERVAL_MONTH = 31;
     const STAT_INTERVAL_HALF_YEAR = 182;
 
     /** @var string */

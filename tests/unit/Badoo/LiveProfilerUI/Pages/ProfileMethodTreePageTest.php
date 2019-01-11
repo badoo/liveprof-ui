@@ -180,7 +180,7 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
                 ],
                 [
                     'name' => '1 month',
-                    'link' => '/profiler/tree-view.phtml?app=app&label=label&method_id=0&stat_interval=21',
+                    'link' => '/profiler/tree-view.phtml?app=app&label=label&method_id=0&stat_interval=31',
                     'selected' => false
                 ],
                 [
