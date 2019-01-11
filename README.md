@@ -313,17 +313,17 @@ Troubleshooting
 #### Error "ERROR: Get https://registry-1.docker.io/v2/composer/composer/manifests/php7: unauthorized: incorrect username or password" during `docker-compose up`
 Run `docker logout` before `docker-compose up`
 
-#### Error "An exception occured in driver: SQLSTATE[HY000] [14] unable to open database file"
+#### Error "An exception occurred in driver: SQLSTATE[HY000] [14] unable to open database file"
 Check location of sqlite db file. If it's correct run `AGGREGATOR_CONFIG_PATH=src/config/services.yaml php bin/cli.php  aggregator:install`
 or `docker-compose exec web php /app/bin/cli.php aggregator:install` for Docker
 
-#### Error "An exception occured in driver: SQLSTATE[08006] [7] could not translate host name "HOST" to address: nodename nor servname provided, or not known"
+#### Error "An exception occurred in driver: SQLSTATE[08006] [7] could not translate host name "HOST" to address: nodename nor servname provided, or not known"
 Check postgresql connection url
 
-#### Error "An exception occured in driver: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo failed: nodename nor servname provided, or not known"
+#### Error "An exception occurred in driver: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo failed: nodename nor servname provided, or not known"
 Check mysql connection url
 
-#### Error "An exception occured in driver: php_network_getaddresses: getaddrinfo failed: nodename nor servname provided, or not known"
+#### Error "An exception occurred in driver: php_network_getaddresses: getaddrinfo failed: nodename nor servname provided, or not known"
 Check mysqli connection url
 
 License
