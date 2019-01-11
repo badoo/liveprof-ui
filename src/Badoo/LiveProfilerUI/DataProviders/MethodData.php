@@ -10,7 +10,6 @@ use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodDataInterface;
 
 class MethodData extends Base implements MethodDataInterface
 {
-    const MAX_METHODS_DATA = 50;
     const TABLE_NAME = 'aggregator_method_data';
 
     public function getDataBySnapshotId(int $snapshot_id) : array
@@ -41,7 +40,7 @@ class MethodData extends Base implements MethodDataInterface
     public function getDataByMethodIdsAndSnapshotIds(
         array $snapshot_ids,
         array $method_ids,
-        int $limit = self::MAX_METHODS_DATA
+        int $limit = 0
     ) : array {
         if (empty($snapshot_ids) || empty($method_ids)) {
             return [];

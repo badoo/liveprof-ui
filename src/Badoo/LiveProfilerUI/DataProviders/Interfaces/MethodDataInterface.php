@@ -19,9 +19,10 @@ interface MethodDataInterface
     /**
      * @param int[] $snapshot_ids
      * @param int[] $method_ids
+     * @param int $limit
      * @return MethodData[]
      */
-    public function getDataByMethodIdsAndSnapshotIds(array $snapshot_ids, array $method_ids) : array;
+    public function getDataByMethodIdsAndSnapshotIds(array $snapshot_ids, array $method_ids, int $limit = 0) : array;
     public function getOneParamDataBySnapshotIds(array $snapshot_ids, string $param, int $threshold = 1000) : array;
     public function deleteBySnapshotId(int $snapshot_id) : bool;
     public function insertMany(array $inserts) : bool;

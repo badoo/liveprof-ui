@@ -89,7 +89,8 @@ class MethodUsagePage extends BasePage
 
             $method_data = $this->MethodData->getDataByMethodIdsAndSnapshotIds(
                 array_keys($snapshots),
-                array_keys($methods)
+                array_keys($methods),
+                50
             );
 
             foreach ($method_data as $Row) {
