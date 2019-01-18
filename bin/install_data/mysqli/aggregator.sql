@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS `aggregator_snapshots` (
   `label` varchar(100) DEFAULT NULL,
   `type` enum('auto','manual') NOT NULL DEFAULT 'auto',
   %SNAPSHOT_CUSTOM_FIELDS%
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `app_idx` (`app`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `aggregator_tree` (

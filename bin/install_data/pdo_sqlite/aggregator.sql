@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS aggregator_snapshots (
   %SNAPSHOT_CUSTOM_FIELDS%
   type TEXT NOT NULL DEFAULT 'auto'
 );
+CREATE INDEX IF NOT EXISTS app_idx ON aggregator_snapshots (app);
 CREATE TABLE IF NOT EXISTS aggregator_tree (
   snapshot_id INTEGER NOT NULL,
   method_id INTEGER  NOT NULL,

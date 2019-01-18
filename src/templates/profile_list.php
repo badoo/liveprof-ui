@@ -25,15 +25,11 @@
 <form class="aggregate-snapshot-form">
     <label for="app">App: </label>
     <select id="app" name="app">
-        <?php foreach ($data['source_apps'] as $app): ?>
-            <option value="<?= $app ?>"><?= $app ?></option>
-        <?php endforeach; ?>
+        <option value="">-select app-</option>
     </select>
     <label for="label">Label: </label>
     <select id="label" name="label">
-        <?php foreach ($data['source_labels'] as $label): ?>
-            <option value="<?= $label ?>"><?= $label ?></option>
-        <?php endforeach; ?>
+        <option value="">-select label-</option>
     </select>
     <button class="btn btn-default btn-sm" id="create-ticket-link">Aggregate today snapshot</button>
 </form>
@@ -170,6 +166,10 @@
             return false;
         }
 
+        if (!data['app'] || !data['label']) {
+            return false;
+        }
+
         var job_key = data['app'] + '-' + data['label'];
         if (job_key in jobs_state) {
             return false;
@@ -277,6 +277,26 @@
 
             aggregate_snapshot(data);
             return false;
+        });
+
+        $.getJSON("/profiler/get-source-app-list.json", null, function(data) {
+            $.each(data, function(index, item) {
+                $("#app").append(
+                    $("<option></option>")
+                        .text(item)
+                        .val(item)
+                );
+            });
+        });
+
+        $.getJSON("/profiler/get-source-label-list.json", null, function(data) {
+            $.each(data, function(index, item) {
+                $("#label").append(
+                    $("<option></option>")
+                        .text(item)
+                        .val(item)
+                );
+            });
         });
     });
 </script>

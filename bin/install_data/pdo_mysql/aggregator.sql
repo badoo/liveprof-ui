@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `aggregator_metods` (
   `name` varchar(300) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_idx` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=178027 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `aggregator_snapshots` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -13,8 +13,9 @@ CREATE TABLE IF NOT EXISTS `aggregator_snapshots` (
   `label` varchar(100) DEFAULT NULL,
   `type` enum('auto','manual') NOT NULL DEFAULT 'auto',
   %SNAPSHOT_CUSTOM_FIELDS%
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5479 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `app_idx` (`app`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `aggregator_tree` (
   `snapshot_id` int(11) unsigned NOT NULL,

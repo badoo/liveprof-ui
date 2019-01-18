@@ -7,6 +7,7 @@
 namespace Badoo\LiveProfilerUI\Pages;
 
 use Badoo\LiveProfilerUI\Aggregator;
+use Badoo\LiveProfilerUI\DataProviders\Interfaces\SourceInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\JobInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\SnapshotInterface;
@@ -21,6 +22,8 @@ class AjaxPages
     protected $Job;
     /** @var Aggregator */
     protected $Aggregator;
+    /** @var SourceInterface */
+    protected $Source;
     /** @var bool */
     protected $use_jobs;
 
@@ -29,12 +32,14 @@ class AjaxPages
         MethodInterface $Method,
         JobInterface $Job,
         Aggregator $Aggregator,
+        SourceInterface $Source,
         bool $use_jobs = false
     ) {
         $this->Snapshot = $Snapshot;
         $this->Method = $Method;
         $this->Job = $Job;
         $this->Aggregator = $Aggregator;
+        $this->Source = $Source;
         $this->use_jobs = $use_jobs;
     }
 
@@ -150,6 +155,24 @@ class AjaxPages
         try {
             return $this->Method->findByName($term);
         } catch (\Throwable $Ex) {
+            return [];
+        }
+    }
+
+    public function getSourceAppList() : array
+    {
+        try {
+            return $this->Source->getAppList();
+        } catch (\Exception $Ex) {
+            return [];
+        }
+    }
+
+    public function getSourceLabelList() : array
+    {
+        try {
+            return $this->Source->getLabelList();
+        } catch (\Exception $Ex) {
             return [];
         }
     }

@@ -70,7 +70,7 @@ services:
   # services for pages
   profile_list_page:
     class: \Badoo\LiveProfilerUI\Pages\ProfileListPage
-    arguments: ['@view', '@source', '@snapshot', '@fields']
+    arguments: ['@view', '@snapshot', '@fields']
 
   profile_method_tree_page:
     class: \Badoo\LiveProfilerUI\Pages\ProfileMethodTreePage
@@ -98,7 +98,7 @@ services:
 
   ajax_pages:
     class: \Badoo\LiveProfilerUI\Pages\AjaxPages
-    arguments: ['@snapshot', '@method', '@job', '@aggregator', '%aggregator.use_jobs_in_aggregation%']
+    arguments: ['@snapshot', '@method', '@job', '@aggregator', '@source', '%aggregator.use_jobs_in_aggregation%']
 
   # services for data providers
   snapshot:

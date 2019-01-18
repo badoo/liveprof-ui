@@ -110,6 +110,22 @@ switch (getCurrentUri()) {
         echo json_encode($Page->searchMethods($term));
         break;
 
+    case '/profiler/get-source-app-list.json':
+        header('Content-Type: application/json;charset=UTF-8');
+
+        /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $Page */
+        $Page = $App->getPage('ajax_pages');
+        echo json_encode($Page->getSourceAppList());
+        break;
+
+    case '/profiler/get-source-label-list.json':
+        header('Content-Type: application/json;charset=UTF-8');
+
+        /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $Page */
+        $Page = $App->getPage('ajax_pages');
+        echo json_encode($Page->getSourceLabelList());
+        break;
+
     case '/profiler/result-list.phtml':
     default:
         $data = [

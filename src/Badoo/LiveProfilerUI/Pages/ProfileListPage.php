@@ -16,8 +16,6 @@ class ProfileListPage extends BasePage
 {
     /** @var string */
     protected static $template_path = 'profile_list';
-    /** @var SourceInterface */
-    protected $Source;
     /** @var SnapshotInterface */
     protected $Snapshot;
     /** @var FieldList */
@@ -25,12 +23,10 @@ class ProfileListPage extends BasePage
 
     public function __construct(
         ViewInterface $View,
-        SourceInterface $Source,
         SnapshotInterface $Snapshot,
         FieldList $FieldList
     ) {
         $this->View = $View;
-        $this->Source = $Source;
         $this->Snapshot = $Snapshot;
         $this->FieldList = $FieldList;
     }
@@ -53,16 +49,11 @@ class ProfileListPage extends BasePage
 
         $apps = $this->Snapshot->getAppList();
 
-        $source_labels = $this->Source->getLabelList();
-        $source_apps = $this->Source->getAppList();
-
         return [
             'app' => $this->data['app'],
             'label' => $this->data['label'],
             'date' => $this->data['date'],
             'apps' => $apps,
-            'source_apps' => $source_apps,
-            'source_labels' => $source_labels,
             'results' => $snapshots,
             'fields' => $fields,
             'field_descriptions' => $field_descriptions,
