@@ -366,8 +366,110 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
     /**
      * @throws \ReflectionException
      */
+    public function testGetSourceAppList()
+    {
+        $SourceMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Source::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAppList'])
+            ->getMock();
+        $SourceMock->method('getAppList')->willReturn(['app']);
+
+        /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $PagesMock */
+        $PagesMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\AjaxPages::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+        $this->setProtectedProperty($PagesMock, 'Source', $SourceMock);
+
+        $result = $PagesMock->getSourceAppList();
+
+        static::assertEquals(['app'], $result);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetSourceAppListsError()
+    {
+        $SourceMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Source::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAppList'])
+            ->getMock();
+        $SourceMock->method('getAppList')->willReturnCallback(function () {
+            throw new \Doctrine\DBAL\DBALException('DB error');
+        });
+
+        /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $PagesMock */
+        $PagesMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\AjaxPages::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+        $this->setProtectedProperty($PagesMock, 'Source', $SourceMock);
+
+        $result = $PagesMock->getSourceAppList();
+
+        static::assertEquals([], $result);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetSourceLabelList()
+    {
+        $SourceMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Source::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getLabelList'])
+            ->getMock();
+        $SourceMock->method('getLabelList')->willReturn(['label']);
+
+        /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $PagesMock */
+        $PagesMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\AjaxPages::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+        $this->setProtectedProperty($PagesMock, 'Source', $SourceMock);
+
+        $result = $PagesMock->getSourceLabelList();
+
+        static::assertEquals(['label'], $result);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetSourceLabelListsError()
+    {
+        $SourceMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Source::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getLabelList'])
+            ->getMock();
+        $SourceMock->method('getLabelList')->willReturnCallback(function () {
+            throw new \Doctrine\DBAL\DBALException('DB error');
+        });
+
+        /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $PagesMock */
+        $PagesMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\AjaxPages::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+        $this->setProtectedProperty($PagesMock, 'Source', $SourceMock);
+
+        $result = $PagesMock->getSourceLabelList();
+
+        static::assertEquals([], $result);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
     public function testConstruct()
     {
+        /** @var \Badoo\LiveProfilerUI\DataProviders\Source $SourceMock */
+        $SourceMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Source::class)
+            ->disableOriginalConstructor()
+            ->setMethods()
+            ->getMock();
+
         /** @var \Badoo\LiveProfilerUI\DataProviders\Method $MethodMock */
         $MethodMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Method::class)
             ->disableOriginalConstructor()
@@ -399,6 +501,7 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
             $MethodMock,
             $JobMock,
             $AggregatorMock,
+            $SourceMock,
             $use_jobs
         );
 
@@ -406,12 +509,14 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
         $Method = $this->getProtectedProperty($Page, 'Method');
         $Job = $this->getProtectedProperty($Page, 'Job');
         $Aggregator = $this->getProtectedProperty($Page, 'Aggregator');
+        $Source = $this->getProtectedProperty($Page, 'Source');
         $use_jobs_new = $this->getProtectedProperty($Page, 'use_jobs');
 
         self::assertSame($JobMock, $Job);
         self::assertSame($SnapshotMock, $Snapshot);
         self::assertSame($MethodMock, $Method);
         self::assertSame($AggregatorMock, $Aggregator);
+        self::assertSame($SourceMock, $Source);
         self::assertSame($use_jobs_new, $use_jobs);
     }
 }

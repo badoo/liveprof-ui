@@ -24,15 +24,6 @@ class ProfileListPageTest extends \unit\Badoo\BaseTestCase
         $SnapshotMock->expects($this->once())->method('getList')->willReturn($snapshots);
         $SnapshotMock->expects($this->once())->method('getAppList')->willReturn($apps);
 
-        $source_apps = ['app'];
-        $source_labels = ['label'];
-        $SourceMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Source::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getLabelList', 'getAppList'])
-            ->getMock();
-        $SourceMock->expects($this->once())->method('getLabelList')->willReturn($source_labels);
-        $SourceMock->expects($this->once())->method('getAppList')->willReturn($source_apps);
-
         $data = [
             'app' => 'app',
             'label' => 'label',
@@ -45,7 +36,6 @@ class ProfileListPageTest extends \unit\Badoo\BaseTestCase
             ->setMethods(['__construct'])
             ->getMock();
         $this->setProtectedProperty($PageMock, 'FieldList', $FieldList);
-        $this->setProtectedProperty($PageMock, 'Source', $SourceMock);
         $this->setProtectedProperty($PageMock, 'Snapshot', $SnapshotMock);
         $PageMock->setData($data);
 
@@ -56,8 +46,6 @@ class ProfileListPageTest extends \unit\Badoo\BaseTestCase
             'label' => 'label',
             'date' => 'date',
             'apps' => $apps,
-            'source_apps' => $source_apps,
-            'source_labels' => $source_labels,
             'results' => $snapshots,
             'fields' => ['ct' => 'ct', 'wt' => 'wt'],
             'field_descriptions' => []
@@ -140,12 +128,6 @@ class ProfileListPageTest extends \unit\Badoo\BaseTestCase
     {
         $FieldList = new \Badoo\LiveProfilerUI\FieldList([], [], []);
 
-        /** @var \Badoo\LiveProfilerUI\DataProviders\Source $SourceMock */
-        $SourceMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Source::class)
-            ->disableOriginalConstructor()
-            ->setMethods()
-            ->getMock();
-
         /** @var \Badoo\LiveProfilerUI\DataProviders\Snapshot $SnapshotMock */
         $SnapshotMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Snapshot::class)
             ->disableOriginalConstructor()
@@ -158,15 +140,13 @@ class ProfileListPageTest extends \unit\Badoo\BaseTestCase
             ->setMethods()
             ->getMock();
 
-        $Page = new \Badoo\LiveProfilerUI\Pages\ProfileListPage($ViewMock, $SourceMock, $SnapshotMock, $FieldList);
+        $Page = new \Badoo\LiveProfilerUI\Pages\ProfileListPage($ViewMock, $SnapshotMock, $FieldList);
 
         $View = $this->getProtectedProperty($Page, 'View');
-        $Source = $this->getProtectedProperty($Page, 'Source');
         $Snapshot = $this->getProtectedProperty($Page, 'Snapshot');
         $FieldListNew = $this->getProtectedProperty($Page, 'FieldList');
 
         self::assertSame($ViewMock, $View);
-        self::assertSame($SourceMock, $Source);
         self::assertSame($SnapshotMock, $Snapshot);
         self::assertSame($FieldList, $FieldListNew);
     }

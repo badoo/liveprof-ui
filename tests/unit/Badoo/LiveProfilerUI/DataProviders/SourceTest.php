@@ -25,19 +25,39 @@ class SourceTest extends \unit\Badoo\BaseTestCase
         $this->SourceStorage->query('create table details (app text, label text, timestamp text, perfdata text)');
         $this->SourceStorage->insert(
             'details',
-            ['app' => 'app1', 'label' => 'label1', 'timestamp' => date('Y-d-m 01:00:00', strtotime('-1 day')), 'perfdata' => '1']
+            [
+                'app' => 'app1',
+                'label' => 'label1',
+                'timestamp' => date('Y-m-d 01:00:00', strtotime('-1 day')),
+                'perfdata' => '1'
+            ]
         );
         $this->SourceStorage->insert(
             'details',
-            ['app' => 'app2', 'label' => 'label1', 'timestamp' => date('Y-d-m 02:00:00', strtotime('-1 day')), 'perfdata' => '2']
+            [
+                'app' => 'app2',
+                'label' => 'label1',
+                'timestamp' => date('Y-m-d 02:00:00', strtotime('-1 day')),
+                'perfdata' => '2'
+            ]
         );
         $this->SourceStorage->insert(
             'details',
-            ['app' => 'app2', 'label' => 'label2', 'timestamp' => date('Y-d-m 03:00:00'), 'perfdata' => '3']
+            [
+                'app' => 'app2',
+                'label' => 'label2',
+                'timestamp' => date('Y-m-d 03:00:00'),
+                'perfdata' => '3'
+            ]
         );
         $this->SourceStorage->insert(
             'details',
-            ['app' => 'app2', 'label' => 'label1', 'timestamp' => date('Y-d-m 04:00:00'), 'perfdata' => '4']
+            [
+                'app' => 'app2',
+                'label' => 'label1',
+                'timestamp' => date('Y-m-d 04:00:00'),
+                'perfdata' => '4'
+            ]
         );
 
         $this->DataPacker = new \Badoo\LiveProfilerUI\DataPacker();
@@ -46,11 +66,11 @@ class SourceTest extends \unit\Badoo\BaseTestCase
     public function testGetSnapshotsDataByDates()
     {
         $Source = new \Badoo\LiveProfilerUI\DataProviders\Source($this->SourceStorage, $this->DataPacker);
-        $result = $Source->getSnapshotsDataByDates(date('Y-d-m', strtotime('-1 day')), date('Y-d-m'));
+        $result = $Source->getSnapshotsDataByDates(date('Y-m-d', strtotime('-1 day')), date('Y-m-d'));
 
         $expected = [
-            ['app' => 'app1', 'label' => 'label1', 'date' => date('Y-d-m', strtotime('-1 day'))],
-            ['app' => 'app2', 'label' => 'label1', 'date' => date('Y-d-m', strtotime('-1 day'))],
+            ['app' => 'app1', 'label' => 'label1', 'date' => date('Y-m-d', strtotime('-1 day'))],
+            ['app' => 'app2', 'label' => 'label1', 'date' => date('Y-m-d', strtotime('-1 day'))],
         ];
         self::assertEquals($expected, $result);
     }
@@ -58,7 +78,7 @@ class SourceTest extends \unit\Badoo\BaseTestCase
     public function testGetPerfData()
     {
         $Source = new \Badoo\LiveProfilerUI\DataProviders\Source($this->SourceStorage, $this->DataPacker);
-        $result = $Source->getPerfData('app1', 'label1', date('Y-d-m', strtotime('-1 day')));
+        $result = $Source->getPerfData('app1', 'label1', date('Y-m-d', strtotime('-1 day')));
 
         $expected = ['1'];
         self::assertEquals($expected, $result);
