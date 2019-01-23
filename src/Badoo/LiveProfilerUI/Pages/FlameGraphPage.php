@@ -132,7 +132,7 @@ class FlameGraphPage extends BasePage
 
         $tmp_file = tempnam(__DIR__, 'flamefile');
         file_put_contents($tmp_file, $graph_data);
-        exec('perl ' . __DIR__ . '/../../../../bin/flamegraph.pl ' . $tmp_file, $output);
+        exec('perl ' . __DIR__ . '/../../../../scripts/flamegraph.pl ' . $tmp_file, $output);
         unlink($tmp_file);
 
         return implode("\n", $output);
