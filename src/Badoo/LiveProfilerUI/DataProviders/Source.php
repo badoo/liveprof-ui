@@ -48,13 +48,29 @@ class Source implements SourceInterface
     {
         $result = $this->SourceStorage->getAll(
             self::TABLE_NAME,
-            ['perfdata'],
+            ['id'],
             [
                 'filter' => [
                     ['timestamp', $date . ' 00:00:00', '>='],
                     ['timestamp', $date . ' 23:59:59', '<='],
                     ['app', $app],
                     ['label', $label],
+                ],
+                'limit' => self::SELECT_LIMIT + 1,
+            ]
+        );
+
+        $ids = $result ? array_column($result, 'id') : [];
+        if (!$ids) {
+            return [];
+        }
+
+        $result = $this->SourceStorage->getAll(
+            self::TABLE_NAME,
+            ['perfdata'],
+            [
+                'filter' => [
+                    ['id', $ids],
                 ],
                 'limit' => self::SELECT_LIMIT + 1,
             ]

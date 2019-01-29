@@ -22,10 +22,13 @@ class SourceTest extends \unit\Badoo\BaseTestCase
             ->setMethods()
             ->getMock();
 
-        $this->SourceStorage->query('create table details (app text, label text, timestamp text, perfdata text)');
+        $this->SourceStorage->query(
+            'create table details (id integer, app text, label text, timestamp text, perfdata text)'
+        );
         $this->SourceStorage->insert(
             'details',
             [
+                'id' => 1,
                 'app' => 'app1',
                 'label' => 'label1',
                 'timestamp' => date('Y-m-d 01:00:00', strtotime('-1 day')),
