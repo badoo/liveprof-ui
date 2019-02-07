@@ -530,7 +530,7 @@ class Aggregator
         // Get all snapshots for last 3 days
         $snapshots = $this->Source->getSnapshotsDataByDates(
             date('Y-m-d 00:00:00', strtotime('-' . $last_num_days . ' days')),
-            date('Y-m-d 23:59:59:00:00', strtotime('-1 day'))
+            date('Y-m-d 23:59:59', strtotime('-1 day'))
         );
 
         // Exclude already aggregated snapshots
