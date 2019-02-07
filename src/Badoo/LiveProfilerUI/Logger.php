@@ -6,7 +6,8 @@
 
 namespace Badoo\LiveProfilerUI;
 
-use Psr\Log\{LoggerInterface, LoggerTrait};
+use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
 
 class Logger implements LoggerInterface
 {

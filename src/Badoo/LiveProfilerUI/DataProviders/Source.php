@@ -12,6 +12,7 @@ use Badoo\LiveProfilerUI\Interfaces\StorageInterface;
 
 class Source implements SourceInterface
 {
+    const MAX_SELECT_LIMIT = 10000;
     const SELECT_LIMIT = 1440;
     const TABLE_NAME = 'details';
 
@@ -56,14 +57,19 @@ class Source implements SourceInterface
                     ['app', $app],
                     ['label', $label],
                 ],
-                'limit' => self::SELECT_LIMIT + 1,
+                'limit' => self::MAX_SELECT_LIMIT,
             ]
         );
 
-        $ids = $result ? array_column($result, 'id') : [];
-        if (!$ids) {
+        if (!$result) {
             return [];
         }
+
+        // get maximum SELECT_LIMIT random records
+        shuffle($result);
+        $result = array_slice($result, 0, self::SELECT_LIMIT + 1);
+
+        $ids = $result ? array_column($result, 'id') : [];
 
         $result = $this->SourceStorage->getAll(
             self::TABLE_NAME,
