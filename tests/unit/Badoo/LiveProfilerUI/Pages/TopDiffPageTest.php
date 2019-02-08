@@ -21,8 +21,8 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
             ->getMock();
         $SnapshotMock->method('getSnapshotsByDates')->willReturn(
             [
-                ['id' => 1, 'app' => 'app', 'label' => 'label', 'date' => 'date 1', 'wt' => 1],
-                ['id' => 2, 'app' => 'app', 'label' => 'label', 'date' => 'date 2', 'wt' => 2]
+                ['id' => 1, 'app' => 'app', 'label' => 'label', 'date' => 'date 1', 'wt' => 10000],
+                ['id' => 2, 'app' => 'app', 'label' => 'label', 'date' => 'date 2', 'wt' => 20000]
             ]
         );
 
@@ -30,7 +30,7 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
             ->disableOriginalConstructor()
             ->setMethods(['getSnapshotParentsData'])
             ->getMock();
-        $MethodTreeMock->method('getSnapshotParentsData')->willReturn([2 => [2 => ['wt' => 1]]]);
+        $MethodTreeMock->method('getSnapshotParentsData')->willReturn([2 => [2 => ['wt' => 10000]]]);
 
         $MethodDataMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\MethodData::class)
             ->disableOriginalConstructor()
@@ -38,10 +38,10 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
             ->getMock();
         $MethodDataMock->method('getOneParamDataBySnapshotIds')->willReturn(
             [
-                ['snapshot_id' => 1, 'method_id' => 1, 'wt' => 3],
-                ['snapshot_id' => 1, 'method_id' => 2, 'wt' => 3],
-                ['snapshot_id' => 2, 'method_id' => 1, 'wt' => 4],
-                ['snapshot_id' => 2, 'method_id' => 2, 'wt' => 4],
+                ['snapshot_id' => 1, 'method_id' => 1, 'wt' => 30000],
+                ['snapshot_id' => 1, 'method_id' => 2, 'wt' => 30000],
+                ['snapshot_id' => 2, 'method_id' => 1, 'wt' => 40000],
+                ['snapshot_id' => 2, 'method_id' => 2, 'wt' => 40000],
             ]
         );
 
@@ -81,13 +81,17 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
                     'app' => 'app',
                     'label' => 'label',
                     'method_id' => 1,
-                    'value' => 1,
+                    'from_value' => 30000,
+                    'to_value' => 40000,
+                    'value' => 10000,
                     'percent' => 33
                 ]),
                 new \Badoo\LiveProfilerUI\Entity\TopDiff([
                     'app' => 'app',
                     'label' => 'label',
                     'method_id' => 2,
+                    'from_value' => 30000,
+                    'to_value' => 30000,
                     'value' => 0,
                     'percent' => 0
                 ]),
