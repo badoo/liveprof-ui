@@ -16,8 +16,12 @@ class TopDiff
     protected $method_id = 0;
     /** @var string */
     protected $method_name = '';
-    /** @var float|int */
+    /** @var float */
     protected $value;
+    /** @var string */
+    protected $from_value;
+    /** @var string */
+    protected $to_value;
     /** @var string */
     protected $formatted_value;
     /** @var float */
@@ -29,6 +33,8 @@ class TopDiff
         $this->label = isset($data['label']) ? trim($data['label']) : '';
         $this->method_id = isset($data['method_id']) ? (int)$data['method_id'] : 0;
         $this->value = isset($data['value']) ? (float)$data['value'] : 0;
+        $this->from_value = isset($data['from_value']) ? number_format((float)$data['from_value']) : '';
+        $this->to_value = isset($data['to_value']) ? number_format((float)$data['to_value']) : '';
         $this->formatted_value = number_format($this->value);
         $this->percent = isset($data['percent']) ? (float)$data['percent'] : 0;
     }
@@ -83,6 +89,28 @@ class TopDiff
         return $this;
     }
 
+    public function getFromValue() : string
+    {
+        return $this->from_value;
+    }
+
+    public function setFromValue(float $value) : self
+    {
+        $this->from_value = number_format($value);
+        return $this;
+    }
+
+    public function getToValue() : string
+    {
+        return $this->to_value;
+    }
+
+    public function setToValue(float $value) : self
+    {
+        $this->to_value = number_format($value);
+        return $this;
+    }
+    
     public function getPercent() : float
     {
         return $this->percent;

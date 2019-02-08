@@ -53,6 +53,8 @@
         <th>method</th>
         <th>label</th>
         <th>app</th>
+        <th><?= $data['param'] ?> before</th>
+        <th><?= $data['param'] ?> after</th>
         <th>Diff of <?= $data['param'] ?></th>
         <th>Percent diff of <?= $data['param'] ?></th>
     </tr>
@@ -74,6 +76,8 @@
             </td>
             <td><?= $Result->getLabel() ?></td>
             <td><?= $Result->getApp() ?></td>
+            <td><?= $Result->getFromValue() ?></td>
+            <td><?= $Result->getToValue() ?></td>
             <td><?= $Result->getFormattedValue() ?></td>
             <td><?= $Result->getPercent() ?>%</td>
         </tr>

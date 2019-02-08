@@ -105,7 +105,7 @@ class Method extends Base implements MethodInterface
     {
         $method_ids = [];
         foreach ($data as $Item) {
-            $method_ids[] = $Item->getMethodId();
+            $method_ids[$Item->getMethodId()] = $Item->getMethodId();
         }
 
         $methods = $this->getListByIds($method_ids);

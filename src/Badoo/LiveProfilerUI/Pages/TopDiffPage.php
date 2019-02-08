@@ -17,7 +17,7 @@ use Badoo\LiveProfilerUI\Entity\TopDiff;
 
 class TopDiffPage extends BasePage
 {
-    const DIFF_THRESHOLD = 10000; // Do not get methods data with < 10ms to reduce load
+    const THRESHOLD = 5000; // Do not get methods data with < 5ms to reduce load
 
     /** @var string */
     protected static $template_path = 'top_diff';
@@ -96,6 +96,11 @@ class TopDiffPage extends BasePage
         $snapshots_data = $this->Snapshot->getSnapshotsByDates([$date1, $date2], $param);
         $snapshots = [];
         foreach ($snapshots_data as $item) {
+            // skip rare snapshots
+            if (isset($item['calls_count']) && $item['calls_count'] < 100) {
+                continue;
+            }
+
             $key = $item['app'] . '|' . $item['label'];
 
             if ($item['date'] === $date1) {
@@ -153,10 +158,10 @@ class TopDiffPage extends BasePage
 
         $children_data = [];
         if ($exclude) {
-            $children_data = $this->MethodTree->getSnapshotParentsData($snapshot_ids, [$param], self::DIFF_THRESHOLD);
+            $children_data = $this->MethodTree->getSnapshotParentsData($snapshot_ids, [$param], self::THRESHOLD);
         }
 
-        $method_data = $this->MethodData->getOneParamDataBySnapshotIds($snapshot_ids, $param, self::DIFF_THRESHOLD);
+        $method_data = $this->MethodData->getOneParamDataBySnapshotIds($snapshot_ids, $param, self::THRESHOLD);
 
         $diff_data = [];
         $diff = [];
@@ -191,6 +196,11 @@ class TopDiffPage extends BasePage
             } else {
                 $diff_data[$key][$index] = (int)$item[$param] - $children_value;
 
+                // Skip if both values below threshold
+                if ($diff_data[$key]['from_value'] < self::THRESHOLD && $diff_data[$key]['to_value'] < self::THRESHOLD) {
+                    continue;
+                }
+                
                 $diff_value = $diff_data[$key]['to_value'] - $diff_data[$key]['from_value'];
                 $diff_percent = $diff_data[$key]['from_value']
                     ? intdiv($diff_value * 100, $diff_data[$key]['from_value'])
@@ -201,6 +211,8 @@ class TopDiffPage extends BasePage
                         'app' => $snapshot['app'],
                         'label' => $snapshot['label'],
                         'method_id' => $item['method_id'],
+                        'from_value' => $diff_data[$key]['from_value'],
+                        'to_value' => $diff_data[$key]['to_value'],
                         'value' => $diff_value,
                         'percent' => $diff_percent
                     ]
@@ -217,8 +229,8 @@ class TopDiffPage extends BasePage
             }
         );
 
-        // keep only 1000 most diff methods
-        $diff = \array_slice($diff, 0, 5000);
+        // return only 2000 most diff methods
+        $diff = \array_slice($diff, 0, 2000);
 
         return $this->Method->injectMethodNames($diff);
     }
