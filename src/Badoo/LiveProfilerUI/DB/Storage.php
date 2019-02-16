@@ -22,6 +22,9 @@ class Storage implements StorageInterface
     /** @var \Doctrine\DBAL\Connection */
     protected $Conn;
 
+    /** @var int */
+    protected $lastInsertId = 0;
+
     /**
      * Storage constructor.
      * @param string $url
@@ -282,7 +285,12 @@ class Storage implements StorageInterface
 
     protected function getLastInsertId() : int
     {
-        return (int)$this->Conn->lastInsertId();
+        return $this->lastInsertId;
+    }
+
+    protected function setLastInsertId(int $lastInsertId)
+    {
+        $this->lastInsertId = $lastInsertId;
     }
 
     public function insertMany(string $table, array $fields) : bool
@@ -310,6 +318,7 @@ class Storage implements StorageInterface
                 $QueryBuilder->execute();
             }
 
+            $this->setLastInsertId((int)$this->Conn->lastInsertId());
             $this->Conn->commit();
         } catch (DBALException $Ex) {
             throw new DatabaseException('Can\'t insert into ' . $table);
