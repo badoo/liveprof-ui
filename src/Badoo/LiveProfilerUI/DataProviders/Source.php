@@ -119,16 +119,4 @@ class Source implements SourceInterface
 
         return $labels ? array_column($labels, 'app') : [];
     }
-
-    public function insert(string $app, string $label, string $datetime, array $perfdata) : int
-    {
-        $fields = [
-            'app' => $app,
-            'label' => $label,
-            'perfdata' => $this->DataPacker->pack($perfdata),
-            'timestamp' => $datetime,
-        ];
-
-        return $this->SourceStorage->insert(self::TABLE_NAME, $fields);
-    }
 }

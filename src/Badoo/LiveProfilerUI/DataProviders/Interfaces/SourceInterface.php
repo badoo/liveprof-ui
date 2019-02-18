@@ -12,5 +12,4 @@ interface SourceInterface
     public function getPerfData(string $app, string $label, string $date) : array;
     public function getLabelList() : array;
     public function getAppList() : array;
-    public function insert(string $app, string $label, string $datetime, array $data) : int;
 }

@@ -29,6 +29,7 @@ parameters:
     percent_mem: 90 percentile of memory usage size in this context during specified day (bytes)
 
   # database parameters for profiler data storage
+  source_storage.path: /app/db_data/files
   source_storage.url: sqlite:////app/db_data/sqlite.db
 #  source_storage.url: mysqli://root:db_password@db_mysql:3306/Profiler?charset=utf8
 #  source_storage.url: mysql://root:db_password@db_mysql:3306/Profiler?charset=utf8
@@ -108,6 +109,8 @@ services:
   source:
     class: \Badoo\LiveProfilerUI\DataProviders\Source
     arguments: ['@source_storage', '@packer']
+#    class: \Badoo\LiveProfilerUI\DataProviders\FileSource
+#    arguments: ['%source_storage.path%', '@packer']
 
   method:
     class: \Badoo\LiveProfilerUI\DataProviders\Method

@@ -104,12 +104,4 @@ class SourceTest extends \unit\Badoo\BaseTestCase
         $expected = ['app1', 'app2'];
         self::assertEquals($expected, $result);
     }
-
-    public function testInsert()
-    {
-        $Source = new \Badoo\LiveProfilerUI\DataProviders\Source($this->SourceStorage, $this->DataPacker);
-        $result = $Source->insert('app2', 'label1', '2019-01-02 04:00:00', ['4']);
-
-        self::assertEquals(5, $result);
-    }
 }
