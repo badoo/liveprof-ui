@@ -157,10 +157,14 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
     {
         $SnapshotMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Snapshot::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getOneById', 'getOneByAppAndLabel', 'getDatesByAppAndLabel'])
+            ->setMethods(['getOneById', 'getOneByAppAndLabel', 'getDatesByAppAndLabel', 'getSnapshotIdsByDates'])
             ->getMock();
         $SnapshotMock->method('getOneById')->willReturn($snapshot);
         $SnapshotMock->method('getOneByAppAndLabel')->willReturn($snapshot);
+        $SnapshotMock->method('getSnapshotIdsByDates')->willReturn([
+            '2019-01-01' => 1,
+            '2018-01-01' => 1
+        ]);
         $SnapshotMock->method('getDatesByAppAndLabel')->willReturn([
             '2019-01-01',
             '2019-01-02',
