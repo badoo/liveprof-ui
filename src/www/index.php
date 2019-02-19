@@ -42,6 +42,9 @@ switch (getCurrentUri()) {
             'label' => isset($_GET['label']) ? trim($_GET['label']) : '',
             'snapshot_id' => isset($_GET['snapshot_id']) ? (int)$_GET['snapshot_id'] : '',
             'param' => isset($_GET['param']) ? trim($_GET['param']) : '',
+            'diff' => isset($_GET['diff']) ? trim($_GET['diff']) : '',
+            'date1' => isset($_GET['date1']) ? trim($_GET['date1']) : '',
+            'date2' => isset($_GET['date2']) ? trim($_GET['date2']) : '',
         ];
         $Page = $App->getPage('flame_graph_page');
         echo $Page->setData($data)->render();

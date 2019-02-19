@@ -20,6 +20,7 @@
 <form class="form-inline">
     <input type="hidden" name="app" value="<?= $data['app'] ?>">
     <input type="hidden" name="label" value="<?= $data['label'] ?>">
+    <input type="hidden" name="diff" value="1">
     <div class="form-group">
         <label for="exampleInputName2">Date from</label>
         <input name="date1" type="date" value="<?= $data['date1'] ?>"  class="form-control" id="exampleInputName2">
@@ -39,6 +40,7 @@
         </select>
     </div>
     <button type="submit" class="btn btn-default">Compare versions</button>
+    <button type="button" class="btn btn-success flame-graph-btn">Go to flame graph</button>
 </form>
 
 <?php if (!empty($data['date1']) && empty($data['snapshot1'])): ?>
@@ -114,5 +116,11 @@
 <script>
     $(function(){
         $('[data-toggle="tooltip"]').tooltip();
+        
+        $('.flame-graph-btn').on('click', function () {
+            var form = $(this).closest('form');
+            form.attr('action', '/profiler/result-flamegraph.phtml');
+            form.submit();
+        })
     });
 </script>

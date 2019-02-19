@@ -27,10 +27,11 @@ class MethodTree extends Base implements MethodTreeInterface
         $return = [];
         if (!empty($records)) {
             foreach ($records as $record) {
-                $return[] = new \Badoo\LiveProfilerUI\Entity\MethodTree(
+                $MethodTree = new \Badoo\LiveProfilerUI\Entity\MethodTree(
                     $record,
                     $this->FieldList->getAllFieldsWithVariations()
                 );
+                $return[$MethodTree->getParentId() . '|' . $MethodTree->getMethodId()] = $MethodTree;
             }
         }
 

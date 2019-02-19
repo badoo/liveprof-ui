@@ -44,7 +44,7 @@ class MethodTreeTest extends \unit\Badoo\BaseTestCase
         $result = $MethodTree->getSnapshotMethodsTree(1);
 
         $expected = [
-            new MethodTree(
+            '2|2' => new MethodTree(
                 [
                     'snapshot_id' => 1,
                     'parent_id' => 2,
@@ -62,8 +62,8 @@ class MethodTreeTest extends \unit\Badoo\BaseTestCase
         $MethodTree = new \Badoo\LiveProfilerUI\DataProviders\MethodTree($this->AggregatorStorage, $this->FieldList);
         $result = $MethodTree->getSnapshotMethodsTree(1);
 
-        self::assertArrayHasKey(0, $result);
-        self::assertInstanceOf(\Badoo\LiveProfilerUI\Entity\MethodTree::class, $result[0]);
+        self::assertArrayHasKey('2|2', $result);
+        self::assertInstanceOf(\Badoo\LiveProfilerUI\Entity\MethodTree::class, $result['2|2']);
     }
 
     public function testGetDataByMethodIdsAndSnapshotIdsEmpty()

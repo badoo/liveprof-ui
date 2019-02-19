@@ -57,6 +57,9 @@ class FlameGraphPage extends BasePage
         $this->data['app'] = isset($this->data['app']) ? trim($this->data['app']) : '';
         $this->data['label'] = isset($this->data['label']) ? trim($this->data['label']) : '';
         $this->data['snapshot_id'] = isset($this->data['snapshot_id']) ? (int)$this->data['snapshot_id'] : 0;
+        $this->data['diff'] = isset($this->data['diff']) ? (bool)$this->data['diff'] : false;
+        $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
+        $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
 
         if (!$this->data['snapshot_id'] && (!$this->data['app'] || !$this->data['label'])) {
             throw new \InvalidArgumentException('Empty snapshot_id, app and label');
@@ -84,6 +87,15 @@ class FlameGraphPage extends BasePage
             throw new \InvalidArgumentException('Can\'t get snapshot');
         }
 
+        $this->initDates();
+
+        list($snapshot_id1, $snapshot_id2) = $this->getSnapshotIdsByDates(
+            $Snapshot->getApp(),
+            $Snapshot->getLabel(),
+            $this->data['date1'],
+            $this->data['date2']
+        );
+
         $fields = $this->FieldList->getFields();
         $fields = array_diff($fields, [$this->calls_count_field]);
 
@@ -91,10 +103,19 @@ class FlameGraphPage extends BasePage
             $this->data['param'] = current($fields);
         }
 
-        $graph = $this->getSVG($Snapshot->getId(), $this->data['param']);
+        $graph = $this->getSVG(
+            $Snapshot->getId(),
+            $this->data['param'],
+            $this->data['diff'],
+            $snapshot_id1,
+            $snapshot_id2
+        );
         $view_data = [
             'snapshot' => $Snapshot,
             'params' => [],
+            'diff' => $this->data['diff'],
+            'date1' => $this->data['date1'],
+            'date2' => $this->data['date2'],
         ];
         if ($graph) {
             $view_data['svg'] = $graph;
@@ -117,15 +138,27 @@ class FlameGraphPage extends BasePage
      * Get svg data for flame graph
      * @param int $snapshot_id
      * @param string $param
+     * @param bool $diff
+     * @param int $snapshot_id1
+     * @param int $snapshot_id2
      * @return string
      */
-    protected function getSVG(int $snapshot_id, string $param) : string
-    {
+    protected function getSVG(
+        int $snapshot_id,
+        string $param,
+        bool $diff,
+        int $snapshot_id1,
+        int $snapshot_id2
+    ) : string {
         if (!$snapshot_id) {
             return '';
         }
 
-        $graph_data = $this->getDataForFlameGraph($snapshot_id, $param);
+        if ($diff && (!$snapshot_id1 || !$snapshot_id2)) {
+            return '';
+        }
+
+        $graph_data = $this->getDataForFlameGraph($snapshot_id, $param, $diff, $snapshot_id1, $snapshot_id2);
         if (!$graph_data) {
             return '';
         }
@@ -142,17 +175,44 @@ class FlameGraphPage extends BasePage
      * Get input data for flamegraph.pl
      * @param int $snapshot_id
      * @param string $param
+     * @param bool $diff
+     * @param int $snapshot_id1
+     * @param int $snapshot_id2
      * @return string
      */
-    protected function getDataForFlameGraph(int $snapshot_id, string $param) : string
-    {
-        $tree = $this->MethodTree->getSnapshotMethodsTree($snapshot_id);
-        if (!$tree) {
-            return '';
-        }
+    protected function getDataForFlameGraph(
+        int $snapshot_id,
+        string $param,
+        bool $diff,
+        int $snapshot_id1,
+        int $snapshot_id2
+    ) : string {
+        if ($diff) {
+            $tree1 = $this->MethodTree->getSnapshotMethodsTree($snapshot_id1);
+            $tree2 = $this->MethodTree->getSnapshotMethodsTree($snapshot_id2);
 
-        $root_method_id = $this->getRootMethodId($tree);
-        $root_method_data = $this->MethodData->getDataByMethodIdsAndSnapshotIds([$snapshot_id], [$root_method_id]);
+            if (!$tree1 || !$tree2) {
+                return '';
+            }
+
+            foreach ($tree2 as $key => $item) {
+                $old_value = 0;
+                if (isset($tree1[$key])) {
+                    $old_value = $tree1[$key]->getValue($param);
+                }
+                $new_value = $item->getValue($param);
+                $item->setValue($param, $new_value - $old_value);
+            }
+
+            $tree = $tree2;
+            $root_method_data = $this->getRootMethodData($tree, $param, $snapshot_id1, $snapshot_id2);
+        } else {
+            $tree = $this->MethodTree->getSnapshotMethodsTree($snapshot_id);
+            if (!$tree) {
+                return '';
+            }
+            $root_method_data = $this->getRootMethodData($tree, $param, $snapshot_id, 0);
+        }
 
         if (!$root_method_data) {
             return '';
@@ -170,9 +230,9 @@ class FlameGraphPage extends BasePage
 
         $parents_param = $this->getAllMethodParentsParam($tree, $param);
         $root_method = [
-            'method_id' => $root_method_data[0]->getMethodId(),
+            'method_id' => $root_method_data->getMethodId(),
             'name' => 'main()',
-            $param => $root_method_data[0]->getValue($param)
+            $param => $root_method_data->getValue($param)
         ];
         $texts = $this->buildFlameGraphInput($tree, $parents_param, $root_method, $param, $threshold);
 
@@ -227,7 +287,7 @@ class FlameGraphPage extends BasePage
         }
         rsort($values);
 
-        return $values[self::MAX_METHODS_IN_FLAME_GRAPH];
+        return max($values[self::MAX_METHODS_IN_FLAME_GRAPH], self::DEFAULT_THRESHOLD);
     }
 
     /**
@@ -236,6 +296,7 @@ class FlameGraphPage extends BasePage
      * @param array $parent
      * @param string $param
      * @param float $threshold
+     * @param int $level
      * @return string
      */
     protected function buildFlameGraphInput(
@@ -243,9 +304,15 @@ class FlameGraphPage extends BasePage
         array $parents_param,
         array $parent,
         string $param,
-        float $threshold
+        float $threshold,
+        int $level = 0
     ) : string {
         if (!$elements || !$parent) {
+            return '';
+        }
+
+        if ($level > 50) {
+            // limit nesting level
             return '';
         }
 
@@ -258,14 +325,16 @@ class FlameGraphPage extends BasePage
                 if ($value <= 0) {
                     if (!empty($parents_param[$Element->getParentId()])) {
                         $p = $parents_param[$Element->getParentId()];
-                        $element_value = ($parent[$param] / array_sum($p)) * $Element->getValue($param);
+                        $sum_p = array_sum($p);
+                        $element_value = 0;
+                        if ($sum_p != 0) {
+                            $element_value = ($parent[$param] / $sum_p) * $Element->getValue($param);
+                        }
                         $value = $parent[$param] - $element_value;
-                    } else {
-                        $value = 0;
                     }
                 }
 
-                if ($value <= 0 || $element_value < $threshold) {
+                if ($element_value < $threshold) {
                     continue;
                 }
 
@@ -274,7 +343,14 @@ class FlameGraphPage extends BasePage
                     'name' => $parent['name'] . ';' . $Element->getMethodNameAlt(),
                     $param => $element_value
                 ];
-                $texts .= $this->buildFlameGraphInput($elements, $parents_param, $new_parent, $param, $threshold);
+                $texts .= $this->buildFlameGraphInput(
+                    $elements,
+                    $parents_param,
+                    $new_parent,
+                    $param,
+                    $threshold,
+                    $level + 1
+                );
                 $parent[$param] = $value;
             }
         }
@@ -282,5 +358,83 @@ class FlameGraphPage extends BasePage
         $texts .= $parent['name'] . ' ' . $parent[$param] . "\n";
 
         return $texts;
+    }
+
+    protected function getSnapshotIdsByDates($app, $label, $date1, $date2) : array
+    {
+        if (!$date1 || !$date2) {
+            return [0, 0];
+        }
+
+        $snapshot_ids = $this->Snapshot->getSnapshotIdsByDates([$date1, $date2], $app, $label);
+        $snapshot_id1 = (int)$snapshot_ids[$date1];
+        $snapshot_id2 = (int)$snapshot_ids[$date2];
+
+        return [$snapshot_id1, $snapshot_id2];
+    }
+
+    protected function getRootMethodData(array $tree, $param, $snapshot_id1, $snapshot_id2)
+    {
+        $root_method_id = $this->getRootMethodId($tree);
+
+        $snapshot_ids = [];
+        if ($snapshot_id1) {
+            $snapshot_ids[] = $snapshot_id1;
+        }
+        if ($snapshot_id2) {
+            $snapshot_ids[] = $snapshot_id2;
+        }
+        $methods_data = $this->MethodData->getDataByMethodIdsAndSnapshotIds(
+            $snapshot_ids,
+            [$root_method_id]
+        );
+
+        if (!$methods_data || count($methods_data) !== count($snapshot_ids)) {
+            return [];
+        }
+
+        if ($snapshot_id1 && $snapshot_id2) {
+            $old_value = $methods_data[1]->getValue($param);
+            $new_value = $methods_data[0]->getValue($param);
+
+            $methods_data[0]->setValue($param, abs($new_value - $old_value));
+        }
+
+        return $methods_data[0];
+    }
+
+    /**
+     * Calculates date params
+     * @return bool
+     * @throws \Exception
+     */
+    public function initDates() : bool
+    {
+        $dates = $this->Snapshot->getDatesByAppAndLabel($this->data['app'], $this->data['label']);
+
+        $last_date = '';
+        $month_old_date = '';
+        if ($dates && \count($dates) >= 2) {
+            $last_date = $dates[0];
+            $last_datetime = new \DateTime($last_date);
+            for ($i = 1; $i < 30 && $i < \count($dates); $i++) {
+                $month_old_date = $dates[$i];
+                $month_old_datetime = new \DateTime($month_old_date);
+                $Interval = $last_datetime->diff($month_old_datetime);
+                if ($Interval->days > 30) {
+                    break;
+                }
+            }
+        }
+
+        if (!$this->data['date1']) {
+            $this->data['date1'] = $month_old_date;
+        }
+
+        if (!$this->data['date2']) {
+            $this->data['date2'] = $last_date;
+        }
+
+        return true;
     }
 }

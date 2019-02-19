@@ -17,15 +17,29 @@
     </div>
 
     <div>
-        <form style="display: inline;">
-            <label for="label">Param: </label>
-            <select id="param" name="param">
-                <?php foreach ($data['params'] as $param): ?>
-                    <option value="<?= $param['value'] ?>" <?php if (!empty($param['selected'])): ?>selected="selected"<?php endif; ?>>
-                        <?= $param['label'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="label">param: </label>
+                <select id="param" name="param">
+                    <?php foreach ($data['params'] as $param): ?>
+                        <option value="<?= $param['value'] ?>" <?php if (!empty($param['selected'])): ?>selected="selected"<?php endif; ?>>
+                            <?= $param['label'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="diff">use diff: </label>
+                <input id="diff" type="checkbox" name="diff" <?php if (!empty($data['diff'])): ?>checked="checked"<?php endif; ?>>
+            </div>
+            <div class="form-group diff-date" <?php if (empty($data['diff'])): ?>style="display: none;"<?php endif; ?>>
+                <label for="exampleInputName2">Date from</label>
+                <input name="date1" type="date" value="<?= $data['date1'] ?>"  class="form-control" id="exampleInputName2">
+            </div>
+            <div class="form-group diff-date" <?php if (empty($data['diff'])): ?>style="display: none;"<?php endif; ?>>
+                <label for="exampleInputEmail2">Date to</label>
+                <input name="date2" type="date" value="<?= $data['date2'] ?>" class="form-control" id="exampleInputEmail2">
+            </div>
             <input type="hidden" name="snapshot_id" value="<?= $data['snapshot']->getId() ?>">
             <button class="btn btn-default btn-sm" id="create-ticket-link">Get flame graph</button>
         </form>
@@ -34,4 +48,12 @@
     <table class="table table-striped">
         <?= $data['svg'] ?>
     </table>
+
+    <script>
+        $(function () {
+            $('#diff').on('click', function () {
+                $(".diff-date").toggle(this.checked);
+            });
+        });
+    </script>
 <?php endif; ?>
