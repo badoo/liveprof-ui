@@ -127,7 +127,8 @@ class ProfileMethodTreePage extends BasePage
         $common_block_data = [
             'link_base' => $link_base,
             'fields' => $this->FieldList->getAllFieldsWithVariations(),
-            'field_descriptions' => $this->FieldList->getFieldDescriptions()
+            'field_descriptions' => $this->FieldList->getFieldDescriptions(),
+            'stat_interval' => $this->data['stat_interval'],
         ];
 
         $method_data = $this->getMethodDataWithHistory($date_to_snapshot_map, $this->data['method_id']);
@@ -145,6 +146,7 @@ class ProfileMethodTreePage extends BasePage
 
         $parents = $this->getMethodParentsWithHistory($date_to_snapshot_map, $this->data['method_id']);
         if (!empty($parents)) {
+            $this->sortList($parents);
             $view_data['parents'] = $this->View->fetchFile(
                 'profiler_result_view_part',
                 $common_block_data + ['data' => $parents],
@@ -154,6 +156,7 @@ class ProfileMethodTreePage extends BasePage
 
         $children = $this->getMethodChildrenWithHistory($date_to_snapshot_map, $this->data['method_id']);
         if ($children) {
+            $this->sortList($children);
             $view_data['children'] = $this->View->fetchFile(
                 'profiler_result_view_part',
                 $common_block_data + ['data' => $children, 'hide_lines_column' => true],
@@ -164,6 +167,16 @@ class ProfileMethodTreePage extends BasePage
         $view_data['js_graph_data_all'] = array_merge($method_data, $children);
 
         return $view_data;
+    }
+
+    protected function sortList(array &$records)
+    {
+        $sort_field = (string)current($this->FieldList->getFields());
+        usort($records, function ($Element1, $Element2) use ($sort_field) : int {
+            /** @var \Badoo\LiveProfilerUI\Entity\MethodData $Element1 */
+            /** @var \Badoo\LiveProfilerUI\Entity\MethodData $Element2 */
+            return $Element2->getValue($sort_field) > $Element1->getValue($sort_field) ? 1 : -1;
+        });
     }
 
     protected function getMainMethodId() : int

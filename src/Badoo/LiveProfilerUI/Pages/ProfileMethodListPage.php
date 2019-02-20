@@ -54,6 +54,7 @@ class ProfileMethodListPage extends BasePage
         $this->data['app'] = isset($this->data['app']) ? trim($this->data['app']) : '';
         $this->data['label'] = isset($this->data['label']) ? trim($this->data['label']) : '';
         $this->data['snapshot_id'] = isset($this->data['snapshot_id']) ? (int)$this->data['snapshot_id'] : 0;
+        $this->data['all'] = isset($this->data['all']) ? (bool)$this->data['all'] : false;
 
         if (!$this->data['snapshot_id'] && (!$this->data['app'] || !$this->data['label'])) {
             throw new \InvalidArgumentException('Empty snapshot_id, app and label');
@@ -82,7 +83,9 @@ class ProfileMethodListPage extends BasePage
             throw new \InvalidArgumentException('Can\'t get snapshot');
         }
 
-        $all_fields = $this->FieldList->getAllFieldsWithVariations();
+        $all_fields = $this->data['all'] ?
+            $this->FieldList->getAllFieldsWithVariations() :
+            $this->FieldList->getFields();
         $fields = array_diff($this->FieldList->getFields(), [$this->calls_count_field]);
         $field_descriptions = $this->FieldList->getFieldDescriptions();
 
@@ -93,6 +96,7 @@ class ProfileMethodListPage extends BasePage
         foreach ($records as $Row) {
             /** @var \Badoo\LiveProfilerUI\Entity\MethodData $Row */
             $values = $Row->getValues();
+            $values = array_intersect_key($values, array_flip($all_fields));
 
             foreach ($fields as $field) {
                 $all_fields[$field . '_excl'] = $field . '_excl';
@@ -102,6 +106,8 @@ class ProfileMethodListPage extends BasePage
             }
             $Row->setValues($values);
         }
+
+        $this->sortList($records);
 
         $wall = $this->View->fetchFile(
             'profiler_result_view_part',
@@ -117,6 +123,17 @@ class ProfileMethodListPage extends BasePage
         return [
             'snapshot' => $Snapshot,
             'wall' => $wall,
+            'all' => $this->data['all'],
         ];
+    }
+
+    protected function sortList(array &$records)
+    {
+        $sort_field = (string)current($this->FieldList->getFields());
+        usort($records, function ($Element1, $Element2) use ($sort_field) : int {
+            /** @var \Badoo\LiveProfilerUI\Entity\MethodData $Element1 */
+            /** @var \Badoo\LiveProfilerUI\Entity\MethodData $Element2 */
+            return $Element2->getValue($sort_field) > $Element1->getValue($sort_field) ? 1 : -1;
+        });
     }
 }

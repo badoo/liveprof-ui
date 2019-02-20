@@ -304,6 +304,28 @@
                         drawAllGraphs();
                     }
                 );
+
+                $.tablesorter.addParser({
+                    // set a unique id
+                    id: 'parse-values',
+                    is: function(s, table, cell, $cell) {
+                        // apply this parser to all columns
+                        return true;
+                    },
+                    format: function(s, table, cell, cellIndex) {
+                        return s.replace(/,/g,'').replace(/^-$/, '0');
+                    },
+                    type: 'numeric'
+                });
+                var options = {
+                    theme : 'blue',
+                    showProcessing: true,
+                    widthFixed: false,
+                };
+                $('.sortable').tablesorter(options);
+                $('[data-toggle="tooltip"]').tooltip({
+                    placement: "bottom"
+                });
             });
         </script>
 

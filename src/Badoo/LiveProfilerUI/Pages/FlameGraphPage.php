@@ -17,7 +17,7 @@ use Badoo\LiveProfilerUI\Interfaces\ViewInterface;
 class FlameGraphPage extends BasePage
 {
     const MAX_METHODS_IN_FLAME_GRAPH = 3000;
-    const DEFAULT_THRESHOLD = 100;
+    const DEFAULT_THRESHOLD = 300;
 
     /** @var string */
     protected static $template_path = 'flame_graph';

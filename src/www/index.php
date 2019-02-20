@@ -19,6 +19,7 @@ switch (getCurrentUri()) {
             'app' => isset($_GET['app']) ? trim($_GET['app']) : '',
             'label' => isset($_GET['label']) ? trim($_GET['label']) : '',
             'snapshot_id' => isset($_GET['snapshot_id']) ? (int)$_GET['snapshot_id'] : '',
+            'all' => isset($_GET['all']) ? trim($_GET['all']) : '',
         ];
         $Page = $App->getPage('profile_method_list_page');
         echo $Page->setData($data)->render();

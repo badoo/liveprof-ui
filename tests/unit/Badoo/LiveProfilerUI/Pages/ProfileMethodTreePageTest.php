@@ -195,20 +195,23 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
                 'fields' => ['wt' => 'wt', 'ct' => 'ct'],
                 'field_descriptions' => [],
                 'data' => [$MethodDataEntityMock],
-                'hide_lines_column' => true
+                'hide_lines_column' => true,
+                'stat_interval' => 7
             ],
             'parents' => [
                 'link_base' => '/profiler/tree-view.phtml?app=app&label=label',
                 'fields' => ['wt' => 'wt', 'ct' => 'ct'],
                 'field_descriptions' => [],
                 'data' => [$MethodTreeEntityMock],
+                'stat_interval' => 7
             ],
             'children' => [
                 'link_base' => '/profiler/tree-view.phtml?app=app&label=label',
                 'fields' => ['wt' => 'wt', 'ct' => 'ct'],
                 'field_descriptions' => [],
                 'data' =>  [$MethodTreeEntityMock],
-                'hide_lines_column' => true
+                'hide_lines_column' => true,
+                'stat_interval' => 7
             ],
             'available_graphs' => [
                 'wt' => [

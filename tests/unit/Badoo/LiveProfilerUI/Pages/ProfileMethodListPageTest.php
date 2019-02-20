@@ -124,6 +124,7 @@ class ProfileMethodListPageTest extends \unit\Badoo\BaseTestCase
             'app' => 'app',
             'label' => 'label',
             'snapshot_id' => 0,
+            'all' => false,
         ];
 
         /** @var \Badoo\LiveProfilerUI\Pages\ProfileMethodListPage $PageMock */
@@ -151,9 +152,10 @@ class ProfileMethodListPageTest extends \unit\Badoo\BaseTestCase
                     'wt_excl' => 'wt_excl'
                 ],
                 'field_descriptions' => [],
-                'link_base' => '/profiler/tree-view.phtml?app=app&label=label'
+                'link_base' => '/profiler/tree-view.phtml?app=app&label=label',
             ],
-            'snapshot' => $SnapshotEntityMock
+            'snapshot' => $SnapshotEntityMock,
+            'all' => false
         ];
         static::assertEquals($expected, $result);
     }
@@ -177,7 +179,8 @@ class ProfileMethodListPageTest extends \unit\Badoo\BaseTestCase
         $expected = [
             'app' => 'app',
             'label' => 'label',
-            'snapshot_id' => 0
+            'snapshot_id' => 0,
+            'all' => false
         ];
         self::assertEquals($expected, $data);
     }
