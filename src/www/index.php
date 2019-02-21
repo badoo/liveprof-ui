@@ -32,6 +32,8 @@ switch (getCurrentUri()) {
             'snapshot_id' => isset($_GET['snapshot_id']) ? (int)$_GET['snapshot_id'] : '',
             'method_id' => isset($_GET['method_id']) ? (int)$_GET['method_id'] : 0,
             'stat_interval' => isset($_GET['stat_interval']) ? (int)$_GET['stat_interval'] : '',
+            'date1' => isset($_GET['date1']) ? trim($_GET['date1']) : '',
+            'date2' => isset($_GET['date2']) ? trim($_GET['date2']) : '',
         ];
         $Page = $App->getPage('profile_method_tree_page');
         echo $Page->setData($data)->render();

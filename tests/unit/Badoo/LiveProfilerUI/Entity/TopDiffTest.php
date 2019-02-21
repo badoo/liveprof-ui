@@ -83,4 +83,28 @@ class TopDiffTest extends \unit\Badoo\BaseTestCase
         $new_percent = $TopDiff->getPercent();
         self::assertEquals(1, $new_percent);
     }
+
+    public function testFromValue()
+    {
+        $TopDiff = new \Badoo\LiveProfilerUI\Entity\TopDiff([]);
+
+        $from_value = $TopDiff->getFromValue();
+        self::assertEquals('', $from_value);
+
+        $TopDiff->setFromValue(1);
+        $new_from_value = $TopDiff->getFromValue();
+        self::assertEquals(1, $new_from_value);
+    }
+
+    public function testToValue()
+    {
+        $TopDiff = new \Badoo\LiveProfilerUI\Entity\TopDiff([]);
+
+        $to_value = $TopDiff->getToValue();
+        self::assertEquals('', $to_value);
+
+        $TopDiff->setToValue(1);
+        $new_to_value = $TopDiff->getToValue();
+        self::assertEquals(1, $new_to_value);
+    }
 }

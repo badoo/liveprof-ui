@@ -65,6 +65,8 @@ class ProfileMethodTreePage extends BasePage
         $this->data['label'] = isset($this->data['label']) ? trim($this->data['label']) : '';
         $this->data['snapshot_id'] = isset($this->data['snapshot_id']) ? (int)$this->data['snapshot_id'] : 0;
         $this->data['stat_interval'] = isset($this->data['stat_interval']) ? (int)$this->data['stat_interval'] : 0;
+        $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
+        $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
         $this->data['method_id'] = isset($this->data['method_id']) ? (int)$this->data['method_id'] : 0;
 
         if (!$this->data['snapshot_id'] && (!$this->data['app'] || !$this->data['label'])) {
@@ -72,7 +74,11 @@ class ProfileMethodTreePage extends BasePage
         }
 
         if (!\in_array($this->data['stat_interval'], self::$graph_intervals, true)) {
-            $this->data['stat_interval'] = self::STAT_INTERVAL_WEEK;
+            $this->data['stat_interval'] = self::STAT_INTERVAL_MONTH;
+        }
+
+        if ($this->data['date1'] && $this->data['date2']) {
+            $this->data['stat_interval'] = 0;
         }
 
         return true;
@@ -98,19 +104,30 @@ class ProfileMethodTreePage extends BasePage
             throw new \InvalidArgumentException('Can\'t get snapshot');
         }
 
-        if (!\in_array($this->data['stat_interval'], self::$graph_intervals, true)) {
-            $this->data['stat_interval'] = self::STAT_INTERVAL_WEEK;
-        }
-
         if (!$this->data['method_id']) {
             $this->data['method_id'] = $this->getMainMethodId();
         }
 
-        $dates = \Badoo\LiveProfilerUI\DateGenerator::getDatesArray(
-            $Snapshot->getDate(),
-            $this->data['stat_interval'],
-            $this->data['stat_interval']
-        );
+        $methods = $this->Method->getListByIds([$this->data['method_id']]);
+        $method_name = '?';
+        if ($methods) {
+            $method_name = $methods[$this->data['method_id']];
+        }
+
+        if ($this->data['date1'] && $this->data['date2']) {
+            $dates = \Badoo\LiveProfilerUI\DateGenerator::getDatesByRange(
+                $this->data['date1'],
+                $this->data['date2']
+            );
+        } else {
+            $dates = \Badoo\LiveProfilerUI\DateGenerator::getDatesArray(
+                $Snapshot->getDate(),
+                $this->data['stat_interval'],
+                $this->data['stat_interval']
+            );
+            $this->data['date1'] = current($dates);
+            $this->data['date2'] = end($dates);
+        }
 
         $date_to_snapshot_map = $this->Snapshot->getSnapshotIdsByDates(
             $dates,
@@ -120,8 +137,12 @@ class ProfileMethodTreePage extends BasePage
 
         $view_data = [
             'snapshot' => $Snapshot,
+            'method_id' => $this->data['method_id'],
+            'method_name' => $method_name,
             'method_dates' => $dates,
             'stat_intervals' => $this->getIntervalsFormData($link_base),
+            'date1' => $this->data['date1'],
+            'date2' => $this->data['date2'],
         ];
 
         $common_block_data = [
@@ -129,6 +150,8 @@ class ProfileMethodTreePage extends BasePage
             'fields' => $this->FieldList->getAllFieldsWithVariations(),
             'field_descriptions' => $this->FieldList->getFieldDescriptions(),
             'stat_interval' => $this->data['stat_interval'],
+            'date1' => $this->data['date1'],
+            'date2' => $this->data['date2'],
         ];
 
         $method_data = $this->getMethodDataWithHistory($date_to_snapshot_map, $this->data['method_id']);
@@ -136,7 +159,6 @@ class ProfileMethodTreePage extends BasePage
             /** @var \Badoo\LiveProfilerUI\Entity\MethodData $MainMethod */
             $MainMethod = current($method_data);
             $view_data['available_graphs'] = $this->getGraphsData($MainMethod);
-            $view_data['method_name'] = $MainMethod->getMethodName();
             $view_data['method_data'] = $this->View->fetchFile(
                 'profiler_result_view_part',
                 $common_block_data + ['data' => $method_data, 'hide_lines_column' => true],

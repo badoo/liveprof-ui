@@ -81,20 +81,26 @@ class SnapshotsDiffPage extends BasePage
 
         $Snapshot1 = false;
         if ($this->data['date1']) {
-            $Snapshot1 = $this->Snapshot->getOneByAppAndLabelAndDate(
-                $this->data['app'],
-                $this->data['label'],
-                $this->data['date1']
-            );
+            try {
+                $Snapshot1 = $this->Snapshot->getOneByAppAndLabelAndDate(
+                    $this->data['app'],
+                    $this->data['label'],
+                    $this->data['date1']
+                );
+            } catch (\InvalidArgumentException $Ex) {
+            }
         }
 
         $Snapshot2 = false;
         if ($this->data['date2']) {
-            $Snapshot2 = $this->Snapshot->getOneByAppAndLabelAndDate(
-                $this->data['app'],
-                $this->data['label'],
-                $this->data['date2']
-            );
+            try {
+                $Snapshot2 = $this->Snapshot->getOneByAppAndLabelAndDate(
+                    $this->data['app'],
+                    $this->data['label'],
+                    $this->data['date2']
+                );
+            } catch (\InvalidArgumentException $Ex) {
+            }
         }
 
         $diff = false;

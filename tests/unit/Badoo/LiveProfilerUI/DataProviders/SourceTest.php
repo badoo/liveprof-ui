@@ -8,7 +8,6 @@ namespace unit\Badoo\LiveProfilerUI\DataProviders;
 
 class SourceTest extends \unit\Badoo\BaseTestCase
 {
-    protected $last_sql = '';
     /** @var \Badoo\LiveProfilerUI\DB\Storage */
     protected $SourceStorage;
     protected $DataPacker;
@@ -75,6 +74,15 @@ class SourceTest extends \unit\Badoo\BaseTestCase
             ['app' => 'app1', 'label' => 'label1', 'date' => date('Y-m-d', strtotime('-1 day'))],
             ['app' => 'app2', 'label' => 'label1', 'date' => date('Y-m-d', strtotime('-1 day'))],
         ];
+        self::assertEquals($expected, $result);
+    }
+
+    public function testGetPerfDataEmptyData()
+    {
+        $Source = new \Badoo\LiveProfilerUI\DataProviders\Source($this->SourceStorage, $this->DataPacker);
+        $result = $Source->getPerfData('new_app', 'new_label', date('Y-m-d', strtotime('-1 day')));
+
+        $expected = [];
         self::assertEquals($expected, $result);
     }
 

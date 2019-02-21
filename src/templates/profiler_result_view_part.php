@@ -31,7 +31,7 @@
         </td>
     <?php endif; ?>
         <td>
-            <a href="<?= $data['link_base'] ?>&method_id=<?= $MethodData->getMethodId() ?>&stat_interval=<?= $data['stat_interval'] ?? 0 ?>" title="<?= $MethodData->getMethodNameAlt() ?>">
+            <a href="<?= $data['link_base'] ?>&method_id=<?= $MethodData->getMethodId() ?>&stat_interval=<?= $data['stat_interval'] ?? 0 ?>&date1=<?= $data['date1'] ?? '' ?>&date2=<?= $data['date2'] ?? '' ?>" title="<?= $MethodData->getMethodNameAlt() ?>">
                 <?= $MethodData->getMethodName() ?>
             </a>
         </td>

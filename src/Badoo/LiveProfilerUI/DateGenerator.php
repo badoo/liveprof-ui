@@ -35,4 +35,36 @@ class DateGenerator
         }
         return $dates;
     }
+
+    /**
+     * @param string $date_from
+     * @param string $date_to
+     * @return array
+     */
+    public static function getDatesByRange(string $date_from, string $date_to) : array
+    {
+        if (strtotime($date_from) > strtotime($date_to)) {
+            return [];
+        }
+
+        try {
+            $period = new \DatePeriod(
+                new \DateTime($date_from),
+                new \DateInterval('P1D'),
+                new \DateTime($date_to)
+            );
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        $dates = [];
+        foreach ($period as $Date) {
+            /** @var \DateTime $Date */
+            $date = $Date->format('Y-m-d');
+            $dates[$date] = $date;
+        }
+        $dates[$date_to] = $date_to;
+        
+        return array_values($dates);
+    }
 }

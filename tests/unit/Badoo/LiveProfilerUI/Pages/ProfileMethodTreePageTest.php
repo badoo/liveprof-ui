@@ -117,10 +117,11 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
 
         $MethodMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Method::class)
             ->disableOriginalConstructor()
-            ->setMethods(['injectMethodNames', 'findByName'])
+            ->setMethods(['injectMethodNames', 'findByName', 'getListByIds'])
             ->getMock();
         $MethodMock->method('injectMethodNames')->willReturnArgument(0);
         $MethodMock->method('findByName')->willReturn([[1 => 'test']]);
+        $MethodMock->method('getListByIds')->willReturn([0 => 'test']);
         self::$Container->set('method', $MethodMock);
 
         $MethodDataMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\MethodData::class)
@@ -146,7 +147,9 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
             'label' => 'label',
             'snapshot_id' => 0,
             'method_id' => 0,
-            'stat_interval' => 0,
+            'stat_interval' => 7,
+            'date1' => '',
+            'date2' => '',
         ];
 
         /** @var \Badoo\LiveProfilerUI\Pages\ProfileMethodTreePage $PageMock */
@@ -165,13 +168,16 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
 
         $result = $this->invokeMethod($PageMock, 'getTemplateData');
 
+        $method_dates = \Badoo\LiveProfilerUI\DateGenerator::getDatesArray(date('Y-m-d'), 7, 7);
+        $date1 = current($method_dates);
+        $date2 = end($method_dates);
         $expected = [
             'snapshot' => $SnapshotEntityMock,
             'js_graph_data_all' => [
                 $MethodDataEntityMock,
                 $MethodTreeEntityMock
             ],
-            'method_dates' => \Badoo\LiveProfilerUI\DateGenerator::getDatesArray(date('Y-m-d'), 7, 7),
+            'method_dates' => $method_dates,
             'stat_intervals' => [
                 [
                     'name' => '7 days',
@@ -189,21 +195,25 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
                     'selected' => false
                 ]
             ],
-            'method_name' => '',
+            'method_name' => 'test',
             'method_data' => [
                 'link_base' => '/profiler/tree-view.phtml?app=app&label=label',
                 'fields' => ['wt' => 'wt', 'ct' => 'ct'],
                 'field_descriptions' => [],
                 'data' => [$MethodDataEntityMock],
                 'hide_lines_column' => true,
-                'stat_interval' => 7
+                'stat_interval' => 7,
+                'date1' => $date1,
+                'date2' => $date2,
             ],
             'parents' => [
                 'link_base' => '/profiler/tree-view.phtml?app=app&label=label',
                 'fields' => ['wt' => 'wt', 'ct' => 'ct'],
                 'field_descriptions' => [],
                 'data' => [$MethodTreeEntityMock],
-                'stat_interval' => 7
+                'stat_interval' => 7,
+                'date1' => $date1,
+                'date2' => $date2,
             ],
             'children' => [
                 'link_base' => '/profiler/tree-view.phtml?app=app&label=label',
@@ -211,7 +221,9 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
                 'field_descriptions' => [],
                 'data' =>  [$MethodTreeEntityMock],
                 'hide_lines_column' => true,
-                'stat_interval' => 7
+                'stat_interval' => 7,
+                'date1' => $date1,
+                'date2' => $date2,
             ],
             'available_graphs' => [
                 'wt' => [
@@ -229,7 +241,10 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
                     'label' => 'mem',
                     'graph_label' => 'mem self + children calls graph'
                 ]
-            ]
+            ],
+            'method_id' => 0,
+            'date1' => $date1,
+            'date2' => $date2,
         ];
         static::assertEquals($expected, $result);
     }
@@ -370,8 +385,10 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
             'app' => 'app',
             'label' => 'label',
             'snapshot_id' => 0,
-            'stat_interval' => 7,
-            'method_id' => 0
+            'stat_interval' => 31,
+            'method_id' => 0,
+            'date1' => '',
+            'date2' => '',
         ];
         self::assertEquals($expected, $data);
     }

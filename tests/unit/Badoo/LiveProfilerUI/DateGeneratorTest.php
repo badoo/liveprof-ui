@@ -41,4 +41,50 @@ class DateGeneratorTest extends \unit\Badoo\BaseTestCase
 
         self::assertEquals($expected, $result);
     }
+
+    public function providerGetDatesByRange() : array
+    {
+        return [
+            [
+                '2019-01-10',
+                '2019-01-10',
+                [
+                    '2019-01-10'
+                ]
+            ],
+            [
+                '2019-01-10',
+                '2019-01-13',
+                [
+                    '2019-01-10',
+                    '2019-01-11',
+                    '2019-01-12',
+                    '2019-01-13',
+                ]
+            ],
+            [
+                '2019-01-10',
+                '2019-01-01',
+                []
+            ],
+            [
+                'abc',
+                '123',
+                []
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providerGetDatesByRange
+     * @param string $date_from
+     * @param string $date_to
+     * @param array $expected
+     */
+    public function testGetDatesByRange(string $date_from, string $date_to, array $expected)
+    {
+        $result = \Badoo\LiveProfilerUI\DateGenerator::getDatesByRange($date_from, $date_to);
+
+        self::assertEquals($expected, $result);
+    }
 }

@@ -4,6 +4,13 @@
 
 There are next changes:
 
+## 1.1.3
+
+There are next changes:
+
+- method tree page was improved: graphs are selectable now
+- class FileSource was covered by tests 
+
 ## 1.1.2
 
 There are next changes:
