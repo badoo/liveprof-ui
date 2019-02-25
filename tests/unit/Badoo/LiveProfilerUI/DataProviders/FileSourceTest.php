@@ -97,16 +97,17 @@ class FileSourceTest extends \unit\Badoo\BaseTestCase
         $Source = new \Badoo\LiveProfilerUI\DataProviders\FileSource($this->path, $this->DataPacker);
         $result = $Source->getSnapshotsDataByDates(date('Y-m-d', strtotime('-1 day')), date('Y-m-d'));
 
+        $date = date('Y-m-d', strtotime('-1 day'));
         $expected = [
-            'app1|label1|2019-02-20' => [
+            'app1|label1|' . $date => [
                 'app' => 'app1',
                 'label' => 'label1',
-                'date' => date('Y-m-d', strtotime('-1 day'))
+                'date' => $date
             ],
-            'app2|label1|2019-02-20' => [
+            'app2|label1|' . $date => [
                 'app' => 'app2',
                 'label' => 'label1',
-                'date' => date('Y-m-d', strtotime('-1 day'))
+                'date' => $date
             ],
         ];
         self::assertEquals($expected, $result);
