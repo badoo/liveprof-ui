@@ -55,6 +55,7 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
             'date1' => 'date 1',
             'date2' => 'date 2',
             'param' => 'wt',
+            'mode' => 'methods_exclude',
         ];
 
         /** @var \Badoo\LiveProfilerUI\Pages\TopDiffPage $PageMock */
@@ -97,7 +98,7 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
                 ]),
             ],
             'params' => ['wt' => 'wt'],
-            'exclude' => true
+            'mode' => 'methods_exclude'
         ];
         static::assertEquals($expected, $result);
     }
@@ -121,7 +122,8 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
         $expected = [
             'date1' => 'date1',
             'date2' => 'date2',
-            'param' => 'param'
+            'param' => 'param',
+            'mode' => 'snapshots'
         ];
         self::assertEquals($expected, $data);
     }

@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.4
+
+There are next changes:
+
+- top diff page was improved
+
 ## 1.1.3
 
 There are next changes:

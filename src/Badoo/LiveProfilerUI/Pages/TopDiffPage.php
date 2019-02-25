@@ -11,6 +11,7 @@ use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodDataInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodTreeInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\SnapshotInterface;
+use Badoo\LiveProfilerUI\DateGenerator;
 use Badoo\LiveProfilerUI\FieldList;
 use Badoo\LiveProfilerUI\Interfaces\ViewInterface;
 use Badoo\LiveProfilerUI\Entity\TopDiff;
@@ -57,35 +58,59 @@ class TopDiffPage extends BasePage
         $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
         $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
         $this->data['param'] = isset($this->data['param']) ? trim($this->data['param']) : '';
+        $this->data['mode'] = isset($this->data['mode']) ? trim($this->data['mode']) : 'snapshots';
 
         return true;
     }
 
     public function getTemplateData() : array
     {
-        $fields = array_diff($this->FieldList->getFields(), [$this->calls_count_field]);// exclude calls count param (ct)
+        $fields = array_diff(
+            $this->FieldList->getFields(),
+            [$this->calls_count_field]
+        );// exclude calls count param (ct)
 
         if (!$this->data['param']) {
             $this->data['param'] = current($fields);
         }
 
-        if (!isset($this->data['exclude'])) {
-            $this->data['exclude'] = true;
+        $snapshots = $this->getSnapshotsByTwoDates($this->data['date1'], $this->data['date2'], $this->data['param']);
+
+        if ($this->data['mode'] === 'snapshots') {
+            $diff = [];
+            foreach ($snapshots as $snapshot) {
+                $diff[] = new TopDiff(
+                    [
+                        'app' => $snapshot['app'],
+                        'label' => $snapshot['label'],
+                        'from_value' => $snapshot['from_value'],
+                        'to_value' => $snapshot['to_value'],
+                        'value' => $snapshot['diff'],
+                        'percent' => $snapshot['percent'],
+                    ]
+                );
+            }
+
+        } else {
+            $second_part = array_slice($snapshots, 0, 50);
+
+            $snapshots1 = [];
+            $snapshots2 = [];
+            foreach ($second_part as $key => $snapshots) {
+                list($app, $label) = explode('|', $key);
+
+                $snapshots1[$snapshots['snapshot_id1']] = compact('app', 'label');
+                $snapshots2[$snapshots['snapshot_id2']] = compact('app', 'label');
+            }
+
+            $diff = $this->getDiff($snapshots1, $snapshots2, $this->data['param'], $this->data['mode']);
         }
-
-        list($snapshots1, $snapshots2) = $this->getSnapshotsByTwoDates(
-            $this->data['date1'],
-            $this->data['date2'],
-            $this->data['param']
-        );
-
-        $diff = $this->getDiff($snapshots1, $snapshots2, $this->data['param'], $this->data['exclude']);
 
         return [
             'date1' => $this->data['date1'],
             'date2' => $this->data['date2'],
             'param' => $this->data['param'],
-            'exclude' => $this->data['exclude'],
+            'mode' => $this->data['mode'],
             'data' => $diff,
             'params' => $fields
         ];
@@ -93,71 +118,110 @@ class TopDiffPage extends BasePage
 
     protected function getSnapshotsByTwoDates(string $date1, string $date2, string $param) : array
     {
-        $snapshots_data = $this->Snapshot->getSnapshotsByDates([$date1, $date2], $param);
-        $snapshots = [];
+        $dates = DateGenerator::getDatesByRange($date1, $date2);
+        $snapshots_data = $this->Snapshot->getSnapshotsByDates($dates, $param);
+
+        $dates_num = count($snapshots_data) > 100 ? count($dates) / 4 : 0;
+
+        $first = (int)current($snapshots_data)['id'];
+        $last = (int)end($snapshots_data)['id'];
+        $middle = $first + intdiv($last - $first, 2);
+
+        $first_part = $second_part = [];
         foreach ($snapshots_data as $item) {
             // skip rare snapshots
-            if (isset($item['calls_count']) && $item['calls_count'] < 100) {
+            if (isset($item['calls_count']) && $item['calls_count'] < 50) {
+                continue;
+            }
+
+            // skip empty values
+            if (!$item[$param]) {
                 continue;
             }
 
             $key = $item['app'] . '|' . $item['label'];
 
-            if ($item['date'] === $date1) {
-                $index = 'id1';
+            if ($item['id'] <= $middle) {
+                $first_part[$key]['snapshots'][$item['id']] = $item[$param];
             } else {
-                $index = 'id2';
-            }
-
-            if (!isset($snapshots[$key])) {
-                $snapshots[$key] = [
-                    $index => $item['id'],
-                    'app' => $item['app'],
-                    'label' => $item['label'],
-                    $param => $item[$param],
-                    'diff' => PHP_INT_MIN,
-                ];
-            } else {
-                $snapshots[$key][$index] = $item['id'];
-                $snapshots[$key]['diff'] = abs($item[$param] - $snapshots[$key][$param]);
+                $second_part[$key]['snapshots'][$item['id']] = $item[$param];
             }
         }
 
-        usort($snapshots, function ($snapshot1, $snapshot2) : int {
-            return $snapshot2['diff'] > $snapshot1['diff'] ? 1 : -1;
-        });
-
-        // keep only 50 most diff snapshots on each date
-        $snapshots = \array_slice($snapshots, 0, 50);
-
-        // get snapshot data for first and second date
-        $snapshotById1 = [];
-        $snapshotById2 = [];
-        foreach ($snapshots as $snapshot) {
-            if (isset($snapshot['id1'])) {
-                $snapshotById1[$snapshot['id1']] = [
-                    'app' => $snapshot['app'],
-                    'label' => $snapshot['label'],
-                ];
+        foreach ($first_part as $key => $snapshots) {
+            if (count($snapshots['snapshots']) < $dates_num) {
+                unset($first_part[$key]);
+                continue;
             }
+            $first_part[$key]['avg'] = array_sum($snapshots['snapshots']) / count($snapshots['snapshots']);
 
-            if (isset($snapshot['id2'])) {
-                $snapshotById2[$snapshot['id2']] = [
-                    'app' => $snapshot['app'],
-                    'label' => $snapshot['label'],
-                ];
-            }
+            asort($snapshots['snapshots']);
+            $keys = array_keys($snapshots['snapshots']);
+            $idx = count($snapshots['snapshots']) * 0.1;
+            $first_part[$key]['snapshot_id'] = $keys[(int)$idx];
+            $first_part[$key]['value'] = $snapshots['snapshots'][$first_part[$key]['snapshot_id']];
         }
 
-        return [$snapshotById1, $snapshotById2];
+        foreach ($second_part as $key => $snapshots) {
+            if (count($snapshots['snapshots']) < $dates_num) {
+                unset($second_part[$key]);
+                continue;
+            }
+
+            $second_part[$key]['avg'] = array_sum($snapshots['snapshots']) / count($snapshots['snapshots']);
+
+            if (!isset($first_part[$key]) || $second_part[$key]['avg'] <= $first_part[$key]['avg']) {
+                unset($second_part[$key]);
+                continue;
+            }
+
+            asort($snapshots['snapshots']);
+            $keys = array_keys($snapshots['snapshots']);
+            $idx = count($snapshots['snapshots']) * 0.9;
+            $snapshots['snapshot_id'] = $keys[(int)$idx];
+            $snapshots['value'] = $snapshots['snapshots'][$snapshots['snapshot_id']];
+
+            unset($second_part[$key]['snapshots']);
+
+            $second_part[$key]['diff'] = $second_part[$key]['avg'] - $first_part[$key]['avg'];
+
+            if ($second_part[$key]['diff'] < 10000) {
+                unset($second_part[$key]);
+                continue;
+            }
+
+            $second_part[$key]['percent'] = intdiv(
+                (int)$second_part[$key]['diff'] * 100,
+                (int)$first_part[$key]['value']
+            );
+
+            list($app, $label) = explode('|', $key);
+            $second_part[$key]['app'] = $app;
+            $second_part[$key]['label'] = $label;
+            $second_part[$key]['snapshot_id1'] = $first_part[$key]['snapshot_id'];
+            $second_part[$key]['snapshot_id2'] = $snapshots['snapshot_id'];
+
+            $second_part[$key]['from_value'] = $first_part[$key]['value'];
+            $second_part[$key]['to_value'] = $snapshots['value'];
+        }
+        unset($first_part);
+
+        uasort(
+            $second_part,
+            function ($el1, $el2) : int {
+                return $el2['diff'] > $el1['diff'] ? 1 : -1;
+            }
+        );
+
+        return $second_part;
     }
 
-    protected function getDiff(array $snapshotById1, array $snapshotById2, string $param, bool $exclude) : array
+    protected function getDiff(array $snapshotById1, array $snapshotById2, string $param, string $mode) : array
     {
         $snapshot_ids = array_merge(array_keys($snapshotById1), array_keys($snapshotById2));
 
         $children_data = [];
-        if ($exclude) {
+        if ($mode === 'methods_exclude') {
             $children_data = $this->MethodTree->getSnapshotParentsData($snapshot_ids, [$param], self::THRESHOLD);
         }
 

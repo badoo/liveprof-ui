@@ -33,10 +33,11 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail2">Param</label>
-        <select id="exclude" name="exclude">
-            <option value="1" <?php if ($data['exclude']): ?>selected="selected"<?php endif; ?>>Exclude children</option>
-            <option value="0" <?php if (!$data['exclude']): ?>selected="selected"<?php endif; ?>>Include children</option>
+        <label for="exampleInputEmail2">Mode</label>
+        <select id="mode" name="mode">
+            <option value="snapshots" <?php if ($data['mode'] === 'snapshots'): ?>selected="selected"<?php endif; ?>>Snapshots</option>
+            <option value="methods_exclude" <?php if ($data['mode'] === 'methods_exclude'): ?>selected="selected"<?php endif; ?>>Methods exclude children</option>
+            <option value="methods_include" <?php if ($data['mode'] === 'methods_include'): ?>selected="selected"<?php endif; ?>>Methods include children</option>
         </select>
     </div>
     <button type="submit" class="btn btn-default">Run</button>
@@ -50,7 +51,7 @@
     <thead>
     <tr>
         <th class="sorter-false filter-false" style="width: 100px;">#</th>
-        <th>method</th>
+        <?php if ($data['mode'] !== 'snapshots'): ?><th>method</th><?php endif; ?>
         <th>label</th>
         <th>app</th>
         <th><?= $data['param'] ?> before</th>
@@ -64,16 +65,18 @@
     <?php foreach ($data['data'] as $Result): ?>
         <tr>
             <td>
-                <a href="/profiler/tree-view.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>&method_id=<?= $Result->getMethodId() ?>"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
+                <a href="/profiler/tree-view.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>&method_id=<?= $Result->getMethodId() ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
                 <a href="/profiler/result-diff.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>"><span class="glyphicon glyphicon-sort-by-attributes-alt" data-toggle="tooltip" title="Goto diff interface"></span></a>
                 <a href="/profiler/list-view.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>"><span class="glyphicon glyphicon-unchecked" data-toggle="tooltip" title="Goto methods list"></span></a>
                 <a href="/profiler/result-flamegraph.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>"><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Goto flame graph"></span></a>
             </td>
-            <td>
-                <a href="/profiler/method-usage.phtml?method=<?= $Result->getMethodName() ?>">
-                    <?= $Result->getMethodName() ?>
-                </a>
-            </td>
+            <?php if ($data['mode'] !== 'snapshots'): ?>
+                <td>
+                    <a href="/profiler/method-usage.phtml?method=<?= $Result->getMethodName() ?>">
+                        <?= $Result->getMethodName() ?>
+                    </a>
+                </td>
+            <?php endif; ?>
             <td><?= $Result->getLabel() ?></td>
             <td><?= $Result->getApp() ?></td>
             <td><?= $Result->getFromValue() ?></td>

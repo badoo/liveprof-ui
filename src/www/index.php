@@ -76,10 +76,10 @@ switch (getCurrentUri()) {
 
     case '/profiler/top-diff.phtml':
         $data = [
-            'date1' => isset($_GET['date1']) ? trim($_GET['date1']) : date('Y-m-d', strtotime('-7 days')),
+            'date1' => isset($_GET['date1']) ? trim($_GET['date1']) : date('Y-m-d', strtotime('-3 months')),
             'date2' => isset($_GET['date2']) ? trim($_GET['date2']) : date('Y-m-d', strtotime('-1 day')),
             'param' => isset($_GET['param']) ? trim($_GET['param']) : '',
-            'exclude' => isset($_GET['exclude']) ? (bool)$_GET['exclude'] : true,
+            'mode' => isset($_GET['mode']) ? trim($_GET['mode']) : 'snapshots',
         ];
         $Page = $App->getPage('top_diff_page');
         echo $Page->setData($data)->render();
