@@ -296,7 +296,8 @@ class ProfileMethodTreePage extends BasePage
      */
     protected function getProfilerRecordsWithHistory(array $result, array $dates_to_snapshots) : array
     {
-        $last_snapshot_id = end($dates_to_snapshots);
+        $exists_snapshots = array_filter($dates_to_snapshots);
+        $last_snapshot_id = end($exists_snapshots);
         if (!$last_snapshot_id) {
             return [];
         }
