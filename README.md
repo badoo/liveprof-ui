@@ -13,6 +13,7 @@ What functions regressed most in the last day/week/month?
 What is the historical trend for execution time of a page/function? and so on.
 
 [![Build Status](https://travis-ci.org/badoo/liveprof-ui.svg?branch=master)](https://travis-ci.org/badoo/liveprof-ui)
+[![GitHub release](https://img.shields.io/github/release/badoo/liveprof-ui.svg)](https://github.com/badoo/liveprof-ui/releases/latest)
 [![codecov](https://codecov.io/gh/badoo/liveprof-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/badoo/liveprof-ui)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/badoo/liveprof-ui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/badoo/liveprof-ui/?branch=master)
 [![GitHub license](https://img.shields.io/github/license/badoo/liveprof-ui.svg)](https://github.com/badoo/liveprof-ui/blob/master/LICENSE)
