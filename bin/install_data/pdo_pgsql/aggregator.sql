@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS aggregator_snapshots (
 CREATE INDEX IF NOT EXISTS app_idx ON aggregator_snapshots (app);
 
 CREATE TABLE IF NOT EXISTS aggregator_tree (
+  id SERIAL NOT NULL PRIMARY KEY,
   snapshot_id INT NOT NULL,
   method_id INT references aggregator_metods(id),
   parent_id INT references aggregator_metods(id),
@@ -33,6 +34,7 @@ CREATE INDEX IF NOT EXISTS snapshot_id_parent_id_idx ON aggregator_tree (snapsho
 CREATE INDEX IF NOT EXISTS snapshot_id_method_id_idx ON aggregator_tree (snapshot_id, method_id);
 
 CREATE TABLE IF NOT EXISTS aggregator_method_data (
+  id SERIAL NOT NULL PRIMARY KEY,
   snapshot_id INT references aggregator_snapshots(id),
   method_id INT references aggregator_metods(id),
   %DATA_CUSTOM_FIELDS%

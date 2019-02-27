@@ -18,19 +18,23 @@ CREATE TABLE IF NOT EXISTS `aggregator_snapshots` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `aggregator_tree` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `snapshot_id` int(11) unsigned NOT NULL,
   `method_id` int(11) unsigned NOT NULL,
   `parent_id` int(11) unsigned NOT NULL,
   %TREE_CUSTOM_FIELDS%
+  PRIMARY KEY (`id`),
   KEY `snapshot_id_parent_id_idx` (`snapshot_id`,`parent_id`),
   KEY `snapshot_id_method_id_idx` (`snapshot_id`,`method_id`),
   CONSTRAINT `aggregator_tree_ibfk_3` FOREIGN KEY (`snapshot_id`) REFERENCES `aggregator_snapshots` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `aggregator_method_data` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `snapshot_id` int(11) unsigned NOT NULL,
   `method_id` int(11) unsigned NOT NULL,
   %DATA_CUSTOM_FIELDS%
+  PRIMARY KEY (`id`),
   KEY `snapshot_id_method_id_idx` (`snapshot_id`,`method_id`),
   KEY `method_id` (`method_id`),
   CONSTRAINT `aggregator_method_data_ibfk_1` FOREIGN KEY (`method_id`) REFERENCES `aggregator_metods` (`id`),

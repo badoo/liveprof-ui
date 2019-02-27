@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS aggregator_snapshots (
 );
 CREATE INDEX IF NOT EXISTS app_idx ON aggregator_snapshots (app);
 CREATE TABLE IF NOT EXISTS aggregator_tree (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   snapshot_id INTEGER NOT NULL,
   method_id INTEGER  NOT NULL,
   parent_id INTEGER  NOT NULL,
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS aggregator_tree (
   FOREIGN KEY (snapshot_id) REFERENCES aggregator_snapshots (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 CREATE TABLE IF NOT EXISTS aggregator_method_data (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   snapshot_id INTEGER NOT NULL,
   method_id INTEGER  NOT NULL,
   %DATA_CUSTOM_FIELDS%
