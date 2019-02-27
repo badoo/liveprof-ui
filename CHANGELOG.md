@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.6
+
+There are next changes:
+
+- were added primary keys to tables aggregator_tree and aggregator_method_data
+
 ## 1.1.4
 
 There are next changes:
