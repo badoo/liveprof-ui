@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.7
+
+There are next changes:
+
+-  added a link on profile list page to search without the app filter
+
 ## 1.1.6
 
 There are next changes:

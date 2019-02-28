@@ -40,7 +40,7 @@
         <tr>
             <th class="sorter-false filter-false" style="width: 100px;">#</th>
             <th class="filter-select filter-onlyAvail filter-select-sort-desc sorter-text" data-value="<?= $data['date'] ?>">last snapshot</th>
-            <th class="sorter-text" data-value="<?= $data['label'] ?>">label</th>
+            <th class="sorter-text filter-label" data-value="<?= $data['label'] ?>">label</th>
             <th class="filter-select filter-onlyAvail sorter-text" data-value="<?= $data['app'] ?>">app</th>
             <th class="filter-false">calls count
                 <span data-toggle="tooltip"  title="Calls count recorded during specified day" class="glyphicon glyphicon-question-sign"></span>
@@ -77,6 +77,10 @@
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <div id="empty-result-link" style="display: none;">
+        Empty result. Try to <a href="">search</a> without the app filter.
+    </div>
 
     <div id="pager" class="pager">
         <form>
@@ -253,12 +257,25 @@
                 savePages : true,
                 updateArrows: true,
                 output: '{startRow:input} – {endRow} / {totalRows} rows',
-            });
+            }).bind('filterEnd', function() {
+                let found = $('.sortable tbody tr:visible').length;
+                let app = "<?= $data['app'] ?>";
+                let label = $('.tablesorter-filter[data-column=2]').val();
+
+                if (found === 0 && app !== "" && label !== "") {
+                    $('#empty-result-link a').attr("href", "/profiler/result-list.phtml?label=" + label + "&app=");
+                    $('#empty-result-link').show();
+                } else {
+                    $('#empty-result-link').hide();
+                }
+        });
+
         $('[data-toggle="tooltip"]').tooltip();
 
         $('select[data-column=3]').unbind().change(function (event) {
             event.stopPropagation();
-            location.replace('?app=' + $(this).val());
+            let label = $('.tablesorter-filter[data-column=2]').val();
+            location.replace('?app=' + $(this).val() + '&label=' + label);
         });
 
         $('.aggregate-snapshot-button').on('click', function () {
