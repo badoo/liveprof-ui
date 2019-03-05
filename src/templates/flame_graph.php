@@ -1,9 +1,11 @@
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
-<h2>Flame graph
+<h2>
+    Flame graph
     <?php if (isset($data['snapshot'])): ?>
         for <?= $data['snapshot']->getDate() ?> - <?= $data['snapshot']->getApp() ?> - <?= $data['snapshot']->getLabel() ?>
     <?php endif; ?>
+    <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Flame-graph" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
 </h2>
 
 <?php if (!empty($data['error'])): ?>

@@ -243,10 +243,8 @@ Also on this page you can rebuild a custom snapshot with today's fresh data
 
 ### Methods tree page
 
-On this page you can see graphs for every collected parameters and every methods up to 6 months. Each graphs also included children stats. It helps to see the history of changes. 
- 
- 
- stats for this method, the method's parents amd the method's children.
+On this page you can see graphs for every collected parameters and every methods up to 6 months. Each graphs also included children stats. It helps to see the history of changes, 
+stats for this method, the method's parents amd the method's children.
 
 ![Methods_tree page](images/methods_tree_with_info.png)
 

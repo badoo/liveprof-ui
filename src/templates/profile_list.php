@@ -17,7 +17,10 @@
 
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
-<h2>Profile list</h2>
+<h2>
+    Profile list
+    <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Profile-list" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
+</h2>
 
 <div class="alert alert-info" role="alert"></div>
 <div class="alert alert-danger" role="alert"></div>

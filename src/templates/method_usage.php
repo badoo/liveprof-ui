@@ -11,7 +11,10 @@
 
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
-<h2>Method usage stats for <?= $data['method'] ?> for last <?= $data['period'] ?> days</h2>
+<h2>
+    Method usage stats for <?= $data['method'] ?> for last <?= $data['period'] ?> days
+    <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Find-method-usage" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
+</h2>
 
 <form>
     <label for="method">Method: </label>

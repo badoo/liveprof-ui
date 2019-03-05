@@ -9,7 +9,10 @@
 
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
-<h2>Diff of <?= $data['param'] ?> from <?= $data['date1'] ?> to <?= $data['date2'] ?></h2>
+<h2>
+    Most changed snapshots (by <?= $data['param'] ?>) from <?= $data['date1'] ?> to <?= $data['date2'] ?>
+    <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Most-changed-snapshots" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
+</h2>
 
 <p>This interface allows to find the most differences in method calls between two date. Please, select the dates.</p>
 

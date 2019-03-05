@@ -6,7 +6,10 @@
 
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
-<h2>Diff interface - <?= $data['app'] ?>:<?= $data['label'] ?></h2>
+<h2>
+    Diff interface - <?= $data['app'] ?>:<?= $data['label'] ?>
+    <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Snapshots-comparison-interface" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
+</h2>
 
 <div class="btn-group" role="group">
     <a class="btn btn-default" href="/profiler/tree-view.phtml?app=<?= $data['app'] ?>&label=<?= $data['label'] ?>&method_id=0">Methods tree</a>
@@ -115,8 +118,6 @@
 
 <script>
     $(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-        
         $('.flame-graph-btn').on('click', function () {
             var form = $(this).closest('form');
             form.attr('action', '/profiler/result-flamegraph.phtml');

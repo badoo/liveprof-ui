@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.8
+
+There are next changes:
+
+-  added links to wiki pages
+
 ## 1.1.7
 
 There are next changes:

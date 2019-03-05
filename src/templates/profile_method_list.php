@@ -95,7 +95,10 @@
 
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
-<h3>Method calls list for <?= $data['snapshot']->getDate() ?> - <?= $data['snapshot']->getApp() ?> - <?= $data['snapshot']->getLabel() ?></h3>
+<h3>
+    Method calls list for <?= $data['snapshot']->getDate() ?> - <?= $data['snapshot']->getApp() ?> - <?= $data['snapshot']->getLabel() ?>
+    <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Method-list" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
+</h3>
 
 <div class="btn-group" role="group">
     <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= $data['snapshot']->getApp() ?>&label=<?= $data['snapshot']->getLabel() ?>&method_id=0">Methods tree</a>

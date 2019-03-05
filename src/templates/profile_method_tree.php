@@ -20,11 +20,6 @@
             margin: 7px 10px;
         }
     }
-    .jqstooltip {
-        box-sizing: content-box;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-    }
     .legend span {
         border-bottom: 1px dotted #000;
         text-decoration: none;
@@ -47,7 +42,10 @@
 
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
-<h3>Method "<?= $data['method_name'] ?>" call list for <?= $data['snapshot']->getDate() ?> - <?= $data['snapshot']->getApp() ?> - <?= $data['snapshot']->getLabel() ?></h3>
+<h3>
+    Method "<?= $data['method_name'] ?>" call list for <?= $data['snapshot']->getDate() ?> - <?= $data['snapshot']->getApp() ?> - <?= $data['snapshot']->getLabel() ?>
+    <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Methods-tree" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
+</h3>
 
 <div class="btn-group" role="group">
     <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= $data['snapshot']->getApp() ?>&label=<?= $data['snapshot']->getLabel() ?>&method_id=0">Methods tree</a>
