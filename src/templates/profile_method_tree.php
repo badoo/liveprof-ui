@@ -48,10 +48,10 @@
 </h3>
 
 <div class="btn-group" role="group">
-    <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= $data['snapshot']->getApp() ?>&label=<?= $data['snapshot']->getLabel() ?>&method_id=0">Methods tree</a>
-    <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= $data['snapshot']->getApp() ?>&label=<?= $data['snapshot']->getLabel() ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>">Diff interface</a>
+    <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&method_id=0">Methods tree</a>
+    <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>">Diff interface</a>
     <a class="btn btn-default<?php if (!empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot']->getId() ?>">Methods list</a>
-    <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= $data['snapshot']->getApp() ?>&label=<?= $data['snapshot']->getApp() ?>&snapshot_id=<?= $data['snapshot']->getId() ?>">Flame graph</a>
+    <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&snapshot_id=<?= $data['snapshot']->getId() ?>">Flame graph</a>
 </div>
 
 <form id="dates-form" class="form-inline" style="margin-top: 5px">

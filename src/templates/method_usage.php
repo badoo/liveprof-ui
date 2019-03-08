@@ -50,7 +50,7 @@
         <?php foreach ($data['results'] as $result): ?>
         <tr>
             <td>
-                <a href="/profiler/tree-view.phtml?app=<?= $result['app'] ?>&label=<?= $result['label'] ?>&method_id=<?= $result['method_id'] ?>">
+                <a href="/profiler/tree-view.phtml?app=<?= urlencode($result['app']) ?>&label=<?= urlencode($result['label']) ?>&method_id=<?= $result['method_id'] ?>">
                     <span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span>
                 </a>
             </td>

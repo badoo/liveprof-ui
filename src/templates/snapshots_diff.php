@@ -12,10 +12,10 @@
 </h2>
 
 <div class="btn-group" role="group">
-    <a class="btn btn-default" href="/profiler/tree-view.phtml?app=<?= $data['app'] ?>&label=<?= $data['label'] ?>&method_id=0">Methods tree</a>
-    <a class="btn btn-default btn-primary" href="/profiler/result-diff.phtml?app=<?= $data['app'] ?>&label=<?= $data['label'] ?>">Diff interface</a>
-    <a class="btn btn-default" href="/profiler/list-view.phtml?app=<?= $data['app'] ?>&label=<?= $data['label'] ?>">Methods list</a>
-    <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= $data['app'] ?>&label=<?= $data['label'] ?>">Flame graph</a>
+    <a class="btn btn-default" href="/profiler/tree-view.phtml?app=<?= urlencode($data['app']) ?>&label=<?= urlencode($data['label']) ?>&method_id=0">Methods tree</a>
+    <a class="btn btn-default btn-primary" href="/profiler/result-diff.phtml?app=<?= $data['app'] ?>&label=<?= urlencode($data['label']) ?>">Diff interface</a>
+    <a class="btn btn-default" href="/profiler/list-view.phtml?app=<?= urlencode($data['app']) ?>&label=<?= urlencode($data['label']) ?>">Methods list</a>
+    <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['app']) ?>&label=<?= urlencode($data['label']) ?>">Flame graph</a>
 </div>
 
 <p>This interface allows to compare two snapshots with different dates. Please, select the dates.</p>

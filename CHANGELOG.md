@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.10
+
+There are next changes:
+
+-  added encoding for url params
+
 ## 1.1.8
 
 There are next changes:

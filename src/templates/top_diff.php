@@ -68,10 +68,10 @@
     <?php foreach ($data['data'] as $Result): ?>
         <tr>
             <td>
-                <a href="/profiler/tree-view.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>&method_id=<?= $Result->getMethodId() ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
-                <a href="/profiler/result-diff.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>"><span class="glyphicon glyphicon-sort-by-attributes-alt" data-toggle="tooltip" title="Goto diff interface"></span></a>
-                <a href="/profiler/list-view.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>"><span class="glyphicon glyphicon-unchecked" data-toggle="tooltip" title="Goto methods list"></span></a>
-                <a href="/profiler/result-flamegraph.phtml?app=<?= $Result->getApp() ?>&label=<?= $Result->getLabel() ?>"><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Goto flame graph"></span></a>
+                <a href="/profiler/tree-view.phtml?app=<?= urlencode($Result->getApp()) ?>&label=<?= urlencode($Result->getLabel()) ?>&method_id=<?= $Result->getMethodId() ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
+                <a href="/profiler/result-diff.phtml?app=<?= urlencode($Result->getApp()) ?>&label=<?= urlencode($Result->getLabel()) ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>"><span class="glyphicon glyphicon-sort-by-attributes-alt" data-toggle="tooltip" title="Goto diff interface"></span></a>
+                <a href="/profiler/list-view.phtml?app=<?= urlencode($Result->getApp()) ?>&label=<?= urlencode($Result->getLabel()) ?>"><span class="glyphicon glyphicon-unchecked" data-toggle="tooltip" title="Goto methods list"></span></a>
+                <a href="/profiler/result-flamegraph.phtml?app=<?= urlencode($Result->getApp()) ?>&label=<?= urlencode($Result->getLabel()) ?>"><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Goto flame graph"></span></a>
             </td>
             <?php if ($data['mode'] !== 'snapshots'): ?>
                 <td>

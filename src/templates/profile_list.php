@@ -63,10 +63,10 @@
         <?php foreach ($data['results'] as $Snapshot): ?>
         <tr>
             <td>
-                <a href="/profiler/tree-view.phtml?app=<?= $Snapshot->getApp() ?>&label=<?= $Snapshot->getLabel() ?>&method_id=0"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
-                <a href="/profiler/result-diff.phtml?app=<?= $Snapshot->getApp() ?>&label=<?= $Snapshot->getLabel() ?>"><span class="glyphicon glyphicon-sort-by-attributes-alt" data-toggle="tooltip"  title="Goto diff interface"></span></a>
+                <a href="/profiler/tree-view.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>&method_id=0"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
+                <a href="/profiler/result-diff.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>"><span class="glyphicon glyphicon-sort-by-attributes-alt" data-toggle="tooltip"  title="Goto diff interface"></span></a>
                 <a href="/profiler/list-view.phtml?snapshot_id=<?= $Snapshot->getId() ?>"><span class="glyphicon glyphicon-unchecked" data-toggle="tooltip"  title="Goto methods list"></span></a>
-                <a href="/profiler/result-flamegraph.phtml?app=<?= $Snapshot->getApp() ?>&label=<?= $Snapshot->getLabel() ?>&snapshot_id=<?= $Snapshot->getId() ?>"><span class="glyphicon glyphicon-fire" data-toggle="tooltip"  title="Goto flame graph"></span></a>
+                <a href="/profiler/result-flamegraph.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>&snapshot_id=<?= $Snapshot->getId() ?>"><span class="glyphicon glyphicon-fire" data-toggle="tooltip"  title="Goto flame graph"></span></a>
                 <a class="aggregate-snapshot-button" href="#" data-app="<?= $Snapshot->getApp() ?>" data-label="<?= $Snapshot->getLabel() ?>"><span class="glyphicon glyphicon-refresh" data-toggle="tooltip"  title="Aggregate last snapshot"></span></a>
             </td>
             <td><?= $Snapshot->getDate() ?></td>

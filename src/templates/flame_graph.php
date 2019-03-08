@@ -12,10 +12,10 @@
     <div class="alert alert-danger" role="alert"><?= $data['error'] ?></div>
 <?php else: ?>
     <div class="btn-group" role="group">
-        <a class="btn btn-default" href="/profiler/tree-view.phtml?app=<?= $data['snapshot']->getApp() ?>&label=<?= $data['snapshot']->getLabel() ?>&method_id=0">Methods tree</a>
-        <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= $data['snapshot']->getApp() ?>&label=<?= $data['snapshot']->getLabel() ?>">Diff interface</a>
+        <a class="btn btn-default" href="/profiler/tree-view.phtml?app=<?=  urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&method_id=0">Methods tree</a>
+        <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>">Diff interface</a>
         <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot']->getId() ?>">Methods list</a>
-        <a class="btn btn-default btn-primary" href="/profiler/result-flamegraph.phtml?app=<?= $data['snapshot']->getApp() ?>&label=<?= $data['snapshot']->getLabel() ?>&snapshot_id=<?= $data['snapshot']->getId() ?>">Flame graph</a>
+        <a class="btn btn-default btn-primary" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&snapshot_id=<?= $data['snapshot']->getId() ?>">Flame graph</a>
     </div>
 
     <div>
