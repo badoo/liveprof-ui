@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.11
+
+There are next changes:
+
+-  added wiki pages
+
 ## 1.1.10
 
 There are next changes:
