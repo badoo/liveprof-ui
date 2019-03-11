@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.12
+
+There are next changes:
+
+-  added possibility to open the method graphs by click on flame graph
+
 ## 1.1.11
 
 There are next changes:

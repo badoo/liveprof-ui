@@ -68,6 +68,7 @@ class ProfileMethodTreePage extends BasePage
         $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
         $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
         $this->data['method_id'] = isset($this->data['method_id']) ? (int)$this->data['method_id'] : 0;
+        $this->data['method_name'] = isset($this->data['method_name']) ? trim($this->data['method_name']) : '';
 
         if (!$this->data['snapshot_id'] && (!$this->data['app'] || !$this->data['label'])) {
             throw new \InvalidArgumentException('Empty snapshot_id, app and label');
@@ -79,6 +80,13 @@ class ProfileMethodTreePage extends BasePage
 
         if ($this->data['date1'] && $this->data['date2']) {
             $this->data['stat_interval'] = 0;
+        }
+
+        if ($this->data['method_name'] && !$this->data['method_id']) {
+            $methods = $this->Method->findByName($this->data['method_name'], true);
+            if ($methods) {
+                $this->data['method_id'] = array_keys($methods)[1];
+            }
         }
 
         return true;

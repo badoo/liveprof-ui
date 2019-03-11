@@ -51,10 +51,22 @@
         <?= $data['svg'] ?>
     </table>
 
+    <div>
+        * double click on a method cell to see the method's graphs in new tab
+    </div>
+
     <script>
         $(function () {
             $('#diff').on('click', function () {
                 $(".diff-date").toggle(this.checked);
+            });
+
+            $('.func_g').on('dblclick', function() {
+                var title = $(this).find('title').text();
+                var method_name = title.split(' ');
+                var url = "/profiler/tree-view.phtml?app=<?=  urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&method_name=" + method_name;
+                var win = window.open(encodeURI(url), '_blank');
+                win.focus();
             });
         });
     </script>

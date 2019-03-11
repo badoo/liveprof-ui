@@ -31,6 +31,7 @@ switch (getCurrentUri()) {
             'label' => isset($_GET['label']) ? trim($_GET['label']) : '',
             'snapshot_id' => isset($_GET['snapshot_id']) ? (int)$_GET['snapshot_id'] : '',
             'method_id' => isset($_GET['method_id']) ? (int)$_GET['method_id'] : 0,
+            'method_name' => isset($_GET['method_name']) ? trim($_GET['method_name']) : '',
             'stat_interval' => isset($_GET['stat_interval']) ? (int)$_GET['stat_interval'] : '',
             'date1' => isset($_GET['date1']) ? trim($_GET['date1']) : '',
             'date2' => isset($_GET['date2']) ? trim($_GET['date2']) : '',
