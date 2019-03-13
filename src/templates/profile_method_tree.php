@@ -69,13 +69,22 @@
     </div>
 
     <div class="form-group">
-        <label for="exampleInputName2">From</label>
+        <label for="date1">From</label>
         <input name="date1" type="date" value="<?= $data['date1'] ?>"  class="form-control" id="date1" required>
     </div>
 
     <div class="form-group">
-        <label for="exampleInputEmail2">To</label>
+        <label for="date2">To</label>
         <input name="date2" type="date" value="<?= $data['date2'] ?>" class="form-control" id="date2" required>
+    </div>
+
+    <div class="form-group">
+        <label for="app">App</label>
+        <select id="app" name="app">
+            <?php foreach ($data['all_apps'] as $app): ?>
+                <option value="<?= $app ?>" <?php if ($app === $data['snapshot']->getApp()): ?>selected<?php endif;  ?>><?= $app ?></option>
+            <?php endforeach; ?>
+        </select>
     </div>
 
     <button type="submit" class="btn btn-default">Show</button>

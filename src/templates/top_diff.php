@@ -1,9 +1,13 @@
 <link rel="stylesheet" href="/js/rrd/libs/jquery-tablesorter/theme.blue.css">
 <script src="/js/rrd/libs/jquery-tablesorter/jquery.tablesorter.min.js"></script>
+<script src="/js/rrd/libs/jquery-tablesorter/jquery.tablesorter.widgets.js"></script>
 
 <style>
     .sortable {
         font-size: smaller;
+    }
+    .tablesorter-filter.disabled {
+        display: none;
     }
 </style>
 
@@ -55,12 +59,12 @@
     <tr>
         <th class="sorter-false filter-false" style="width: 100px;">#</th>
         <?php if ($data['mode'] !== 'snapshots'): ?><th>method</th><?php endif; ?>
-        <th>label</th>
-        <th>app</th>
-        <th><?= $data['param'] ?> before</th>
-        <th><?= $data['param'] ?> after</th>
-        <th>Diff of <?= $data['param'] ?></th>
-        <th>Percent diff of <?= $data['param'] ?></th>
+        <th class="filter-select filter-onlyAvail sorter-text">label</th>
+        <th class="filter-select filter-onlyAvail sorter-text">app</th>
+        <th class="filter-false"><?= $data['param'] ?> before</th>
+        <th class="filter-false"><?= $data['param'] ?> after</th>
+        <th class="filter-false">Diff of <?= $data['param'] ?></th>
+        <th class="filter-false">Percent diff of <?= $data['param'] ?></th>
     </tr>
     </thead>
     <tbody>
@@ -96,7 +100,7 @@
         $('.sortable').tablesorter({
             theme : 'blue',
             widthFixed: false,
-            widgets: ['zebra'],
+            widgets: ['zebra', 'filter'],
         });
     });
 </script>

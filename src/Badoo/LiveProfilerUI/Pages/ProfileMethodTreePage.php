@@ -195,6 +195,7 @@ class ProfileMethodTreePage extends BasePage
         }
 
         $view_data['js_graph_data_all'] = array_merge($method_data, $children);
+        $view_data['all_apps'] = $this->Snapshot->getAppList($Snapshot->getLabel());
 
         return $view_data;
     }

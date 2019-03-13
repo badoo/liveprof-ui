@@ -257,12 +257,17 @@ class Snapshot extends Base implements SnapshotInterface
         return $snapshots ? array_column($snapshots, 'date') : [];
     }
 
-    public function getAppList() : array
+    public function getAppList(string $label = '') : array
     {
+        $filter = [];
+        if ($label) {
+            $filter[] = ['label', $label];
+        }
         $apps = $this->AggregatorStorage->getAll(
             self::TABLE_NAME,
             ['app'],
             [
+                'filter' => $filter,
                 'group' => ['app'],
                 'order' => ['app' => 'asc'],
             ]

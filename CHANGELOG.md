@@ -4,6 +4,13 @@
 
 There are next changes:
 
+## 1.1.13
+
+There are next changes:
+
+-  added filters on top diff page
+-  added app select on method tree page
+
 ## 1.1.12
 
 There are next changes:

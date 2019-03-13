@@ -259,12 +259,24 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
         self::assertEquals($expected, $result);
     }
 
-    public function testGetAppList()
+    public function providerGetAppList() : array
+    {
+        return [
+            ['', ['app1', 'app2']],
+            ['label1', ['app1']],
+        ];
+    }
+
+    /**
+     * @dataProvider providerGetAppList
+     * @param string $label
+     * @param array $expected
+     */
+    public function testGetAppList(string $label, array $expected)
     {
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
-        $result = $Snapshot->getAppList();
+        $result = $Snapshot->getAppList($label);
 
-        $expected = ['app1', 'app2'];
         self::assertEquals($expected, $result);
     }
 
