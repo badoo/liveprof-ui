@@ -127,7 +127,7 @@ class ProfileMethodTreePage extends BasePage
 
         $methods = $this->Method->getListByIds([$this->data['method_id']]);
         $method_name = '?';
-        if ($methods) {
+        if (!empty($methods)) {
             $method_name = $methods[$this->data['method_id']];
         }
 
@@ -175,7 +175,7 @@ class ProfileMethodTreePage extends BasePage
         ];
 
         $method_data = $this->getMethodDataWithHistory($date_to_snapshot_map, $this->data['method_id']);
-        if ($method_data) {
+        if (!empty($method_data)) {
             /** @var \Badoo\LiveProfilerUI\Entity\MethodData $MainMethod */
             $MainMethod = current($method_data);
             $view_data['available_graphs'] = $this->getGraphsData($MainMethod);
@@ -197,7 +197,7 @@ class ProfileMethodTreePage extends BasePage
         }
 
         $children = $this->getMethodChildrenWithHistory($date_to_snapshot_map, $this->data['method_id']);
-        if ($children) {
+        if (!empty($children)) {
             $this->sortList($children);
             $view_data['children'] = $this->View->fetchFile(
                 'profiler_result_view_part',

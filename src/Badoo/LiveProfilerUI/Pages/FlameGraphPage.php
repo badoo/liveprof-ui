@@ -72,7 +72,7 @@ class FlameGraphPage extends BasePage
 
     /**
      * @return array
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function getTemplateData() : array
     {
@@ -194,7 +194,7 @@ class FlameGraphPage extends BasePage
             $tree1 = $this->MethodTree->getSnapshotMethodsTree($snapshot_id1);
             $tree2 = $this->MethodTree->getSnapshotMethodsTree($snapshot_id2);
 
-            if (!$tree1 || !$tree2) {
+            if (empty($tree1) || empty($tree2)) {
                 return '';
             }
 
@@ -211,7 +211,7 @@ class FlameGraphPage extends BasePage
             $root_method_data = $this->getRootMethodData($tree, $param, $snapshot_id1, $snapshot_id2);
         } else {
             $tree = $this->MethodTree->getSnapshotMethodsTree($snapshot_id);
-            if (!$tree) {
+            if (empty($tree)) {
                 return '';
             }
             $root_method_data = $this->getRootMethodData($tree, $param, $snapshot_id, 0);
@@ -310,7 +310,7 @@ class FlameGraphPage extends BasePage
         float $threshold,
         int $level = 0
     ) : string {
-        if (!$elements || !$parent) {
+        if (empty($elements) || empty($parent)) {
             return '';
         }
 
@@ -392,7 +392,7 @@ class FlameGraphPage extends BasePage
             [$root_method_id]
         );
 
-        if (!$methods_data || count($methods_data) !== count($snapshot_ids)) {
+        if (empty($methods_data) || count($methods_data) !== count($snapshot_ids)) {
             return [];
         }
 
@@ -417,7 +417,7 @@ class FlameGraphPage extends BasePage
 
         $last_date = '';
         $month_old_date = '';
-        if ($dates && \count($dates) >= 2) {
+        if (!empty($dates) && \count($dates) >= 2) {
             $last_date = $dates[0];
             $last_datetime = new \DateTime($last_date);
             for ($i = 1; $i < 30 && $i < \count($dates); $i++) {

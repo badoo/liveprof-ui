@@ -37,7 +37,7 @@
     <button class="btn btn-default btn-sm" id="create-ticket-link">Aggregate today snapshot</button>
 </form>
 
-<?php if (!empty($data['results'])): ?>
+<?php if (!empty($data['results'])) { ?>
     <table class="table sortable">
         <thead>
         <tr>
@@ -52,15 +52,15 @@
                 /** @var \Badoo\LiveProfilerUI\Entity\Snapshot $Snapshot */
                 $Snapshot = current($data['results']);
             ?>
-            <?php foreach ($Snapshot->getFormattedValues() as $field => $value): ?>
+            <?php foreach ($Snapshot->getFormattedValues() as $field => $value) { ?>
                 <th class="filter-false"><?= $field ?>
                     <span data-toggle="tooltip"  title="<?= $data['field_descriptions'][$field] ?? '' ?>" class="glyphicon glyphicon-question-sign"></span>
                 </th>
-            <?php endforeach; ?>
+            <?php } ?>
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($data['results'] as $Snapshot): ?>
+        <?php foreach ($data['results'] as $Snapshot) { ?>
         <tr>
             <td>
                 <a href="/profiler/tree-view.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>&method_id=0"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
@@ -73,11 +73,11 @@
             <td><?= $Snapshot->getLabel() ?></td>
             <td><?= $Snapshot->getApp() ?></td>
             <td><?= $Snapshot->getCallsCount() ?></td>
-            <?php foreach ($Snapshot->getFormattedValues() as $field => $value): ?>
+            <?php foreach ($Snapshot->getFormattedValues() as $field => $value) { ?>
                 <td><?= $value ?></td>
-            <?php endforeach; ?>
+            <?php } ?>
         </tr>
-        <?php endforeach; ?>
+        <?php } ?>
         </tbody>
     </table>
 
@@ -100,9 +100,9 @@
             </select>
         </form>
     </div>
-<?php else: ?>
+<?php } else { ?>
     Empty list
-<?php endif; ?>
+<?php } ?>
 
 <script>
     var new_time_limit = 300;
@@ -247,9 +247,9 @@
                 },
                 filter_selectSource  : {
                     3 : [
-                        <?php foreach ($data['apps'] as $app): ?>
+                        <?php foreach ($data['apps'] as $app) { ?>
                         { value : '<?= $app ?>', 'data-class' : 'ui-icon-script', text : '<?= $app ?>' },
-                        <?php endforeach; ?>
+                        <?php } ?>
                     ]
                 }
             }

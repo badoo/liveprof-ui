@@ -238,47 +238,40 @@ class Aggregator
     protected function aggregate() : bool
     {
         foreach ($this->method_data as &$map) {
-            foreach ($this->fields as $param) {
-                $map[$param . 's'] = explode(',', rtrim($map[$param . 's'], ','));
-                $map[$param] = array_sum($map[$param . 's']);
-                foreach ($this->field_variations as $field_variation) {
-                    $map[$field_variation . '_' . $param] = $this->FieldHandler->handle(
-                        $field_variation,
-                        $map[$param . 's']
-                    );
-                }
-                $map[$param] /= $this->perf_count;
-                if ($param !== $this->calls_count_field) {
-                    $map[$param] = (int)$map[$param];
-                }
-                unset($map[$param . 's']);
-            }
+            $map = $this->aggregateRow($map);
         }
         unset($map);
 
         foreach ($this->call_map as &$map) {
             foreach ($map as &$stat) {
-                foreach ($this->fields as $param) {
-                    $stat[$param . 's'] = explode(',', rtrim($stat[$param . 's'], ','));
-                    $stat[$param] = array_sum($stat[$param . 's']);
-                    foreach ($this->field_variations as $field_variation) {
-                        $stat[$field_variation . '_' . $param] = $this->FieldHandler->handle(
-                            $field_variation,
-                            $stat[$param . 's']
-                        );
-                    }
-                    $stat[$param] /= $this->perf_count;
-                    if ($param !== $this->calls_count_field) {
-                        $stat[$param] = (int)$stat[$param];
-                    }
-                    unset($stat[$param . 's']);
-                }
+                $stat = $this->aggregateRow($stat);
             }
             unset($stat);
         }
         unset($map);
 
         return true;
+    }
+
+    protected function aggregateRow(array $map) : array
+    {
+        foreach ($this->fields as $param) {
+            $map[$param . 's'] = explode(',', rtrim($map[$param . 's'], ','));
+            $map[$param] = array_sum($map[$param . 's']);
+            foreach ($this->field_variations as $field_variation) {
+                $map[$field_variation . '_' . $param] = $this->FieldHandler->handle(
+                    $field_variation,
+                    $map[$param . 's']
+                );
+            }
+            $map[$param] /= $this->perf_count;
+            if ($param !== $this->calls_count_field) {
+                $map[$param] = (int)$map[$param];
+            }
+            unset($map[$param . 's']);
+        }
+
+        return $map;
     }
 
     /**

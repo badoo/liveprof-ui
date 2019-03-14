@@ -61,7 +61,7 @@ class Source implements SourceInterface
             ]
         );
 
-        if (!$result) {
+        if (empty($result)) {
             return [];
         }
 

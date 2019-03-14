@@ -35,26 +35,26 @@
     <div class="form-group">
         <label for="exampleInputEmail2">Param</label>
         <select id="param" name="param">
-            <?php foreach ($data['params'] as $param): ?>
+            <?php foreach ($data['params'] as $param) { ?>
                 <option value="<?= $param ?>" <?php if ($param === $data['param']): ?>selected="selected"<?php endif; ?>>
                     <?= $param?>
                 </option>
-            <?php endforeach; ?>
+            <?php } ?>
         </select>
     </div>
     <button type="submit" class="btn btn-default">Compare versions</button>
     <button type="button" class="btn btn-success flame-graph-btn">Go to flame graph</button>
 </form>
 
-<?php if (!empty($data['date1']) && empty($data['snapshot1'])): ?>
+<?php if (!empty($data['date1']) && empty($data['snapshot1'])) { ?>
     <p>Cannot fetch snapshot for date <?= $data['date1'] ?></p>
-<?php endif; ?>
+<?php } ?>
 
-<?php if (!empty($data['date2']) && empty($data['snapshot2'])): ?>
+<?php if (!empty($data['date2']) && empty($data['snapshot2'])) { ?>
     <p>Cannot fetch snapshot for date <?= $data['date2'] ?></p>
-<?php endif; ?>
+<?php } ?>
 
-<?php if (!empty($data['diff'])): ?>
+<?php if (!empty($data['diff'])) { ?>
     <table class="table sortable">
         <tr>
             <th class="text-right">name</th>
@@ -71,7 +71,7 @@
                 info&nbsp;<span data-toggle="tooltip" title="Diffence inside the method, which led to Delta" class="glyphicon glyphicon-question-sign"></span>
             </th>
         </tr>
-        <?php foreach ($data['diff'] as $diff): ?>
+        <?php foreach ($data['diff'] as $diff) { ?>
             <tr>
                 <td>
                     <a href="<?= $data['link_base'] ?>&method_id=<?= $diff['method_id'] ?>" title="<?= $diff['name_alt'] ?>"><?= $diff['name'] ?></a>
@@ -87,7 +87,7 @@
                             <th class="text-right">name</th>
                             <?php
                             $fields = current($diff['info'])['fields'];
-                            foreach ($fields as $field => $field_values):
+                            foreach ($fields as $field => $field_values) {
                             ?>
                                 <th class="text-right">
                                     <?= $field ?>1
@@ -97,24 +97,24 @@
                                     <?= $field ?>2
                                     <span data-toggle="tooltip" title="<?= $data['field_descriptions'][$field] ?? '' ?> in snapshot 1" class="glyphicon glyphicon-question-sign"></span>
                                 </th>
-                            <?php endforeach; ?>
+                            <?php } ?>
                         </tr>
-                        <?php foreach ($diff['info'] as $info): ?>
+                        <?php foreach ($diff['info'] as $info) { ?>
                             <tr>
                                 <td><a href="<?= $data['link_base'] ?>&method_id=<?= $info['method_id'] ?>" title="<?= $info['name_alt'] ?>"><?= $info['name'] ?></a></td>
-                                <?php foreach ($info['fields'] as $field_values): ?>
+                                <?php foreach ($info['fields'] as $field_values) { ?>
                                     <td><?= $field_values[1] ?></td>
                                     <td><?= $field_values[2] ?></td>
-                                <?php endforeach; ?>
+                                <?php } ?>
 
                             </tr>
-                        <?php endforeach; ?>
+                        <?php } ?>
                     </table>
                 </td>
             </tr>
-        <?php endforeach; ?>
+        <?php } ?>
     </table>
-<?php endif; ?>
+<?php } ?>
 
 <script>
     $(function(){

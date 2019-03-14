@@ -11,6 +11,71 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
     /**
      * @throws \ReflectionException
      */
+    public function testGetTemplateDataModeSnapshot()
+    {
+        $FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt', 'ct'], [], []);
+
+        $SnapshotMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Snapshot::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getSnapshotsByDates'])
+            ->getMock();
+        $SnapshotMock->method('getSnapshotsByDates')->willReturn(
+            [
+                ['id' => 1, 'app' => 'app', 'label' => 'label', 'date' => 'date 1', 'wt' => 10000],
+                ['id' => 2, 'app' => 'app', 'label' => 'label', 'date' => 'date 2', 'wt' => 20000]
+            ]
+        );
+
+        $MethodMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Method::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['injectMethodNames'])
+            ->getMock();
+        $MethodMock->method('injectMethodNames')->willReturnArgument(0);
+
+        $data = [
+            'date1' => 'date 1',
+            'date2' => 'date 2',
+            'param' => 'wt',
+            'mode' => 'snapshots',
+        ];
+
+        /** @var \Badoo\LiveProfilerUI\Pages\TopDiffPage $PageMock */
+        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\TopDiffPage::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+        $this->setProtectedProperty($PageMock, 'FieldList', $FieldList);
+        $this->setProtectedProperty($PageMock, 'Method', $MethodMock);
+        $this->setProtectedProperty($PageMock, 'Snapshot', $SnapshotMock);
+        $this->setProtectedProperty($PageMock, 'calls_count_field', 'ct');
+        $PageMock->setData($data);
+
+        $result = $this->invokeMethod($PageMock, 'getTemplateData');
+
+        $expected = [
+            'date1' => 'date 1',
+            'date2' => 'date 2',
+            'param' => 'wt',
+            'data' => [
+                new \Badoo\LiveProfilerUI\Entity\TopDiff([
+                    'app' => 'app',
+                    'label' => 'label',
+                    'method_id' => 0,
+                    'from_value' => 10000,
+                    'to_value' => 20000,
+                    'value' => 10000,
+                    'percent' => 100
+                ]),
+            ],
+            'params' => ['wt' => 'wt'],
+            'mode' => 'snapshots'
+        ];
+        static::assertEquals($expected, $result);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
     public function testGetTemplateData()
     {
         $FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt', 'ct'], [], []);

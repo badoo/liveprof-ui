@@ -5,9 +5,9 @@
     <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Flame-graph" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
 </h2>
 
-<?php if (!empty($data['error'])): ?>
+<?php if (!empty($data['error'])) { ?>
     <div class="alert alert-danger" role="alert"><?= $data['error'] ?></div>
-<?php else: ?>
+<?php } else { ?>
     <div class="btn-group" role="group">
         <a class="btn btn-default" href="/profiler/tree-view.phtml?app=<?=  urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&method_id=0">Methods tree</a>
         <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>">Diff interface</a>
@@ -20,22 +20,22 @@
             <div class="form-group">
                 <label for="label">param: </label>
                 <select id="param" name="param">
-                    <?php foreach ($data['params'] as $param): ?>
-                        <option value="<?= $param['value'] ?>" <?php if (!empty($param['selected'])): ?>selected="selected"<?php endif; ?>>
+                    <?php foreach ($data['params'] as $param) { ?>
+                        <option value="<?= $param['value'] ?>" <?php if (!empty($param['selected'])) { ?>selected<?php } ?>>
                             <?= $param['label'] ?>
                         </option>
-                    <?php endforeach; ?>
+                    <?php } ?>
                 </select>
             </div>
             <div class="form-group">
                 <label for="diff">use diff: </label>
-                <input id="diff" type="checkbox" name="diff" <?php if (!empty($data['diff'])): ?>checked="checked"<?php endif; ?>>
+                <input id="diff" type="checkbox" name="diff" <?php if (!empty($data['diff'])) { ?>checked="checked"<?php } ?>>
             </div>
-            <div class="form-group diff-date" <?php if (empty($data['diff'])): ?>style="display: none;"<?php endif; ?>>
+            <div class="form-group diff-date" <?php if (empty($data['diff'])) { ?>style="display: none;"<?php } ?>>
                 <label for="exampleInputName2">Date from</label>
                 <input name="date1" type="date" value="<?= $data['date1'] ?>"  class="form-control" id="exampleInputName2">
             </div>
-            <div class="form-group diff-date" <?php if (empty($data['diff'])): ?>style="display: none;"<?php endif; ?>>
+            <div class="form-group diff-date" <?php if (empty($data['diff'])) { ?>style="display: none;"<?php } ?>>
                 <label for="exampleInputEmail2">Date to</label>
                 <input name="date2" type="date" value="<?= $data['date2'] ?>" class="form-control" id="exampleInputEmail2">
             </div>
@@ -71,4 +71,4 @@
             });
         });
     </script>
-<?php endif; ?>
+<?php } ?>

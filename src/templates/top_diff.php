@@ -32,33 +32,35 @@
     <div class="form-group">
         <label for="exampleInputEmail2">Param</label>
         <select id="param" name="param">
-            <?php foreach ($data['params'] as $param): ?>
-                <option value="<?= $param ?>" <?php if ($param === $data['param']): ?>selected="selected"<?php endif; ?>>
+            <?php foreach ($data['params'] as $param) { ?>
+                <option value="<?= $param ?>" <?php if ($param === $data['param']) { ?>selected="selected"<?php } ?>>
                     <?= $param?>
                 </option>
-            <?php endforeach; ?>
+            <?php } ?>
         </select>
     </div>
     <div class="form-group">
         <label for="exampleInputEmail2">Mode</label>
         <select id="mode" name="mode">
-            <option value="snapshots" <?php if ($data['mode'] === 'snapshots'): ?>selected="selected"<?php endif; ?>>Snapshots</option>
-            <option value="methods_exclude" <?php if ($data['mode'] === 'methods_exclude'): ?>selected="selected"<?php endif; ?>>Methods exclude children</option>
-            <option value="methods_include" <?php if ($data['mode'] === 'methods_include'): ?>selected="selected"<?php endif; ?>>Methods include children</option>
+            <option value="snapshots" <?php if ($data['mode'] === 'snapshots') { ?>selected<?php } ?>>Snapshots</option>
+            <option value="methods_exclude" <?php if ($data['mode'] === 'methods_exclude') { ?>selected<?php } ?>>Methods exclude children</option>
+            <option value="methods_include" <?php if ($data['mode'] === 'methods_include') { ?>selected<?php } ?>>Methods include children</option>
         </select>
     </div>
     <button type="submit" class="btn btn-default">Run</button>
 </form>
 
-<?php if (!empty($data['error'])): ?>
+<?php if (!empty($data['error'])) { ?>
     <div class="alert alert-danger"><?= $data['error'] ?></div>
-<?php endif; ?>
+<?php } ?>
 
 <table class="table sortable">
     <thead>
     <tr>
         <th class="sorter-false filter-false" style="width: 100px;">#</th>
-        <?php if ($data['mode'] !== 'snapshots'): ?><th>method</th><?php endif; ?>
+        <?php if ($data['mode'] !== 'snapshots') { ?>
+            <th>method</th>
+        <?php } ?>
         <th class="filter-select filter-onlyAvail sorter-text">label</th>
         <th class="filter-select filter-onlyAvail sorter-text">app</th>
         <th class="filter-false"><?= $data['param'] ?> before</th>
@@ -69,7 +71,7 @@
     </thead>
     <tbody>
     <?php /** @var \Badoo\LiveProfilerUI\Entity\TopDiff $Result */ ?>
-    <?php foreach ($data['data'] as $Result): ?>
+    <?php foreach ($data['data'] as $Result) { ?>
         <tr>
             <td>
                 <a href="/profiler/tree-view.phtml?app=<?= urlencode($Result->getApp()) ?>&label=<?= urlencode($Result->getLabel()) ?>&method_id=<?= $Result->getMethodId() ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
@@ -77,13 +79,13 @@
                 <a href="/profiler/list-view.phtml?app=<?= urlencode($Result->getApp()) ?>&label=<?= urlencode($Result->getLabel()) ?>"><span class="glyphicon glyphicon-unchecked" data-toggle="tooltip" title="Goto methods list"></span></a>
                 <a href="/profiler/result-flamegraph.phtml?app=<?= urlencode($Result->getApp()) ?>&label=<?= urlencode($Result->getLabel()) ?>"><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Goto flame graph"></span></a>
             </td>
-            <?php if ($data['mode'] !== 'snapshots'): ?>
+            <?php if ($data['mode'] !== 'snapshots') { ?>
                 <td>
                     <a href="/profiler/method-usage.phtml?method=<?= $Result->getMethodName() ?>">
                         <?= $Result->getMethodName() ?>
                     </a>
                 </td>
-            <?php endif; ?>
+            <?php } ?>
             <td><?= $Result->getLabel() ?></td>
             <td><?= $Result->getApp() ?></td>
             <td><?= $Result->getFromValue() ?></td>
@@ -91,7 +93,7 @@
             <td><?= $Result->getFormattedValue() ?></td>
             <td><?= $Result->getPercent() ?>%</td>
         </tr>
-    <?php endforeach; ?>
+    <?php } ?>
     </tbody>
 </table>
 

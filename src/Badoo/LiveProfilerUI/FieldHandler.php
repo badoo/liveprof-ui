@@ -20,7 +20,7 @@ class FieldHandler implements FieldHandlerInterface
      */
     public function handle(string $function, array $data)
     {
-        if (!$data) {
+        if (empty($data)) {
             return null;
         }
 

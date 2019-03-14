@@ -48,9 +48,9 @@
 </h3>
 
 <div class="btn-group" role="group">
-    <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&method_id=0">Methods tree</a>
+    <a class="btn btn-default<?php if (empty($data['wall'])) { ?> btn-primary<?php } ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&method_id=0">Methods tree</a>
     <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>">Diff interface</a>
-    <a class="btn btn-default<?php if (!empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>">Methods list</a>
+    <a class="btn btn-default<?php if (!empty($data['wall'])) { ?> btn-primary<?php } ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>">Methods list</a>
     <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&snapshot_id=<?= $data['snapshot_id'] ?>">Flame graph</a>
 </div>
 
@@ -62,11 +62,11 @@
     <div class="form-group">
         <strong>Select graph period:</strong>
         <div class="btn-group" role="group">
-            <?php foreach ($data['stat_intervals'] as $stat_intervals): ?>
-                <a class="btn btn-default <?php if (!empty($stat_intervals['selected'])): ?>btn-primary<?php endif; ?>" href="<?= $stat_intervals['link'] ?>" role="button">
+            <?php foreach ($data['stat_intervals'] as $stat_intervals) { ?>
+                <a class="btn btn-default <?php if (!empty($stat_intervals['selected'])) { ?>btn-primary<?php } ?>" href="<?= $stat_intervals['link'] ?>" role="button">
                     <?= $stat_intervals['name'] ?>
                 </a>
-            <?php endforeach; ?>
+            <?php } ?>
         </div>
     </div>
 
@@ -83,16 +83,16 @@
     <div class="form-group">
         <label for="app">App</label>
         <select id="app" name="app">
-            <?php foreach ($data['all_apps'] as $app): ?>
-                <option value="<?= $app ?>" <?php if ($app === $data['snapshot_app']): ?>selected<?php endif;  ?>><?= $app ?></option>
-            <?php endforeach; ?>
+            <?php foreach ($data['all_apps'] as $app) { ?>
+                <option value="<?= $app ?>" <?php if ($app === $data['snapshot_app']) { ?>selected<?php }  ?>><?= $app ?></option>
+            <?php } ?>
         </select>
     </div>
 
     <button type="submit" class="btn btn-default">Show</button>
 </form>
 
-<?php if (!empty($data['js_graph_data_all'])): ?>
+<?php if (!empty($data['js_graph_data_all'])) { ?>
     <script>
         var available_graphs = <?= json_encode($data['available_graphs']) ?>;
         var data_all = <?= json_encode($data['js_graph_data_all']) ?>;
@@ -380,11 +380,11 @@
 
     <form class="form-inline">
         <strong>Select graphs:</strong>
-        <?php foreach ($data['available_graphs'] as $graph_name => $graph): ?>
+        <?php foreach ($data['available_graphs'] as $graph_name => $graph) { ?>
             <label class="checkbox">
                 <input type="checkbox" class="graph_selector" id="graph_select_<?= $graph_name ?>"> <strong><?= $graph['label'] ?></strong>
             </label>
-        <?php endforeach; ?>
+        <?php } ?>
     </form>
 
     <form class="form-inline">
@@ -393,7 +393,7 @@
         <input type="button" class="btn btn-default line-visibility" data-action="hide" value="Hide children">
     </form>
 
-    <?php foreach ($data['available_graphs'] as $graph_name => $graph): ?>
+    <?php foreach ($data['available_graphs'] as $graph_name => $graph) { ?>
         <div>
             <h5><?= $graph['graph_label'] ?></h5>
             <div class="legend">
@@ -402,30 +402,30 @@
             </div>
             <div id="current_method_graph_<?= $graph_name ?>" class="badoo_graph" style="height: 200px;"></div>
         </div>
-    <?php endforeach; ?>
-<?php endif; ?>
+    <?php } ?>
+<?php } ?>
 
-<?php if (!empty($data['method_data'])): ?>
+<?php if (!empty($data['method_data'])) { ?>
     <h4>self stat</h4>
     <table class="table table-striped sortable self-stats">
         <?= $data['method_data'] ?>
     </table>
-<?php elseif ($data['snapshot_id'] === 0): ?>
+<?php } elseif ($data['snapshot_id'] === 0) { ?>
     <span>Snapshot not found. Try to select other app.</span>
-<?php else: ?>
+<?php } else { ?>
     <span>No data for this period.</span>
-<?php endif; ?>
+<?php } ?>
 
-<?php if (!empty($data['parents'])): ?>
+<?php if (!empty($data['parents'])) { ?>
     <h4>parent stat</h4>
     <table class="table table-striped sortable parents-stats">
         <?= $data['parents'] ?>
     </table>
-<?php endif; ?>
+<?php } ?>
 
-<?php if (!empty($data['children'])): ?>
+<?php if (!empty($data['children'])) { ?>
     <h4>children stat</h4>
     <table class="table table-striped sortable children-stats">
         <?= $data['children'] ?>
     </table>
-<?php endif; ?>
+<?php } ?>

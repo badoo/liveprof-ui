@@ -90,7 +90,6 @@ class TopDiffPage extends BasePage
                     ]
                 );
             }
-
         } else {
             $second_part = array_slice($snapshots, 0, 50);
 

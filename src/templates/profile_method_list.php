@@ -101,24 +101,24 @@
 </h3>
 
 <div class="btn-group" role="group">
-    <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&method_id=0">Methods tree</a>
+    <a class="btn btn-default<?php if (empty($data['wall'])) { ?> btn-primary<?php } ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&method_id=0">Methods tree</a>
     <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>">Diff interface</a>
-    <a class="btn btn-default<?php if (!empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>">Methods list</a>
+    <a class="btn btn-default<?php if (!empty($data['wall'])) { ?> btn-primary<?php } ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>">Methods list</a>
     <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&snapshot_id=<?= $data['snapshot_id'] ?>">Flame graph</a>
 </div>
 
-<?php if (!empty($data['wall'])): ?>
+<?php if (!empty($data['wall'])) { ?>
 <div class="columnSelectorWrapper">
     <input id="colSelect1" type="checkbox" class="hidden">
     <label class="columnSelectorButton" for="colSelect1">Column selector</label>
     <div id="columnSelector" class="columnSelector">
         <!-- this div is where the column selector is added -->
     </div>
-    <?php if (empty($data['all'])): ?>
+    <?php if (empty($data['all'])) { ?>
         <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>&all=1">Show all columns</a>
-    <?php else: ?>
+    <?php } else { ?>
         <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>&all=0">Show compact</a>
-    <?php endif; ?>
+    <?php } ?>
 </div>
 
 <table class="table table-striped sortable hidden">
@@ -262,4 +262,4 @@
         });
     });
 </script>
-<?php endif; ?>
+<?php } ?>

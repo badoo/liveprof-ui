@@ -88,6 +88,7 @@ class SnapshotsDiffPage extends BasePage
                     $this->data['date1']
                 );
             } catch (\InvalidArgumentException $Ex) {
+                // just skip error
             }
         }
 
@@ -100,6 +101,7 @@ class SnapshotsDiffPage extends BasePage
                     $this->data['date2']
                 );
             } catch (\InvalidArgumentException $Ex) {
+                // just skip error
             }
         }
 
@@ -138,7 +140,7 @@ class SnapshotsDiffPage extends BasePage
 
         $last_date = '';
         $month_old_date = '';
-        if ($dates && \count($dates) >= 2) {
+        if (!empty($dates) && \count($dates) >= 2) {
             $last_date = $dates[0];
             $last_datetime = new \DateTime($last_date);
             for ($i = 1; $i < 30 && $i < \count($dates); $i++) {

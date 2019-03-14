@@ -19,7 +19,7 @@ class Snapshot extends Base implements SnapshotInterface
     public function getList(string $app = '') : array
     {
         $last_snapshots = $this->getLastSnapshots($app);
-        if (!$last_snapshots) {
+        if (empty($last_snapshots)) {
             return [];
         }
 
@@ -191,7 +191,7 @@ class Snapshot extends Base implements SnapshotInterface
 
     public function getSnapshotIdsByDates(array $dates, string $app, string $label) : array
     {
-        if (!$dates || !$app || !$label) {
+        if (empty($dates) || !$app || !$label) {
             return [];
         }
 

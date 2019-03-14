@@ -24,11 +24,11 @@
     <button class="btn btn-default btn-sm" id="create-ticket-link">Show method stat</button>
 </form>
 
-<?php if (!empty($data['error'])): ?>
+<?php if (!empty($data['error'])) { ?>
 <div class="alert alert-danger"><?= $data['error'] ?></div>
-<?php endif; ?>
+<?php } ?>
 
-<?php if (!empty($data['results'])): ?>
+<?php if (!empty($data['results'])) { ?>
     <table class="table sortable">
         <thead>
         <tr>
@@ -37,17 +37,17 @@
             <th>method</th>
             <th>label</th>
             <th>app</th>
-            <?php foreach ($data['results'][0]['fields'] as $field_name => $field_value): ?>
+            <?php foreach ($data['results'][0]['fields'] as $field_name => $field_value) { ?>
                 <th>
                     <?= $field_name ?>
                     <span data-toggle="tooltip"  title="<?= $data['field_descriptions'][$field_name] ?? '' ?>" class="glyphicon glyphicon-question-sign">
                     </span>
                 </th>
-            <?php endforeach; ?>
+            <?php } ?>
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($data['results'] as $result): ?>
+        <?php foreach ($data['results'] as $result) { ?>
         <tr>
             <td>
                 <a href="/profiler/tree-view.phtml?app=<?= urlencode($result['app']) ?>&label=<?= urlencode($result['label']) ?>&method_id=<?= $result['method_id'] ?>">
@@ -58,14 +58,14 @@
             <td><?= $result['method_name'] ?></td>
             <td><?= $result['label'] ?></td>
             <td><?= $result['app'] ?></td>
-            <?php foreach ($result['fields'] as $field): ?>
+            <?php foreach ($result['fields'] as $field) { ?>
                 <td><?= $field ?></td>
-            <?php endforeach; ?>
+            <?php } ?>
         </tr>
-        <?php endforeach; ?>
+        <?php } ?>
         </tbody>
     </table>
-<?php endif; ?>
+<?php } ?>
 
 <script>
     $(function(){
