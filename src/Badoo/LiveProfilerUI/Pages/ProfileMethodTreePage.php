@@ -11,6 +11,7 @@ use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodDataInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodTreeInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\SnapshotInterface;
+use Badoo\LiveProfilerUI\Entity\Snapshot;
 use Badoo\LiveProfilerUI\FieldList;
 use Badoo\LiveProfilerUI\Interfaces\ViewInterface;
 
@@ -99,18 +100,26 @@ class ProfileMethodTreePage extends BasePage
     public function getTemplateData() : array
     {
         $link_base = '/profiler/tree-view.phtml?';
-        $Snapshot = false;
-        if ($this->data['snapshot_id']) {
-            $Snapshot = $this->Snapshot->getOneById($this->data['snapshot_id']);
-            $link_base .= 'snapshot_id=' . $this->data['snapshot_id'];
-        } elseif ($this->data['app'] && $this->data['label']) {
-            $Snapshot = $this->Snapshot->getOneByAppAndLabel($this->data['app'], $this->data['label']);
-            $link_base .= 'app=' . urlencode($this->data['app']) . '&label=' . urlencode($this->data['label']);
-        }
 
-        if (empty($Snapshot)) {
-            throw new \InvalidArgumentException('Can\'t get snapshot');
+        try {
+            if ($this->data['snapshot_id']) {
+                $Snapshot = $this->Snapshot->getOneById($this->data['snapshot_id']);
+            } elseif ($this->data['app'] && $this->data['label']) {
+                $Snapshot = $this->Snapshot->getOneByAppAndLabel($this->data['app'], $this->data['label']);
+            } else {
+                throw new \InvalidArgumentException('Can\'t get snapshot');
+            }
+        } catch (\InvalidArgumentException $Ex) {
+            $Snapshot = new Snapshot(
+                [
+                    'app' => $this->data['app'],
+                    'label' => $this->data['label'],
+                    'id' => 0,
+                ],
+                []
+            );
         }
+        $link_base .= 'app=' . urlencode($this->data['app']) . '&label=' . urlencode($this->data['label']);
 
         if (!$this->data['method_id']) {
             $this->data['method_id'] = $this->getMainMethodId();

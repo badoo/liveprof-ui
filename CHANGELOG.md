@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.15
+
+There are next changes:
+
+-  get rid of exception if could not find a snapshot
+
 ## 1.1.14
 
 There are next changes:

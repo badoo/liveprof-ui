@@ -35,8 +35,6 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
      * @param $label
      * @param $snapshot_id
      * @throws \ReflectionException
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't get snapshot
      */
     public function testInvalidData($app, $label, $snapshot_id)
     {
@@ -48,14 +46,29 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
 
         $SnapshotMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Snapshot::class)
             ->disableOriginalConstructor()
-            ->setMethods(['__construct'])
+            ->setMethods(['__construct', 'getAppList', 'getSnapshotIdsByDates'])
             ->getMock();
+        $SnapshotMock->method('getAppList')->willReturn([]);
+        $SnapshotMock->method('getSnapshotIdsByDates')->willReturn([]);
         $this->setProtectedProperty($SnapshotMock, 'AggregatorStorage', $StorageMock);
+
+        $MethodMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Method::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['findByName', 'getListByIds'])
+            ->getMock();
+        $MethodMock->method('findByName')->willReturn([[]]);
+        $MethodMock->method('getListByIds')->willReturn([[]]);
+
+        $FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt', 'ct'], [], []);
 
         $data = [
             'app' => $app,
             'label' => $label,
             'snapshot_id' => $snapshot_id,
+            'method_id' => 0,
+            'date1' => '',
+            'date2' => '',
+            'stat_interval' => 7,
         ];
 
         /** @var \Badoo\LiveProfilerUI\Pages\ProfileMethodTreePage $PageMock */
@@ -64,10 +77,47 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
             ->setMethods(['__construct'])
             ->getMock();
         $this->setProtectedProperty($PageMock, 'Snapshot', $SnapshotMock);
+        $this->setProtectedProperty($PageMock, 'Method', $MethodMock);
+        $this->setProtectedProperty($PageMock, 'FieldList', $FieldList);
         $this->setProtectedProperty($PageMock, 'calls_count_field', 'ct');
         $PageMock->setData($data);
 
-        $this->invokeMethod($PageMock, 'getTemplateData');
+        $result = $this->invokeMethod($PageMock, 'getTemplateData');
+
+        $method_dates = \Badoo\LiveProfilerUI\DateGenerator::getDatesArray(date('Y-m-d'), 7, 7);
+        $date1 = current($method_dates);
+        $date2 = end($method_dates);
+        $expected = [
+            'snapshot_id' => 0,
+            'snapshot_app' => $app,
+            'snapshot_label' => $label,
+            'snapshot_date' => '',
+            'method_id' => 0,
+            'method_name' => [],
+            'method_dates' => $method_dates,
+            'stat_intervals' => [
+                [
+                    'name' => '7 days',
+                    'link' => "/profiler/tree-view.phtml?app=$app&label=$label&method_id=0&stat_interval=7",
+                    'selected' => true
+                ],
+                [
+                    'name' => '1 month',
+                    'link' => "/profiler/tree-view.phtml?app=$app&label=$label&method_id=0&stat_interval=31",
+                    'selected' => false
+                ],
+                [
+                    'name' => '6 months',
+                    'link' => "/profiler/tree-view.phtml?app=$app&label=$label&method_id=0&stat_interval=182",
+                    'selected' => false
+                ]
+            ],
+            'date1' => $date1,
+            'date2' => $date2,
+            'js_graph_data_all' => [],
+            'all_apps' => [],
+        ];
+        static::assertEquals($expected, $result);
     }
 
     /**

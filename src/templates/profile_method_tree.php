@@ -63,7 +63,9 @@
         <strong>Select graph period:</strong>
         <div class="btn-group" role="group">
             <?php foreach ($data['stat_intervals'] as $stat_intervals): ?>
-                <a class="btn btn-default <?php if (!empty($stat_intervals['selected'])): ?>btn-primary<?php endif; ?>" href="<?= $stat_intervals['link'] ?>" role="button"><?= $stat_intervals['name'] ?></a>
+                <a class="btn btn-default <?php if (!empty($stat_intervals['selected'])): ?>btn-primary<?php endif; ?>" href="<?= $stat_intervals['link'] ?>" role="button">
+                    <?= $stat_intervals['name'] ?>
+                </a>
             <?php endforeach; ?>
         </div>
     </div>
@@ -408,8 +410,10 @@
     <table class="table table-striped sortable self-stats">
         <?= $data['method_data'] ?>
     </table>
+<?php elseif ($data['snapshot_id'] === 0): ?>
+    <span>Snapshot not found. Try to select other app.</span>
 <?php else: ?>
-    <span>No data for this period</span>
+    <span>No data for this period.</span>
 <?php endif; ?>
 
 <?php if (!empty($data['parents'])): ?>
