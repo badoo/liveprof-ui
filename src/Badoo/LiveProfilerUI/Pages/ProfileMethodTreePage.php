@@ -85,7 +85,7 @@ class ProfileMethodTreePage extends BasePage
         if ($this->data['method_name'] && !$this->data['method_id']) {
             $methods = $this->Method->findByName($this->data['method_name'], true);
             if ($methods) {
-                $this->data['method_id'] = array_keys($methods)[1];
+                $this->data['method_id'] = array_keys($methods)[0];
             }
         }
 
@@ -144,7 +144,10 @@ class ProfileMethodTreePage extends BasePage
         );
 
         $view_data = [
-            'snapshot' => $Snapshot,
+            'snapshot_id' => $Snapshot->getId(),
+            'snapshot_app' => $Snapshot->getApp(),
+            'snapshot_label' => $Snapshot->getLabel(),
+            'snapshot_date' => $Snapshot->getDate(),
             'method_id' => $this->data['method_id'],
             'method_name' => $method_name,
             'method_dates' => $dates,

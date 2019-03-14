@@ -121,7 +121,10 @@ class ProfileMethodListPage extends BasePage
         );
 
         return [
-            'snapshot' => $Snapshot,
+            'snapshot_id' => $Snapshot->getId(),
+            'snapshot_app' => $Snapshot->getApp(),
+            'snapshot_label' => $Snapshot->getLabel(),
+            'snapshot_date' => $Snapshot->getDate(),
             'wall' => $wall,
             'all' => $this->data['all'],
         ];

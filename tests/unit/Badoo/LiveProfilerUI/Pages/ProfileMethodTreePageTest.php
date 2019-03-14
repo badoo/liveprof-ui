@@ -173,7 +173,6 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
         $date1 = current($method_dates);
         $date2 = end($method_dates);
         $expected = [
-            'snapshot' => $SnapshotEntityMock,
             'js_graph_data_all' => [
                 $MethodDataEntityMock,
                 $MethodTreeEntityMock
@@ -247,6 +246,10 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
             'date1' => $date1,
             'date2' => $date2,
             'all_apps' => ['app'],
+            'snapshot_id' => 1,
+            'snapshot_app' => '',
+            'snapshot_label' => '',
+            'snapshot_date' => '',
         ];
         static::assertEquals($expected, $result);
     }

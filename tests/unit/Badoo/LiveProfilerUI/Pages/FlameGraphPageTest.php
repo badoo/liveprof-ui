@@ -85,48 +85,6 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                 'svg' => false,
                 'expected' => [
                     'error' => 'Not enough data to show graph',
-                    'snapshot' => $SnapshotMock,
-                    'params' => [
-                        [
-                            'value' => 'wt',
-                            'label' => 'wt',
-                            'selected' => true
-                        ]
-                    ],
-                    'diff' => false,
-                    'date1' => '2018-01-01',
-                    'date2' => '2019-01-01'
-                ],
-            ],
-            [
-                'app' => 'app',
-                'label' => 'label',
-                'snapshot_id' => 0,
-                'snapshot' => $SnapshotMock,
-                'svg' => false,
-                'expected' => [
-                    'error' => 'Not enough data to show graph',
-                    'snapshot' => $SnapshotMock,
-                    'params' => [
-                        [
-                            'value' => 'wt',
-                            'label' => 'wt',
-                            'selected' => true
-                        ]
-                    ],
-                    'diff' => false,
-                    'date1' => '2018-01-01',
-                    'date2' => '2019-01-01'
-                ],
-            ],
-            [
-                'app' => '',
-                'label' => '',
-                'snapshot_id' => 1,
-                'snapshot' => $SnapshotMock,
-                'svg' => 'svg',
-                'expected' => [
-                    'snapshot' => $SnapshotMock,
                     'params' => [
                         [
                             'value' => 'wt',
@@ -137,7 +95,58 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                     'diff' => false,
                     'date1' => '2018-01-01',
                     'date2' => '2019-01-01',
-                    'svg' => 'svg'
+                    'snapshot_id' => 1,
+                    'snapshot_app' => '',
+                    'snapshot_label' => '',
+                    'snapshot_date' => '',
+                ],
+            ],
+            [
+                'app' => 'app',
+                'label' => 'label',
+                'snapshot_id' => 0,
+                'snapshot' => $SnapshotMock,
+                'svg' => false,
+                'expected' => [
+                    'error' => 'Not enough data to show graph',
+                    'params' => [
+                        [
+                            'value' => 'wt',
+                            'label' => 'wt',
+                            'selected' => true
+                        ]
+                    ],
+                    'diff' => false,
+                    'date1' => '2018-01-01',
+                    'date2' => '2019-01-01',
+                    'snapshot_id' => 1,
+                    'snapshot_app' => '',
+                    'snapshot_label' => '',
+                    'snapshot_date' => '',
+                ],
+            ],
+            [
+                'app' => '',
+                'label' => '',
+                'snapshot_id' => 1,
+                'snapshot' => $SnapshotMock,
+                'svg' => 'svg',
+                'expected' => [
+                    'params' => [
+                        [
+                            'value' => 'wt',
+                            'label' => 'wt',
+                            'selected' => true
+                        ]
+                    ],
+                    'diff' => false,
+                    'date1' => '2018-01-01',
+                    'date2' => '2019-01-01',
+                    'svg' => 'svg',
+                    'snapshot_id' => 1,
+                    'snapshot_app' => '',
+                    'snapshot_label' => '',
+                    'snapshot_date' => '',
                 ],
             ],
         ];

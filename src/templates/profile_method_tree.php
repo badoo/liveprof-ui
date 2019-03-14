@@ -43,20 +43,20 @@
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
 <h3>
-    Method "<?= $data['method_name'] ?>" call list for <?= $data['snapshot']->getDate() ?> - <?= $data['snapshot']->getApp() ?> - <?= $data['snapshot']->getLabel() ?>
+    Method "<?= $data['method_name'] ?>" call list for <?= $data['snapshot_date'] ?> - <?= $data['snapshot_app'] ?> - <?= $data['snapshot_label'] ?>
     <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Methods-tree" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
 </h3>
 
 <div class="btn-group" role="group">
-    <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&method_id=0">Methods tree</a>
-    <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>">Diff interface</a>
-    <a class="btn btn-default<?php if (!empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot']->getId() ?>">Methods list</a>
-    <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&snapshot_id=<?= $data['snapshot']->getId() ?>">Flame graph</a>
+    <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&method_id=0">Methods tree</a>
+    <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&date1=<?= $data['date1'] ?>&date2=<?= $data['date2'] ?>">Diff interface</a>
+    <a class="btn btn-default<?php if (!empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>">Methods list</a>
+    <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&snapshot_id=<?= $data['snapshot_id'] ?>">Flame graph</a>
 </div>
 
 <form id="dates-form" class="form-inline" style="margin-top: 5px">
-    <input type="hidden" name="app" value="<?= $data['snapshot']->getApp() ?>">
-    <input type="hidden" name="label" value="<?= $data['snapshot']->getLabel() ?>">
+    <input type="hidden" name="app" value="<?= $data['snapshot_app'] ?>">
+    <input type="hidden" name="label" value="<?= $data['snapshot_label'] ?>">
     <input type="hidden" name="method_id" value="<?= $data['method_id'] ?>">
 
     <div class="form-group">
@@ -82,7 +82,7 @@
         <label for="app">App</label>
         <select id="app" name="app">
             <?php foreach ($data['all_apps'] as $app): ?>
-                <option value="<?= $app ?>" <?php if ($app === $data['snapshot']->getApp()): ?>selected<?php endif;  ?>><?= $app ?></option>
+                <option value="<?= $app ?>" <?php if ($app === $data['snapshot_app']): ?>selected<?php endif;  ?>><?= $app ?></option>
             <?php endforeach; ?>
         </select>
     </div>

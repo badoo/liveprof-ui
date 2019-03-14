@@ -96,15 +96,15 @@
 <?php include __DIR__ . '/navbar.block.php'; ?>
 
 <h3>
-    Method calls list for <?= $data['snapshot']->getDate() ?> - <?= $data['snapshot']->getApp() ?> - <?= $data['snapshot']->getLabel() ?>
+    Method calls list for <?= $data['snapshot_date'] ?> - <?= $data['snapshot_app'] ?> - <?= $data['snapshot_label'] ?>
     <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Method-list" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
 </h3>
 
 <div class="btn-group" role="group">
-    <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&method_id=0">Methods tree</a>
-    <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>">Diff interface</a>
-    <a class="btn btn-default<?php if (!empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot']->getId() ?>">Methods list</a>
-    <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&snapshot_id=<?= $data['snapshot']->getId() ?>">Flame graph</a>
+    <a class="btn btn-default<?php if (empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/tree-view.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&method_id=0">Methods tree</a>
+    <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>">Diff interface</a>
+    <a class="btn btn-default<?php if (!empty($data['wall'])): ?> btn-primary<?php endif; ?>" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>">Methods list</a>
+    <a class="btn btn-default" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&snapshot_id=<?= $data['snapshot_id'] ?>">Flame graph</a>
 </div>
 
 <?php if (!empty($data['wall'])): ?>
@@ -115,9 +115,9 @@
         <!-- this div is where the column selector is added -->
     </div>
     <?php if (empty($data['all'])): ?>
-        <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot']->getId() ?>&all=1">Show all columns</a>
+        <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>&all=1">Show all columns</a>
     <?php else: ?>
-        <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot']->getId() ?>&all=0">Show compact</a>
+        <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>&all=0">Show compact</a>
     <?php endif; ?>
 </div>
 

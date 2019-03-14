@@ -3,7 +3,7 @@
 <h2>
     Flame graph
     <?php if (isset($data['snapshot'])): ?>
-        for <?= $data['snapshot']->getDate() ?> - <?= $data['snapshot']->getApp() ?> - <?= $data['snapshot']->getLabel() ?>
+        for <?= $data['snapshot_date'] ?> - <?= $data['snapshot_app'] ?> - <?= $data['snapshot_label'] ?>
     <?php endif; ?>
     <a href="https://github.com/badoo/liveprof-ui/wiki/Web-interface#Flame-graph" class="glyphicon glyphicon-question-sign" target="_blank" data-toggle="tooltip" title="See the page documentation"></a>
 </h2>
@@ -12,10 +12,10 @@
     <div class="alert alert-danger" role="alert"><?= $data['error'] ?></div>
 <?php else: ?>
     <div class="btn-group" role="group">
-        <a class="btn btn-default" href="/profiler/tree-view.phtml?app=<?=  urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&method_id=0">Methods tree</a>
-        <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>">Diff interface</a>
-        <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot']->getId() ?>">Methods list</a>
-        <a class="btn btn-default btn-primary" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&snapshot_id=<?= $data['snapshot']->getId() ?>">Flame graph</a>
+        <a class="btn btn-default" href="/profiler/tree-view.phtml?app=<?=  urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&method_id=0">Methods tree</a>
+        <a class="btn btn-default" href="/profiler/result-diff.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>">Diff interface</a>
+        <a class="btn btn-default" href="/profiler/list-view.phtml?snapshot_id=<?= $data['snapshot_id'] ?>">Methods list</a>
+        <a class="btn btn-default btn-primary" href="/profiler/result-flamegraph.phtml?app=<?= urlencode($data['snapshot_app']) ?>&label=<?= urlencode($data['snapshot_label']) ?>&snapshot_id=<?= $data['snapshot_id'] ?>">Flame graph</a>
     </div>
 
     <div>
@@ -42,7 +42,7 @@
                 <label for="exampleInputEmail2">Date to</label>
                 <input name="date2" type="date" value="<?= $data['date2'] ?>" class="form-control" id="exampleInputEmail2">
             </div>
-            <input type="hidden" name="snapshot_id" value="<?= $data['snapshot']->getId() ?>">
+            <input type="hidden" name="snapshot_id" value="<?= $data['snapshot_id'] ?>">
             <button class="btn btn-default btn-sm" id="create-ticket-link">Get flame graph</button>
         </form>
     </div>
@@ -62,10 +62,14 @@
             });
 
             $('.func_g').on('dblclick', function() {
-                var title = $(this).find('title').text();
-                var method_name = title.split(' ');
-                var url = "/profiler/tree-view.phtml?app=<?=  urlencode($data['snapshot']->getApp()) ?>&label=<?= urlencode($data['snapshot']->getLabel()) ?>&method_name=" + method_name;
-                var win = window.open(encodeURI(url), '_blank');
+                const title = $(this).find('title').text();
+                const method_name = encodeURI(title.split(' ')[0]);
+
+                var url = "/profiler/tree-view.phtml?app=<?=  urlencode($data['snapshot_app']) ?>";
+                url += "&label=<?= urlencode($data['snapshot_label']) ?>";
+                url += "&method_name=" + method_name;
+
+                var win = window.open(url, '_blank');
                 win.focus();
             });
         });

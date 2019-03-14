@@ -111,7 +111,10 @@ class FlameGraphPage extends BasePage
             $snapshot_id2
         );
         $view_data = [
-            'snapshot' => $Snapshot,
+            'snapshot_id' => $Snapshot->getId(),
+            'snapshot_app' => $Snapshot->getApp(),
+            'snapshot_label' => $Snapshot->getLabel(),
+            'snapshot_date' => $Snapshot->getDate(),
             'params' => [],
             'diff' => $this->data['diff'],
             'date1' => $this->data['date1'],

@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.14
+
+There are next changes:
+
+-  fixed link from flame graph  to method tree page
+
 ## 1.1.13
 
 There are next changes:

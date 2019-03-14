@@ -154,8 +154,11 @@ class ProfileMethodListPageTest extends \unit\Badoo\BaseTestCase
                 'field_descriptions' => [],
                 'link_base' => '/profiler/tree-view.phtml?app=app&label=label',
             ],
-            'snapshot' => $SnapshotEntityMock,
-            'all' => false
+            'all' => false,
+            'snapshot_id' => 1,
+            'snapshot_app' => '',
+            'snapshot_label' => '',
+            'snapshot_date' => '',
         ];
         static::assertEquals($expected, $result);
     }
