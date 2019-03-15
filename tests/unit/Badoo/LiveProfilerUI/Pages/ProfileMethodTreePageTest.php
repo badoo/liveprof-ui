@@ -162,7 +162,7 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
             ->getMock();
         $SnapshotMock->method('getOneById')->willReturn($SnapshotEntityMock);
         $SnapshotMock->method('getOneByAppAndLabel')->willReturn($SnapshotEntityMock);
-        $SnapshotMock->method('getSnapshotIdsByDates')->willReturn(['date' => 1]);
+        $SnapshotMock->method('getSnapshotIdsByDates')->willReturn(['date' => ['id' => 1, 'calls_count' => 1]]);
         $SnapshotMock->method('getAppList')->willReturn(['app']);
         self::$Container->set('snapshot', $SnapshotMock);
 
@@ -312,7 +312,7 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
                 'expected' => []
             ],
             [
-                'dates' => ['date'],
+                'dates' => ['date' => ['id' => 1, 'calls_count' => 1]],
                 'expected' => ['records with history']
             ]
         ];

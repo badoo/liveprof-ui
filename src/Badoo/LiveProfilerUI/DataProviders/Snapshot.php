@@ -197,7 +197,7 @@ class Snapshot extends Base implements SnapshotInterface
 
         $snapshots = $this->AggregatorStorage->getAll(
             self::TABLE_NAME,
-            ['id', 'date'],
+            ['id', 'calls_count', 'date'],
             [
                 'filter' => [
                     ['date', $dates],
@@ -210,7 +210,10 @@ class Snapshot extends Base implements SnapshotInterface
         $result = [];
         if (!empty($snapshots)) {
             foreach ($snapshots as $row) {
-                $result[$row['date']] = $row['id'];
+                $result[$row['date']] = [
+                    'id' => (int)$row['id'],
+                    'calls_count' => (int)$row['calls_count'],
+                ];
             }
         }
         foreach ($dates as $date) {

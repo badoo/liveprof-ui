@@ -784,8 +784,8 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             ->setMethods(['getSnapshotIdsByDates'])
             ->getMock();
         $SnapshotMock->method('getSnapshotIdsByDates')->willReturn([
-            'date1' => '1',
-            'date2' => '2'
+            'date1' => ['id' => 1, 'calls_count' => 1],
+            'date2' => ['id' => 2, 'calls_count' => 1]
         ]);
 
         /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */

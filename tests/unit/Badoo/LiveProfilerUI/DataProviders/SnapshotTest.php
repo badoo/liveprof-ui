@@ -25,15 +25,39 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
             ->getMock();
 
         $this->AggregatorStorage->query(
-            'create table aggregator_snapshots(id integer, app text, label text, date text, type text, wt integer)'
+            'create table aggregator_snapshots(
+                      id integer,
+                      calls_count integer,
+                      app text,
+                      label text,
+                      date text,
+                      type text,
+                      wt integer
+                  )'
         );
         $this->AggregatorStorage->insert(
             'aggregator_snapshots',
-            ['id' => 1, 'app' => 'app1', 'label' => 'label1', 'date' => '2019-01-01', 'type' => 'auto', 'wt' => 2]
+            [
+                'id' => 1,
+                'calls_count' => 1,
+                'app' => 'app1',
+                'label' => 'label1',
+                'date' => '2019-01-01',
+                'type' => 'auto',
+                'wt' => 2
+            ]
         );
         $this->AggregatorStorage->insert(
             'aggregator_snapshots',
-            ['id' => 2, 'app' => 'app2', 'label' => 'label2', 'date' => '2019-01-02', 'type' => 'auto', 'wt' => 3]
+            [
+                'id' => 2,
+                'calls_count' => 1,
+                'app' => 'app2',
+                'label' => 'label2',
+                'date' => '2019-01-02',
+                'type' => 'auto',
+                'wt' => 3
+            ]
         );
 
         $this->FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt'], [], []);
@@ -216,12 +240,12 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
             ->disableOriginalConstructor()
             ->setMethods(['getAll'])
             ->getMock();
-        $StorageMock->method('getAll')->willReturn([['id' => 1, 'date' => 'date']]);
+        $StorageMock->method('getAll')->willReturn([['id' => 1, 'date' => 'date', 'calls_count' => 1]]);
 
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($StorageMock, $this->FieldList);
         $result = $Snapshot->getSnapshotIdsByDates(['date'], 'app', 'label');
 
-        self::assertEquals(['date' => 1], $result);
+        self::assertEquals(['date' => ['id' => 1, 'calls_count' => 1]], $result);
     }
 
     public function testGetSnapshotIdsByDates()
@@ -229,7 +253,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
         $result = $Snapshot->getSnapshotIdsByDates(['2019-01-01'], 'app1', 'label1');
 
-        $expected = ['2019-01-01' => '1'];
+        $expected = ['2019-01-01' => ['id' => 1, 'calls_count' => 1]];
         self::assertEquals($expected, $result);
     }
 

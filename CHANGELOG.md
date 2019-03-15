@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.16
+
+There are next changes:
+
+-  added profiles count graph on method tree page
+
 ## 1.1.15
 
 There are next changes:
@@ -14,7 +20,7 @@ There are next changes:
 
 There are next changes:
 
--  fixed link from flame graph  to method tree page
+-  fixed link from flame graph to method tree page
 
 ## 1.1.13
 

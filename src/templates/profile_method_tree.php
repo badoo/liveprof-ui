@@ -202,7 +202,7 @@
                         data: graph_data,
                         color: "#FF0000"
                     });
-                } else {
+                } else if (param !== 'calls_count') {
                     // children method
                     graphs.push({
                         stack: true,

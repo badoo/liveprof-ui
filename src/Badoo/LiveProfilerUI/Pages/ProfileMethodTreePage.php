@@ -139,12 +139,6 @@ class ProfileMethodTreePage extends BasePage
             $this->data['date2'] = end($dates);
         }
 
-        $date_to_snapshot_map = $this->Snapshot->getSnapshotIdsByDates(
-            $dates,
-            $Snapshot->getApp(),
-            $Snapshot->getLabel()
-        );
-
         $view_data = [
             'snapshot_id' => $Snapshot->getId(),
             'snapshot_app' => $Snapshot->getApp(),
@@ -166,6 +160,12 @@ class ProfileMethodTreePage extends BasePage
             'date1' => $this->data['date1'],
             'date2' => $this->data['date2'],
         ];
+
+        $date_to_snapshot_map = $this->Snapshot->getSnapshotIdsByDates(
+            $dates,
+            $Snapshot->getApp(),
+            $Snapshot->getLabel()
+        );
 
         $method_data = $this->getMethodDataWithHistory($date_to_snapshot_map, $this->data['method_id']);
         if (!empty($method_data)) {
@@ -252,6 +252,15 @@ class ProfileMethodTreePage extends BasePage
     {
         $data = [];
         foreach (array_keys($MainMethod->getHistoryData()) as $field) {
+            if ($field === 'calls_count') {
+                $data[$field] = [
+                    'type' => 'times',
+                    'label' => 'profiles count',
+                    'graph_label' => 'calls count'
+                ];
+                continue;
+            }
+
             if (strpos($field, 'mem') !== false) {
                 $type = 'memory';
             } elseif (strpos($field, $this->calls_count_field) !== false) {
@@ -284,7 +293,7 @@ class ProfileMethodTreePage extends BasePage
 
     protected function getMethodDataWithHistory(array $dates_to_snapshots, int $method_id) : array
     {
-        $snapshot_ids = array_filter(array_values($dates_to_snapshots));
+        $snapshot_ids = array_column(array_filter(array_values($dates_to_snapshots)), 'id');
         if (empty($snapshot_ids)) {
             return [];
         }
@@ -297,7 +306,7 @@ class ProfileMethodTreePage extends BasePage
 
     protected function getMethodParentsWithHistory(array $dates_to_snapshots, int $method_id) : array
     {
-        $snapshot_ids = array_filter(array_values($dates_to_snapshots));
+        $snapshot_ids = array_column(array_filter(array_values($dates_to_snapshots)), 'id');
         if (empty($snapshot_ids)) {
             return [];
         }
@@ -316,7 +325,7 @@ class ProfileMethodTreePage extends BasePage
 
     protected function getMethodChildrenWithHistory(array $dates_to_snapshots, int $method_id) : array
     {
-        $snapshot_ids = array_filter(array_values($dates_to_snapshots));
+        $snapshot_ids = array_column(array_filter(array_values($dates_to_snapshots)), 'id');
         if (empty($snapshot_ids)) {
             return [];
         }
@@ -334,7 +343,7 @@ class ProfileMethodTreePage extends BasePage
      */
     protected function getProfilerRecordsWithHistory(array $result, array $dates_to_snapshots) : array
     {
-        $last_snapshot_id = end($dates_to_snapshots);
+        $last_snapshot_id = end($dates_to_snapshots)['id'];
 
         $history = [];
         foreach ($result as $Row) {
@@ -359,8 +368,9 @@ class ProfileMethodTreePage extends BasePage
             }
 
             // extract data from previous snapshots
-            foreach ($dates_to_snapshots as $snapshot_id) {
+            foreach ($dates_to_snapshots as $snapshot) {
                 $values = [];
+                $snapshot_id = $snapshot['id'];
                 if ($snapshot_id && isset($method_rows[$snapshot_id])) {
                     /** @var \Badoo\LiveProfilerUI\Entity\MethodData $PreviousRow */
                     $PreviousRow = $method_rows[$snapshot_id];
@@ -369,6 +379,10 @@ class ProfileMethodTreePage extends BasePage
 
                 foreach ($all_fields as $field) {
                     $data[$field][] = ['val' => $values[$field] ?? 0];
+                }
+
+                if ($data) {
+                    $data['calls_count'][] = ['val' => $snapshot['calls_count']];
                 }
             }
 

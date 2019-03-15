@@ -370,8 +370,8 @@ class FlameGraphPage extends BasePage
         }
 
         $snapshot_ids = $this->Snapshot->getSnapshotIdsByDates([$date1, $date2], $app, $label);
-        $snapshot_id1 = (int)$snapshot_ids[$date1];
-        $snapshot_id2 = (int)$snapshot_ids[$date2];
+        $snapshot_id1 = (int)$snapshot_ids[$date1]['id'];
+        $snapshot_id2 = (int)$snapshot_ids[$date2]['id'];
 
         return [$snapshot_id1, $snapshot_id2];
     }
