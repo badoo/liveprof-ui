@@ -65,32 +65,42 @@ class ProfileMethodTreePage extends BasePage
         $this->data['app'] = isset($this->data['app']) ? trim($this->data['app']) : '';
         $this->data['label'] = isset($this->data['label']) ? trim($this->data['label']) : '';
         $this->data['snapshot_id'] = isset($this->data['snapshot_id']) ? (int)$this->data['snapshot_id'] : 0;
-        $this->data['stat_interval'] = isset($this->data['stat_interval']) ? (int)$this->data['stat_interval'] : 0;
-        $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
-        $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
-        $this->data['method_id'] = isset($this->data['method_id']) ? (int)$this->data['method_id'] : 0;
-        $this->data['method_name'] = isset($this->data['method_name']) ? trim($this->data['method_name']) : '';
 
         if (!$this->data['snapshot_id'] && (!$this->data['app'] || !$this->data['label'])) {
             throw new \InvalidArgumentException('Empty snapshot_id, app and label');
         }
 
-        if (!\in_array($this->data['stat_interval'], self::$graph_intervals, true)) {
-            $this->data['stat_interval'] = self::STAT_INTERVAL_MONTH;
-        }
+        $this->initDates();
+        $this->initMethodId();
 
-        if ($this->data['date1'] && $this->data['date2']) {
-            $this->data['stat_interval'] = 0;
-        }
+        return true;
+    }
 
-        if ($this->data['method_name'] && !$this->data['method_id']) {
+    protected function initMethodId()
+    {
+        $this->data['method_id'] = isset($this->data['method_id']) ? (int)$this->data['method_id'] : 0;
+
+        if (!empty($this->data['method_name']) && !$this->data['method_id']) {
             $methods = $this->Method->findByName($this->data['method_name'], true);
-            if ($methods) {
+            if (!empty($methods)) {
                 $this->data['method_id'] = array_keys($methods)[0];
             }
         }
+    }
 
-        return true;
+    public function initDates()
+    {
+        $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
+        $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
+
+        if ($this->data['date1'] && $this->data['date2']) {
+            $this->data['stat_interval'] = 0;
+        } else {
+            $this->data['stat_interval'] = isset($this->data['stat_interval']) ? (int)$this->data['stat_interval'] : 0;
+            if (!\in_array($this->data['stat_interval'], self::$graph_intervals, true)) {
+                $this->data['stat_interval'] = self::STAT_INTERVAL_MONTH;
+            }
+        }
     }
 
     /**
@@ -101,24 +111,7 @@ class ProfileMethodTreePage extends BasePage
     {
         $link_base = '/profiler/tree-view.phtml?';
 
-        try {
-            if ($this->data['snapshot_id']) {
-                $Snapshot = $this->Snapshot->getOneById($this->data['snapshot_id']);
-            } elseif ($this->data['app'] && $this->data['label']) {
-                $Snapshot = $this->Snapshot->getOneByAppAndLabel($this->data['app'], $this->data['label']);
-            } else {
-                throw new \InvalidArgumentException('Can\'t get snapshot');
-            }
-        } catch (\InvalidArgumentException $Ex) {
-            $Snapshot = new Snapshot(
-                [
-                    'app' => $this->data['app'],
-                    'label' => $this->data['label'],
-                    'id' => 0,
-                ],
-                []
-            );
-        }
+        $Snapshot = $this->getSnapshot();
         $link_base .= 'app=' . urlencode($this->data['app']) . '&label=' . urlencode($this->data['label']);
 
         if (!$this->data['method_id']) {
@@ -210,6 +203,30 @@ class ProfileMethodTreePage extends BasePage
         $view_data['all_apps'] = $this->Snapshot->getAppList($Snapshot->getLabel());
 
         return $view_data;
+    }
+
+    protected function getSnapshot() : Snapshot
+    {
+        try {
+            if ($this->data['snapshot_id']) {
+                $Snapshot = $this->Snapshot->getOneById($this->data['snapshot_id']);
+            } elseif ($this->data['app'] && $this->data['label']) {
+                $Snapshot = $this->Snapshot->getOneByAppAndLabel($this->data['app'], $this->data['label']);
+            } else {
+                throw new \InvalidArgumentException('Can\'t get snapshot');
+            }
+        } catch (\InvalidArgumentException $Ex) {
+            $Snapshot = new Snapshot(
+                [
+                    'app' => $this->data['app'],
+                    'label' => $this->data['label'],
+                    'id' => 0,
+                ],
+                []
+            );
+        }
+
+        return $Snapshot;
     }
 
     protected function sortList(array &$records)
@@ -317,11 +334,7 @@ class ProfileMethodTreePage extends BasePage
      */
     protected function getProfilerRecordsWithHistory(array $result, array $dates_to_snapshots) : array
     {
-        $exists_snapshots = array_filter($dates_to_snapshots);
-        $last_snapshot_id = end($exists_snapshots);
-        if (!$last_snapshot_id) {
-            return [];
-        }
+        $last_snapshot_id = end($dates_to_snapshots);
 
         $history = [];
         foreach ($result as $Row) {
@@ -347,18 +360,15 @@ class ProfileMethodTreePage extends BasePage
 
             // extract data from previous snapshots
             foreach ($dates_to_snapshots as $snapshot_id) {
+                $values = [];
                 if ($snapshot_id && isset($method_rows[$snapshot_id])) {
                     /** @var \Badoo\LiveProfilerUI\Entity\MethodData $PreviousRow */
                     $PreviousRow = $method_rows[$snapshot_id];
                     $values = $PreviousRow->getValues();
+                }
 
-                    foreach ($all_fields as $field) {
-                        $data[$field][] = ['val' => $values[$field]];
-                    }
-                } else {
-                    foreach ($all_fields as $field) {
-                        $data[$field][] = ['val' => 0];
-                    }
+                foreach ($all_fields as $field) {
+                    $data[$field][] = ['val' => $values[$field] ?? 0];
                 }
             }
 

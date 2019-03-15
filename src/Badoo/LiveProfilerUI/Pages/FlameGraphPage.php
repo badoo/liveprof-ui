@@ -230,8 +230,12 @@ class FlameGraphPage extends BasePage
         );
 
         $tree = $this->Method->injectMethodNames($tree);
-
         $parents_param = $this->getAllMethodParentsParam($tree, $param);
+
+        if (empty($parents_param)) {
+            return '';
+        }
+
         $root_method = [
             'method_id' => $root_method_data->getMethodId(),
             'name' => 'main()',
@@ -310,10 +314,6 @@ class FlameGraphPage extends BasePage
         float $threshold,
         int $level = 0
     ) : string {
-        if (empty($elements) || empty($parent)) {
-            return '';
-        }
-
         if ($level > 50) {
             // limit nesting level
             return '';

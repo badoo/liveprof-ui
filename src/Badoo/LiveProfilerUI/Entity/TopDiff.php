@@ -32,11 +32,11 @@ class TopDiff
         $this->app = isset($data['app']) ? trim($data['app']) : '';
         $this->label = isset($data['label']) ? trim($data['label']) : '';
         $this->method_id = isset($data['method_id']) ? (int)$data['method_id'] : 0;
-        $this->value = isset($data['value']) ? (float)$data['value'] : 0;
+        $this->value = isset($data['value']) ? (float)$data['value'] : 0.0;
         $this->from_value = isset($data['from_value']) ? number_format((float)$data['from_value']) : '';
         $this->to_value = isset($data['to_value']) ? number_format((float)$data['to_value']) : '';
         $this->formatted_value = number_format($this->value);
-        $this->percent = isset($data['percent']) ? (float)$data['percent'] : 0;
+        $this->percent = isset($data['percent']) ? (float)$data['percent'] : 0.0;
     }
 
     public function getApp() : string

@@ -111,9 +111,8 @@ class Storage implements StorageInterface
         foreach ($filter as $param) {
             if (empty($param[2])) {
                 $param[2] = '=';
-            } else {
-                Operator::validate($param[2]);
             }
+            Operator::validate($param[2]);
             list($field_name, $value, $operator) = $param;
 
             if ($field_name === 'union') {
@@ -137,10 +136,7 @@ class Storage implements StorageInterface
                 }
                 $where_expr = $field_name . ' IN (' . implode(',', $named_params) . ')';
             } else {
-                if ($operator === 'like') {
-                    $value = $this->prepareLikeValue($value);
-                }
-
+                $value = $this->prepareValue($value, $operator);
                 $named_param = $QueryBuilder->createNamedParameter($value);
                 $QueryBuilder->setParameter($named_param, $value);
                 $where_expr = $QueryBuilder->expr()->comparison($field_name, $operator, $named_param);
@@ -149,18 +145,20 @@ class Storage implements StorageInterface
             if ($is_first) {
                 $QueryBuilder->where($where_expr);
                 $is_first = false;
-            } else {
-                $QueryBuilder->andWhere($where_expr);
+                continue;
             }
+            $QueryBuilder->andWhere($where_expr);
         }
     }
 
-    protected function prepareLikeValue(string $value) : string
+    protected function prepareValue($value, string $operator)
     {
-        if ($this->Conn->getDriver()->getName() !== 'pdo_sqlite') {
-            $value = addcslashes($value, '%_\\');
+        if ($operator === 'like') {
+            if ($this->Conn->getDriver()->getName() !== 'pdo_sqlite') {
+                $value = addcslashes($value, '%_\\');
+            }
+            $value = '%' . $value . '%';
         }
-        $value = '%' . $value . '%';
 
         return $value;
     }

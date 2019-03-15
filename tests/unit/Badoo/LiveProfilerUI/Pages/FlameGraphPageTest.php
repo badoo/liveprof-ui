@@ -569,7 +569,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
     /**
      * @throws \ReflectionException
      */
-    public function testBuildFlameGraphInputEmptyElements()
+    public function testBuildFlameGraphInputNestedLevel()
     {
         /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
         $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
@@ -582,31 +582,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
         $root = [];
         $param = 'wt';
         $threshold = 0;
-        $args = [$elements, $parents_param, $root, $param, $threshold];
-        $result = $this->invokeMethod($PageMock, 'buildFlameGraphInput', $args);
-
-        self::assertEquals('', $result);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    public function testBuildFlameGraphInputEmptyRootMethodData()
-    {
-        /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
-        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['__construct'])
-            ->getMock();
-
-        $elements = [
-            ['method_id' => 2, 'parent_id' => 1, 'wt' => 2],
-        ];
-        $parents_param = [];
-        $root = [];
-        $param = 'wt';
-        $threshold = 0;
-        $args = [$elements, $parents_param, $root, $param, $threshold];
+        $args = [$elements, $parents_param, $root, $param, $threshold, 51];
         $result = $this->invokeMethod($PageMock, 'buildFlameGraphInput', $args);
 
         self::assertEquals('', $result);

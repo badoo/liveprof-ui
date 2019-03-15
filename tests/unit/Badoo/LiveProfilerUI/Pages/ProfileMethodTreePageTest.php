@@ -444,7 +444,6 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
             'method_id' => 0,
             'date1' => '',
             'date2' => '',
-            'method_name' => '',
         ];
         self::assertEquals($expected, $data);
     }
