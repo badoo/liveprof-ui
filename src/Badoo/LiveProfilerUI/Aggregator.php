@@ -426,7 +426,7 @@ class Aggregator
         foreach ($this->method_data as $method_name => $data) {
             $insert_data = [
                 'snapshot_id' => $snapshot_id,
-                'method_id' => $map[strtolower($method_name)]['id'],
+                'method_id' => (int)$map[strtolower($method_name)]['id'],
             ];
             foreach ($this->fields as $field) {
                 $insert_data[$field] = (float)$data[$field];
