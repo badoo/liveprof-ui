@@ -139,6 +139,7 @@
                             }
                         }
                     },
+                    dataType: 'json',
                     method: 'post',
                     async: false
                 });
@@ -213,7 +214,8 @@
                     'time': new Date().getTime() / 1000
                 };
                 updateJobsState();
-            }
+            },
+            'json'
         );
     }
 

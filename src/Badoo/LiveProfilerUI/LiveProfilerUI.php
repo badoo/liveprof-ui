@@ -24,7 +24,7 @@ class LiveProfilerUI
      * @return Container
      * @throws \Exception
      */
-    protected function getContainer() : Container
+    public function getContainer() : Container
     {
         if (null === $this->Container) {
             $this->Container = new ContainerBuilder();
