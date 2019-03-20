@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.19
+
+There are next changes:
+
+-  added default value for method usage page
+
 ## 1.1.16
 
 There are next changes:

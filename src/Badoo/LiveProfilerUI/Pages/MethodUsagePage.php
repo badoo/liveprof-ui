@@ -43,7 +43,7 @@ class MethodUsagePage extends BasePage
     protected function cleanData() : bool
     {
         $this->data['method'] = isset($this->data['method']) ? trim($this->data['method']) : '';
-        $this->data['period'] = isset($this->data['period']) ? (int)$this->data['period'] : 0;
+        $this->data['period'] = isset($this->data['period']) ? (int)$this->data['period'] : 7;
 
         return true;
     }
