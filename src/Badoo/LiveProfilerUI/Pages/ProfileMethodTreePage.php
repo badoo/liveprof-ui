@@ -109,10 +109,7 @@ class ProfileMethodTreePage extends BasePage
      */
     public function getTemplateData() : array
     {
-        $link_base = '/profiler/tree-view.phtml?';
-
         $Snapshot = $this->getSnapshot();
-        $link_base .= 'app=' . urlencode($this->data['app']) . '&label=' . urlencode($this->data['label']);
 
         if (!$this->data['method_id']) {
             $this->data['method_id'] = $this->getMainMethodId();
@@ -139,6 +136,7 @@ class ProfileMethodTreePage extends BasePage
             $this->data['date2'] = end($dates);
         }
 
+        $link_base = '/profiler/tree-view.phtml?app=' . urlencode($Snapshot->getApp()) . '&label=' . urlencode($Snapshot->getLabel());
         $view_data = [
             'snapshot_id' => $Snapshot->getId(),
             'snapshot_app' => $Snapshot->getApp(),

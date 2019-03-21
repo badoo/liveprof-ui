@@ -127,9 +127,11 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
     {
         $SnapshotEntityMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Entity\Snapshot::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getId'])
+            ->setMethods(['getId', 'getApp', 'getLabel'])
             ->getMock();
         $SnapshotEntityMock->method('getId')->willReturn(1);
+        $SnapshotEntityMock->method('getApp')->willReturn('app');
+        $SnapshotEntityMock->method('getLabel')->willReturn('label');
 
         $MethodDataEntityMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Entity\MethodData::class)
             ->disableOriginalConstructor()
@@ -297,8 +299,8 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
             'date2' => $date2,
             'all_apps' => ['app'],
             'snapshot_id' => 1,
-            'snapshot_app' => '',
-            'snapshot_label' => '',
+            'snapshot_app' => 'app',
+            'snapshot_label' => 'label',
             'snapshot_date' => '',
         ];
         static::assertEquals($expected, $result);

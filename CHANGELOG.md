@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.20
+
+There are next changes:
+
+-  fixed links on method tree page
+
 ## 1.1.19
 
 There are next changes:
