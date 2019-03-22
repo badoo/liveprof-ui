@@ -121,6 +121,7 @@ class TopDiffPage extends BasePage
         $snapshots_data = $this->Snapshot->getSnapshotsByDates($dates, $param);
 
         $dates_num = count($snapshots_data) > 100 ? count($dates) / 4 : 0;
+        $calls_count_limit = count($snapshots_data) > 100 ? 50 : 0;
 
         $first = (int)current($snapshots_data)['id'];
         $last = (int)end($snapshots_data)['id'];
@@ -129,7 +130,7 @@ class TopDiffPage extends BasePage
         $first_part = $second_part = [];
         foreach ($snapshots_data as $item) {
             // skip rare snapshots
-            if (isset($item['calls_count']) && $item['calls_count'] < 50) {
+            if (isset($item['calls_count']) && $item['calls_count'] < $calls_count_limit) {
                 continue;
             }
 
@@ -156,7 +157,7 @@ class TopDiffPage extends BasePage
 
             asort($snapshots['snapshots']);
             $keys = array_keys($snapshots['snapshots']);
-            $idx = count($snapshots['snapshots']) * 0.1;
+            $idx = count($snapshots['snapshots']) * 0.4;
             $first_part[$key]['snapshot_id'] = $keys[(int)$idx];
             $first_part[$key]['value'] = $snapshots['snapshots'][$first_part[$key]['snapshot_id']];
         }
@@ -176,7 +177,7 @@ class TopDiffPage extends BasePage
 
             asort($snapshots['snapshots']);
             $keys = array_keys($snapshots['snapshots']);
-            $idx = count($snapshots['snapshots']) * 0.9;
+            $idx = count($snapshots['snapshots']) * 0.6;
             $snapshots['snapshot_id'] = $keys[(int)$idx];
             $snapshots['value'] = $snapshots['snapshots'][$snapshots['snapshot_id']];
 
@@ -184,7 +185,7 @@ class TopDiffPage extends BasePage
 
             $second_part[$key]['diff'] = $second_part[$key]['avg'] - $first_part[$key]['avg'];
 
-            if ($second_part[$key]['diff'] < 10000) {
+            if ($second_part[$key]['diff'] < 0) {
                 unset($second_part[$key]);
                 continue;
             }
@@ -263,7 +264,7 @@ class TopDiffPage extends BasePage
                 if ($diff_data[$key]['from_value'] < self::THRESHOLD && $diff_data[$key]['to_value'] < self::THRESHOLD) {
                     continue;
                 }
-                
+
                 $diff_value = $diff_data[$key]['to_value'] - $diff_data[$key]['from_value'];
                 $diff_percent = $diff_data[$key]['from_value']
                     ? intdiv($diff_value * 100, $diff_data[$key]['from_value'])
