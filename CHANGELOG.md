@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.25
+
+There are next changes:
+
+-  fix LiveProf-UI aggregator saveMethodData behavior
+
 ## 1.1.24
 
 There are next changes:
