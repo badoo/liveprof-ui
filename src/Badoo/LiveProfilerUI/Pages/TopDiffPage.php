@@ -66,7 +66,7 @@ class TopDiffPage extends BasePage
     public function getTemplateData() : array
     {
         $fields = array_diff(
-            $this->FieldList->getFields(),
+            $this->FieldList->getAllFieldsWithVariations(),
             [$this->calls_count_field]
         );// exclude calls count param (ct)
 
@@ -120,8 +120,8 @@ class TopDiffPage extends BasePage
         $dates = DateGenerator::getDatesByRange($date1, $date2);
         $snapshots_data = $this->Snapshot->getSnapshotsByDates($dates, $param);
 
-        $dates_num = count($snapshots_data) > 100 ? count($dates) / 4 : 0;
-        $calls_count_limit = count($snapshots_data) > 100 ? 50 : 0;
+        $dates_num = count($snapshots_data) > 100 ? count($dates) / 8 : 0;
+        $calls_count_limit = count($snapshots_data) > 100 ? 20 : 0;
 
         $first = (int)current($snapshots_data)['id'];
         $last = (int)end($snapshots_data)['id'];
@@ -157,7 +157,7 @@ class TopDiffPage extends BasePage
 
             asort($snapshots['snapshots']);
             $keys = array_keys($snapshots['snapshots']);
-            $idx = count($snapshots['snapshots']) * 0.4;
+            $idx = count($snapshots['snapshots']) * 0.5;
             $first_part[$key]['snapshot_id'] = $keys[(int)$idx];
             $first_part[$key]['value'] = $snapshots['snapshots'][$first_part[$key]['snapshot_id']];
         }
@@ -177,15 +177,15 @@ class TopDiffPage extends BasePage
 
             asort($snapshots['snapshots']);
             $keys = array_keys($snapshots['snapshots']);
-            $idx = count($snapshots['snapshots']) * 0.6;
+            $idx = count($snapshots['snapshots']) * 0.5;
             $snapshots['snapshot_id'] = $keys[(int)$idx];
             $snapshots['value'] = $snapshots['snapshots'][$snapshots['snapshot_id']];
 
             unset($second_part[$key]['snapshots']);
 
-            $second_part[$key]['diff'] = $second_part[$key]['avg'] - $first_part[$key]['avg'];
+            $second_part[$key]['diff'] = $snapshots['value'] - $first_part[$key]['value'];
 
-            if ($second_part[$key]['diff'] < 0) {
+            if ($second_part[$key]['diff'] < 100) {
                 unset($second_part[$key]);
                 continue;
             }
