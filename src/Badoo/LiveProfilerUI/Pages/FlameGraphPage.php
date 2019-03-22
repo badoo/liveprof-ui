@@ -11,6 +11,7 @@ use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodDataInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodTreeInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\SnapshotInterface;
+use Badoo\LiveProfilerUI\Entity\Snapshot;
 use Badoo\LiveProfilerUI\FieldList;
 use Badoo\LiveProfilerUI\Interfaces\ViewInterface;
 
@@ -58,6 +59,7 @@ class FlameGraphPage extends BasePage
         $this->data['label'] = isset($this->data['label']) ? trim($this->data['label']) : '';
         $this->data['snapshot_id'] = isset($this->data['snapshot_id']) ? (int)$this->data['snapshot_id'] : 0;
         $this->data['diff'] = isset($this->data['diff']) ? (bool)$this->data['diff'] : false;
+        $this->data['date'] = isset($this->data['date']) ? trim($this->data['date']) : '';
         $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
         $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
 
@@ -87,7 +89,13 @@ class FlameGraphPage extends BasePage
             throw new \InvalidArgumentException('Can\'t get snapshot');
         }
 
-        $this->initDates();
+        $dates =$this->initDates($Snapshot);
+        $dates = $this->Snapshot->getSnapshotIdsByDates($dates, $Snapshot->getApp(), $Snapshot->getLabel());
+        if ($this->data['date'] && !$this->data['diff'] && isset($dates[$this->data['date']]) && $Snapshot->getDate() !== $this->data['date']) {
+            $Snapshot = $this->Snapshot->getOneById($dates[$this->data['date']]['id']);
+        }
+        $dates = array_keys($dates);
+        rsort($dates);
 
         list($snapshot_id1, $snapshot_id2) = $this->getSnapshotIdsByDates(
             $Snapshot->getApp(),
@@ -117,6 +125,8 @@ class FlameGraphPage extends BasePage
             'snapshot_date' => $Snapshot->getDate(),
             'params' => [],
             'diff' => $this->data['diff'],
+            'dates' => $dates,
+            'date' => $this->data['date'],
             'date1' => $this->data['date1'],
             'date2' => $this->data['date2'],
         ];
@@ -408,12 +418,13 @@ class FlameGraphPage extends BasePage
 
     /**
      * Calculates date params
-     * @return bool
+     * @param Snapshot $Snapshot
+     * @return array
      * @throws \Exception
      */
-    public function initDates() : bool
+    public function initDates(Snapshot $Snapshot) : array
     {
-        $dates = $this->Snapshot->getDatesByAppAndLabel($this->data['app'], $this->data['label']);
+        $dates = $this->Snapshot->getDatesByAppAndLabel($Snapshot->getApp(), $Snapshot->getLabel());
 
         $last_date = '';
         $month_old_date = '';
@@ -438,6 +449,6 @@ class FlameGraphPage extends BasePage
             $this->data['date2'] = $last_date;
         }
 
-        return true;
+        return $dates;
     }
 }

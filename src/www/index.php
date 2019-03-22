@@ -47,6 +47,7 @@ switch (getCurrentUri()) {
             'snapshot_id' => isset($_GET['snapshot_id']) ? (int)$_GET['snapshot_id'] : '',
             'param' => isset($_GET['param']) ? trim($_GET['param']) : '',
             'diff' => isset($_GET['diff']) ? trim($_GET['diff']) : '',
+            'date' => isset($_GET['date']) ? trim($_GET['date']) : '',
             'date1' => isset($_GET['date1']) ? trim($_GET['date1']) : '',
             'date2' => isset($_GET['date2']) ? trim($_GET['date2']) : '',
         ];

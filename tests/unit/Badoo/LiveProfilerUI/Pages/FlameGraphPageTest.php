@@ -99,6 +99,11 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                     'snapshot_app' => '',
                     'snapshot_label' => '',
                     'snapshot_date' => '',
+                    'dates' => [
+                        '2019-01-01',
+                        '2018-01-01',
+                    ],
+                    'date' => ''
                 ],
             ],
             [
@@ -123,6 +128,11 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                     'snapshot_app' => '',
                     'snapshot_label' => '',
                     'snapshot_date' => '',
+                    'dates' => [
+                        '2019-01-01',
+                        '2018-01-01',
+                    ],
+                    'date' => ''
                 ],
             ],
             [
@@ -147,6 +157,11 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                     'snapshot_app' => '',
                     'snapshot_label' => '',
                     'snapshot_date' => '',
+                    'dates' => [
+                        '2019-01-01',
+                        '2018-01-01',
+                    ],
+                    'date' => ''
                 ],
             ],
         ];
@@ -186,6 +201,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             'snapshot_id' => $snapshot_id,
             'param' => '',
             'diff' => false,
+            'date' => '',
             'date1' => '',
             'date2' => '',
         ];
@@ -669,6 +685,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             'snapshot_id' => 0,
             'param' => '',
             'diff' => false,
+            'date' => '',
             'date1' => '',
             'date2' => ''
         ];

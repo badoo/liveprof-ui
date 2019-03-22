@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.24
+
+There are next changes:
+
+-  added date selector on flame graph page
+
 ## 1.1.23
 
 There are next changes:
