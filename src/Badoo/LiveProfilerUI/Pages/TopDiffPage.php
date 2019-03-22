@@ -55,8 +55,8 @@ class TopDiffPage extends BasePage
 
     protected function cleanData() : bool
     {
-        $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
-        $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
+        $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : date('Y-m-d', strtotime('-3 months'));
+        $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : date('Y-m-d', strtotime('-1 day'));
         $this->data['param'] = isset($this->data['param']) ? trim($this->data['param']) : '';
         $this->data['mode'] = isset($this->data['mode']) ? trim($this->data['mode']) : 'snapshots';
 
