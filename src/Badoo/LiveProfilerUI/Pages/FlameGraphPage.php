@@ -13,6 +13,7 @@ use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodTreeInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\SnapshotInterface;
 use Badoo\LiveProfilerUI\Entity\Snapshot;
 use Badoo\LiveProfilerUI\FieldList;
+use Badoo\LiveProfilerUI\FlameGraph;
 use Badoo\LiveProfilerUI\Interfaces\ViewInterface;
 
 class FlameGraphPage extends BasePage
@@ -55,19 +56,17 @@ class FlameGraphPage extends BasePage
 
     public function cleanData() : bool
     {
-        $this->data['app'] = isset($this->data['app']) ? trim($this->data['app']) : '';
-        $this->data['label'] = isset($this->data['label']) ? trim($this->data['label']) : '';
-        $this->data['snapshot_id'] = isset($this->data['snapshot_id']) ? (int)$this->data['snapshot_id'] : 0;
-        $this->data['diff'] = isset($this->data['diff']) ? (bool)$this->data['diff'] : false;
-        $this->data['date'] = isset($this->data['date']) ? trim($this->data['date']) : '';
-        $this->data['date1'] = isset($this->data['date1']) ? trim($this->data['date1']) : '';
-        $this->data['date2'] = isset($this->data['date2']) ? trim($this->data['date2']) : '';
+        $this->data['app'] = $this->data['app'] ?? '';
+        $this->data['label'] = $this->data['label'] ?? '';
+        $this->data['snapshot_id'] = (int)($this->data['snapshot_id'] ?? 0);
+        $this->data['diff'] = (bool)($this->data['diff'] ?? false);
+        $this->data['date'] = $this->data['date'] ?? '';
+        $this->data['date1'] = $this->data['date1'] ?? '';
+        $this->data['date2'] = $this->data['date2'] ?? '';
 
-        if (!$this->data['snapshot_id'] && (!$this->data['app'] || !$this->data['label'])) {
-            throw new \InvalidArgumentException('Empty snapshot_id, app and label');
+        if (empty($this->data['param'])) {
+            $this->data['param'] = current($this->FieldList->getFields());
         }
-
-        $this->data['param'] = isset($this->data['param']) ? trim($this->data['param']) : '';
 
         return true;
     }
@@ -78,133 +77,96 @@ class FlameGraphPage extends BasePage
      */
     public function getTemplateData() : array
     {
-        $Snapshot = false;
-        if ($this->data['snapshot_id']) {
-            $Snapshot = $this->Snapshot->getOneById($this->data['snapshot_id']);
-        } elseif ($this->data['app'] && $this->data['label']) {
-            $Snapshot = $this->Snapshot->getOneByAppAndLabel($this->data['app'], $this->data['label']);
-        }
-
-        if (empty($Snapshot)) {
-            throw new \InvalidArgumentException('Can\'t get snapshot');
-        }
+        $Snapshot = $this->getSnapshot();
 
         $dates =$this->initDates($Snapshot);
         $dates = $this->Snapshot->getSnapshotIdsByDates($dates, $Snapshot->getApp(), $Snapshot->getLabel());
-        if ($this->data['date'] && !$this->data['diff'] && isset($dates[$this->data['date']]) && $Snapshot->getDate() !== $this->data['date']) {
-            $Snapshot = $this->Snapshot->getOneById($dates[$this->data['date']]['id']);
-        }
-        $dates = array_keys($dates);
-        rsort($dates);
-
-        list($snapshot_id1, $snapshot_id2) = $this->getSnapshotIdsByDates(
-            $Snapshot->getApp(),
-            $Snapshot->getLabel(),
-            $this->data['date1'],
-            $this->data['date2']
-        );
-
-        $fields = $this->FieldList->getFields();
-        $fields = array_diff($fields, [$this->calls_count_field]);
-
-        if (!$this->data['param']) {
-            $this->data['param'] = current($fields);
+        if (isset($dates[$this->data['date']]) && $Snapshot->getDate() !== $this->data['date']) {
+            $Snapshot = new Snapshot([
+                'id' => $dates[$this->data['date']]['id'],
+                'app' => $Snapshot->getApp(),
+                'label' => $Snapshot->getLabel(),
+                'date' => $this->data['date'],
+            ], []);
         }
 
-        $graph = $this->getSVG(
-            $Snapshot->getId(),
-            $this->data['param'],
-            $this->data['diff'],
+        $snapshot_id1 = $Snapshot->getId();
+        $snapshot_id2 = 0;
+        if ($this->data['diff']) {
+            list($snapshot_id1, $snapshot_id2) = $this->getSnapshotIdsByDates(
+                $Snapshot->getApp(),
+                $Snapshot->getLabel(),
+                $this->data['date1'],
+                $this->data['date2']
+            );
+        }
+
+        $graph_data = $this->getDataForFlameGraph(
             $snapshot_id1,
-            $snapshot_id2
+            $snapshot_id2,
+            $this->data['param'],
+            $this->data['diff']
         );
+        $graph = FlameGraph::getSVG($graph_data);
+
+        krsort($dates);
         $view_data = [
             'snapshot_id' => $Snapshot->getId(),
             'snapshot_app' => $Snapshot->getApp(),
             'snapshot_label' => $Snapshot->getLabel(),
             'snapshot_date' => $Snapshot->getDate(),
-            'params' => [],
+            'param' => $this->data['param'],
+            'params' => array_diff($this->FieldList->getFields(), [$this->calls_count_field]),
             'diff' => $this->data['diff'],
-            'dates' => $dates,
+            'dates' => array_keys($dates),
             'date' => $this->data['date'],
             'date1' => $this->data['date1'],
             'date2' => $this->data['date2'],
+            'svg' => $graph,
         ];
-        if ($graph) {
-            $view_data['svg'] = $graph;
-        } else {
-            $view_data['error'] = 'Not enough data to show graph';
-        }
 
-        foreach ($fields as $field) {
-            $view_data['params'][] = [
-                'value' => $field,
-                'label' => $field,
-                'selected' => $field === $this->data['param']
-            ];
+        if (!$graph) {
+            $view_data['error'] = 'Not enough data to show graph';
         }
 
         return $view_data;
     }
 
-    /**
-     * Get svg data for flame graph
-     * @param int $snapshot_id
-     * @param string $param
-     * @param bool $diff
-     * @param int $snapshot_id1
-     * @param int $snapshot_id2
-     * @return string
-     */
-    protected function getSVG(
-        int $snapshot_id,
-        string $param,
-        bool $diff,
-        int $snapshot_id1,
-        int $snapshot_id2
-    ) : string {
-        if (!$snapshot_id) {
-            return '';
+    protected function getSnapshot() : Snapshot
+    {
+        if ($this->data['snapshot_id']) {
+            $Snapshot = $this->Snapshot->getOneById($this->data['snapshot_id']);
+        } elseif ($this->data['app'] && $this->data['label']) {
+            $Snapshot = $this->Snapshot->getOneByAppAndLabel($this->data['app'], $this->data['label']);
+        } else {
+            throw new \InvalidArgumentException('Empty snapshot_id, app and label');
         }
 
-        if ($diff && (!$snapshot_id1 || !$snapshot_id2)) {
-            return '';
-        }
-
-        $graph_data = $this->getDataForFlameGraph($snapshot_id, $param, $diff, $snapshot_id1, $snapshot_id2);
-        if (!$graph_data) {
-            return '';
-        }
-
-        $tmp_file = tempnam(__DIR__, 'flamefile');
-        file_put_contents($tmp_file, $graph_data);
-        exec('perl ' . __DIR__ . '/../../../../scripts/flamegraph.pl ' . $tmp_file, $output);
-        unlink($tmp_file);
-
-        return implode("\n", $output);
+        return $Snapshot;
     }
 
     /**
      * Get input data for flamegraph.pl
-     * @param int $snapshot_id
-     * @param string $param
-     * @param bool $diff
      * @param int $snapshot_id1
      * @param int $snapshot_id2
+     * @param string $param
+     * @param bool $diff
      * @return string
      */
     protected function getDataForFlameGraph(
-        int $snapshot_id,
-        string $param,
-        bool $diff,
         int $snapshot_id1,
-        int $snapshot_id2
+        int $snapshot_id2,
+        string $param,
+        bool $diff
     ) : string {
-        if ($diff) {
-            $tree1 = $this->MethodTree->getSnapshotMethodsTree($snapshot_id1);
-            $tree2 = $this->MethodTree->getSnapshotMethodsTree($snapshot_id2);
+        $tree1 = $this->MethodTree->getSnapshotMethodsTree($snapshot_id1);
+        if (empty($tree1)) {
+            return '';
+        }
 
-            if (empty($tree1) || empty($tree2)) {
+        if ($diff) {
+            $tree2 = $this->MethodTree->getSnapshotMethodsTree($snapshot_id2);
+            if (empty($tree2)) {
                 return '';
             }
 
@@ -216,31 +178,24 @@ class FlameGraphPage extends BasePage
                 $new_value = $item->getValue($param);
                 $item->setValue($param, $new_value - $old_value);
             }
-
-            $tree = $tree2;
-            $root_method_data = $this->getRootMethodData($tree, $param, $snapshot_id1, $snapshot_id2);
-        } else {
-            $tree = $this->MethodTree->getSnapshotMethodsTree($snapshot_id);
-            if (empty($tree)) {
-                return '';
-            }
-            $root_method_data = $this->getRootMethodData($tree, $param, $snapshot_id, 0);
+            $tree1 = $tree2;
         }
 
+        $root_method_data = $this->getRootMethodData($tree1, $param, $snapshot_id1, $snapshot_id2);
         if (!$root_method_data) {
             return '';
         }
 
-        $threshold = self::calculateParamThreshold($tree, $param);
-        $tree = array_filter(
-            $tree,
+        $threshold = self::calculateParamThreshold($tree1, $param);
+        $tree1 = array_filter(
+            $tree1,
             function (\Badoo\LiveProfilerUI\Entity\MethodTree $Elem) use ($param, $threshold) : bool {
                 return $Elem->getValue($param) > $threshold;
             }
         );
 
-        $tree = $this->Method->injectMethodNames($tree);
-        $parents_param = $this->getAllMethodParentsParam($tree, $param);
+        $tree1 = $this->Method->injectMethodNames($tree1);
+        $parents_param = $this->getAllMethodParentsParam($tree1, $param);
 
         if (empty($parents_param)) {
             return '';
@@ -251,7 +206,7 @@ class FlameGraphPage extends BasePage
             'name' => 'main()',
             $param => $root_method_data->getValue($param)
         ];
-        $texts = $this->buildFlameGraphInput($tree, $parents_param, $root_method, $param, $threshold);
+        $texts = FlameGraph::buildFlameGraphInput($tree1, $parents_param, $root_method, $param, $threshold);
 
         return $texts;
     }
@@ -305,72 +260,6 @@ class FlameGraphPage extends BasePage
         rsort($values);
 
         return max($values[self::MAX_METHODS_IN_FLAME_GRAPH], self::DEFAULT_THRESHOLD);
-    }
-
-    /**
-     * @param \Badoo\LiveProfilerUI\Entity\MethodTree[] $elements
-     * @param array $parents_param
-     * @param array $parent
-     * @param string $param
-     * @param float $threshold
-     * @param int $level
-     * @return string
-     */
-    protected function buildFlameGraphInput(
-        array $elements,
-        array $parents_param,
-        array $parent,
-        string $param,
-        float $threshold,
-        int $level = 0
-    ) : string {
-        if ($level > 50) {
-            // limit nesting level
-            return '';
-        }
-
-        $texts = '';
-        foreach ($elements as $Element) {
-            if ($Element->getParentId() === $parent['method_id']) {
-                $element_value = $Element->getValue($param);
-                $value = $parent[$param] - $element_value;
-
-                if ($value <= 0) {
-                    if (!empty($parents_param[$Element->getParentId()])) {
-                        $p = $parents_param[$Element->getParentId()];
-                        $sum_p = array_sum($p);
-                        $element_value = 0;
-                        if ($sum_p != 0) {
-                            $element_value = ($parent[$param] / $sum_p) * $Element->getValue($param);
-                        }
-                        $value = $parent[$param] - $element_value;
-                    }
-                }
-
-                if ($element_value < $threshold) {
-                    continue;
-                }
-
-                $new_parent = [
-                    'method_id' => $Element->getMethodId(),
-                    'name' => $parent['name'] . ';' . $Element->getMethodNameAlt(),
-                    $param => $element_value
-                ];
-                $texts .= $this->buildFlameGraphInput(
-                    $elements,
-                    $parents_param,
-                    $new_parent,
-                    $param,
-                    $threshold,
-                    $level + 1
-                );
-                $parent[$param] = $value;
-            }
-        }
-
-        $texts .= $parent['name'] . ' ' . $parent[$param] . "\n";
-
-        return $texts;
     }
 
     protected function getSnapshotIdsByDates($app, $label, $date1, $date2) : array

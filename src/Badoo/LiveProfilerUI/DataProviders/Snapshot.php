@@ -222,6 +222,7 @@ class Snapshot extends Base implements SnapshotInterface
             }
         }
         ksort($result);
+
         return $result;
     }
 

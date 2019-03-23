@@ -8,7 +8,7 @@ namespace unit\Badoo\LiveProfilerUI;
 
 class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
 {
-    public function providerInvalidData()
+    public function providerInvalidData() : array
     {
         return [
             [
@@ -36,7 +36,6 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
      * @param $snapshot_id
      * @throws \ReflectionException
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't get snapshot
      */
     public function testInvalidData($app, $label, $snapshot_id)
     {
@@ -68,7 +67,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
         $this->invokeMethod($PageMock, 'getTemplateData');
     }
 
-    public function providerGetTemplateData()
+    public function providerGetTemplateData() : array
     {
         $SnapshotMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Entity\Snapshot::class)
             ->disableOriginalConstructor()
@@ -82,16 +81,11 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                 'label' => '',
                 'snapshot_id' => 1,
                 'snapshot' => $SnapshotMock,
-                'svg' => false,
+                'svg' => '',
                 'expected' => [
                     'error' => 'Not enough data to show graph',
-                    'params' => [
-                        [
-                            'value' => 'wt',
-                            'label' => 'wt',
-                            'selected' => true
-                        ]
-                    ],
+                    'param' => '',
+                    'params' => ['wt' => 'wt'],
                     'diff' => false,
                     'date1' => '2018-01-01',
                     'date2' => '2019-01-01',
@@ -103,7 +97,8 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                         '2019-01-01',
                         '2018-01-01',
                     ],
-                    'date' => ''
+                    'date' => '',
+                    'svg' => '',
                 ],
             ],
             [
@@ -111,16 +106,11 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                 'label' => 'label',
                 'snapshot_id' => 0,
                 'snapshot' => $SnapshotMock,
-                'svg' => false,
+                'svg' => '',
                 'expected' => [
                     'error' => 'Not enough data to show graph',
-                    'params' => [
-                        [
-                            'value' => 'wt',
-                            'label' => 'wt',
-                            'selected' => true
-                        ]
-                    ],
+                    'param' => '',
+                    'params' => ['wt' => 'wt'],
                     'diff' => false,
                     'date1' => '2018-01-01',
                     'date2' => '2019-01-01',
@@ -132,7 +122,8 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                         '2019-01-01',
                         '2018-01-01',
                     ],
-                    'date' => ''
+                    'date' => '',
+                    'svg' => '',
                 ],
             ],
             [
@@ -140,19 +131,14 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                 'label' => '',
                 'snapshot_id' => 1,
                 'snapshot' => $SnapshotMock,
-                'svg' => 'svg',
+                'svg' => '',
                 'expected' => [
-                    'params' => [
-                        [
-                            'value' => 'wt',
-                            'label' => 'wt',
-                            'selected' => true
-                        ]
-                    ],
+                    'param' => '',
+                    'params' => ['wt' => 'wt'],
                     'diff' => false,
                     'date1' => '2018-01-01',
                     'date2' => '2019-01-01',
-                    'svg' => 'svg',
+                    'svg' => '',
                     'snapshot_id' => 1,
                     'snapshot_app' => '',
                     'snapshot_label' => '',
@@ -161,7 +147,8 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
                         '2019-01-01',
                         '2018-01-01',
                     ],
-                    'date' => ''
+                    'date' => '',
+                    'error' => 'Not enough data to show graph'
                 ],
             ],
         ];
@@ -208,9 +195,9 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
 
         $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getSVG'])
+            ->setMethods(['getDataForFlameGraph'])
             ->getMock();
-        $PageMock->method('getSVG')->willReturn($svg);
+        $PageMock->method('getDataForFlameGraph')->willReturn($svg);
 
         $FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt' => 'wt'], [], []);
 
@@ -224,7 +211,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
         static::assertEquals($expected, $result);
     }
 
-    public function providerCalculateParamThreshold()
+    public function providerCalculateParamThreshold() : array
     {
         $MethodTreeMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Entity\MethodTree::class)
             ->disableOriginalConstructor()
@@ -308,66 +295,6 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
     /**
      * @throws \ReflectionException
      */
-    public function testGetSVGEmptySnapshotId()
-    {
-        /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
-        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['__construct'])
-            ->getMock();
-
-        $result = $this->invokeMethod($PageMock, 'getSVG', [0, 'wt', false, 0, 0]);
-        self::assertEquals('', $result);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    public function testGetSVGEmptySnapshotIds()
-    {
-        /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
-        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['__construct'])
-            ->getMock();
-
-        $result = $this->invokeMethod($PageMock, 'getSVG', [1, 'wt', true, 0, 0]);
-        self::assertEquals('', $result);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    public function testGetSVGEmptyEmptyDataForFlameGraph()
-    {
-        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getDataForFlameGraph'])
-            ->getMock();
-        $PageMock->method('getDataForFlameGraph')->willReturn(false);
-
-        $result = $this->invokeMethod($PageMock, 'getSVG', [1, 'wt', false, 0, 0]);
-        self::assertEquals('', $result);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    public function testGetSVG()
-    {
-        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getDataForFlameGraph'])
-            ->getMock();
-        $PageMock->method('getDataForFlameGraph')->willReturn('main() 123');
-
-        $result = $this->invokeMethod($PageMock, 'getSVG', [1, 'wt', false, 0, 0]);
-        self::assertNotEmpty($result);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
     public function testGetDataForFlameGraphEmptyTree()
     {
         $MethodTreeMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\MethodTree::class)
@@ -383,7 +310,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             ->getMock();
         $this->setProtectedProperty($PageMock, 'MethodTree', $MethodTreeMock);
 
-        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 'wt', false, 0, 0]);
+        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 0, 'wt', false]);
         self::assertEquals('', $result);
     }
 
@@ -396,7 +323,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             ->disableOriginalConstructor()
             ->setMethods(['getSnapshotMethodsTree'])
             ->getMock();
-        $MethodTreeMock->expects($this->exactly(2))->method('getSnapshotMethodsTree')->willReturn([]);
+        $MethodTreeMock->expects($this->once())->method('getSnapshotMethodsTree')->willReturn([]);
 
         /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
         $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
@@ -405,7 +332,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             ->getMock();
         $this->setProtectedProperty($PageMock, 'MethodTree', $MethodTreeMock);
 
-        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 'wt', true, 2, 3]);
+        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [2, 3, 'wt', true]);
         self::assertEquals('', $result);
     }
 
@@ -437,7 +364,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
         $this->setProtectedProperty($PageMock, 'MethodTree', $MethodTreeMock);
         $this->setProtectedProperty($PageMock, 'MethodData', $MethodDataMock);
 
-        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 'wt', false, 0, 0]);
+        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 0, 'wt', false]);
         self::assertEquals('', $result);
     }
 
@@ -479,7 +406,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
         $this->setProtectedProperty($PageMock, 'MethodTree', $MethodTreeMock);
         $this->setProtectedProperty($PageMock, 'MethodData', $MethodDataMock);
 
-        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 'wt', true, 2, 3]);
+        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [2, 3, 'wt', true]);
         self::assertEquals('', $result);
     }
 
@@ -528,7 +455,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
         $this->setProtectedProperty($PageMock, 'MethodData', $MethodDataMock);
         $this->setProtectedProperty($PageMock, 'Method', $MethodMock);
 
-        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 'wt', false, 0, 0]);
+        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 0, 'wt', false]);
         self::assertEquals("main() 2\n", $result);
     }
 
@@ -578,89 +505,8 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
         $this->setProtectedProperty($PageMock, 'MethodData', $MethodDataMock);
         $this->setProtectedProperty($PageMock, 'Method', $MethodMock);
 
-        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [1, 'wt', true, 2, 3]);
+        $result = $this->invokeMethod($PageMock, 'getDataForFlameGraph', [2, 3, 'wt', true]);
         self::assertEquals("main() 1\n", $result);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    public function testBuildFlameGraphInputNestedLevel()
-    {
-        /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
-        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['__construct'])
-            ->getMock();
-
-        $elements = [];
-        $parents_param = [];
-        $root = [];
-        $param = 'wt';
-        $threshold = 0;
-        $args = [$elements, $parents_param, $root, $param, $threshold, 51];
-        $result = $this->invokeMethod($PageMock, 'buildFlameGraphInput', $args);
-
-        self::assertEquals('', $result);
-    }
-
-    public function providerBuildFlameGraphInput()
-    {
-        return [
-            [
-                'elements' => [
-                    ['method_id' => 1, 'parent_id' => 0, 'method_name' => 'main()', 'wt' => 7],
-                ],
-                'expected' => "main() 7\n",
-            ],
-            [
-                'elements' => [
-                    ['method_id' => 2, 'parent_id' => 1, 'method_name' => 'f', 'wt' => 1],
-                    ['method_id' => 1, 'parent_id' => 0, 'method_name' => 'main()', 'wt' => 2],
-                ],
-                'expected' => "main();f 1\nmain() 6\n",
-            ],
-            [
-                'elements' => [
-                    ['method_id' => 5, 'parent_id' => 4, 'method_name' => 'c2', 'wt' => 2],
-                    ['method_id' => 4, 'parent_id' => 3, 'method_name' => 'c1', 'wt' => 2],
-                    ['method_id' => 4, 'parent_id' => 2, 'method_name' => 'c1', 'wt' => 2],
-                    ['method_id' => 3, 'parent_id' => 1, 'method_name' => 'p1', 'wt' => 3],
-                    ['method_id' => 2, 'parent_id' => 1, 'method_name' => 'p2', 'wt' => 3],
-                ],
-                'expected' => "main();p1;c1;c2 1\nmain();p1;c1 1\nmain();p1 1\nmain();p2;c1;c2 1\nmain();p2;c1 1\nmain();p2 1\nmain() 1\n",
-            ],
-        ];
-    }
-
-    /**
-     * @depends testGetAllMethodParentsParam
-     * @dataProvider providerBuildFlameGraphInput
-     * @param array $elements
-     * @param string $expected
-     * @throws \ReflectionException
-     */
-    public function testBuildFlameGraphInput($elements, $expected)
-    {
-        foreach ($elements as &$element) {
-            $element = new \Badoo\LiveProfilerUI\Entity\MethodTree($element, ['wt' => 'wt']);
-        }
-        unset($element);
-
-        /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
-        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['__construct'])
-            ->getMock();
-
-        $root_method_data = ['method_id' => 1, 'name' => 'main()', 'wt' => 7];
-        $param = 'wt';
-        $threshold = 0;
-        $parents_param = $this->invokeMethod($PageMock, 'getAllMethodParentsParam', [$elements, $param]);
-        $args = [$elements, $parents_param, $root_method_data, $param, $threshold];
-        $result = $this->invokeMethod($PageMock, 'buildFlameGraphInput', $args);
-
-        self::assertEquals($expected, $result);
     }
 
     /**
@@ -668,13 +514,15 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
      */
     public function testCleanData()
     {
+        $FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt'], [], []);
         $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
             ->disableOriginalConstructor()
             ->setMethods(['__construct'])
             ->getMock();
+        $this->setProtectedProperty($PageMock, 'FieldList', $FieldList);
 
         /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
-        $PageMock->setData(['app' => ' app ', 'label' => ' label ']);
+        $PageMock->setData(['app' => 'app', 'label' => 'label']);
         $this->invokeMethod($PageMock, 'cleanData');
 
         $data = $this->getProtectedProperty($PageMock, 'data');
@@ -683,30 +531,13 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             'app' => 'app',
             'label' => 'label',
             'snapshot_id' => 0,
-            'param' => '',
+            'param' => 'wt',
             'diff' => false,
             'date' => '',
             'date1' => '',
             'date2' => ''
         ];
         self::assertEquals($expected, $data);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Empty snapshot_id, app and label
-     * @throws \ReflectionException
-     */
-    public function testCleanDataInvalidData()
-    {
-        $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\FlameGraphPage::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['__construct'])
-            ->getMock();
-
-        /** @var \Badoo\LiveProfilerUI\Pages\FlameGraphPage $PageMock */
-        $PageMock->setData(['app' => ' app ']);
-        $this->invokeMethod($PageMock, 'cleanData');
     }
 
     /**
