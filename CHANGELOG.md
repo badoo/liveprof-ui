@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.26
+
+There are next changes:
+
+-  flame graph page refactoring
+
 ## 1.1.25
 
 There are next changes:
