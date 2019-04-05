@@ -152,6 +152,7 @@ class AjaxPages
 
     public function searchMethods(string $term) : array
     {
+        $term = ltrim($term, '\\');
         try {
             return $this->Method->findByName($term);
         } catch (\Throwable $Ex) {

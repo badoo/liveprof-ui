@@ -4,96 +4,102 @@
 
 There are next changes:
 
+## 1.1.27
+
+There are next changes:
+
+- method usage page was improved
+
 ## 1.1.26
 
 There are next changes:
 
--  flame graph page refactoring
+- flame graph page refactoring
 
 ## 1.1.25
 
 There are next changes:
 
--  fix LiveProf-UI aggregator saveMethodData behavior
+- fix LiveProf-UI aggregator saveMethodData behavior
 
 ## 1.1.24
 
 There are next changes:
 
--  added date selector on flame graph page
+- added date selector on flame graph page
 
 ## 1.1.23
 
 There are next changes:
 
--  top diff page was improved
+- top diff page was improved
 
 ## 1.1.20
 
 There are next changes:
 
--  fixed links on method tree page
+- fixed links on method tree page
 
 ## 1.1.19
 
 There are next changes:
 
--  added default value for method usage page
+- added default value for method usage page
 
 ## 1.1.16
 
 There are next changes:
 
--  added profiles count graph on method tree page
+- added profiles count graph on method tree page
 
 ## 1.1.15
 
 There are next changes:
 
--  get rid of exception if could not find a snapshot
+- get rid of exception if could not find a snapshot
 
 ## 1.1.14
 
 There are next changes:
 
--  fixed link from flame graph to method tree page
+- fixed link from flame graph to method tree page
 
 ## 1.1.13
 
 There are next changes:
 
--  added filters on top diff page
--  added app select on method tree page
+- added filters on top diff page
+- added app select on method tree page
 
 ## 1.1.12
 
 There are next changes:
 
--  added possibility to open the method graphs by click on flame graph
+- added possibility to open the method graphs by click on flame graph
 
 ## 1.1.11
 
 There are next changes:
 
--  added wiki pages
+- added wiki pages
 
 ## 1.1.10
 
 There are next changes:
 
--  added encoding for url params
+- added encoding for url params
 
 ## 1.1.8
 
 There are next changes:
 
--  added links to wiki pages
+- added links to wiki pages
 
 ## 1.1.7
 
 There are next changes:
 
--  added a link on profile list page to search without the app filter
+- added a link on profile list page to search without the app filter
 
 ## 1.1.6
 
