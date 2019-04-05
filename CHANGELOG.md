@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.28
+
+There are next changes:
+
+- fixed required package list
+
 ## 1.1.27
 
 There are next changes:
