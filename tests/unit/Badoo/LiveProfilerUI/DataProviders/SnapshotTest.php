@@ -42,7 +42,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
                 'calls_count' => 1,
                 'app' => 'app1',
                 'label' => 'label1',
-                'date' => '2019-01-01',
+                'date' => date('Y-m-d'),
                 'type' => 'auto',
                 'wt' => 2
             ]
@@ -54,7 +54,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
                 'calls_count' => 1,
                 'app' => 'app2',
                 'label' => 'label2',
-                'date' => '2019-01-02',
+                'date' => date('Y-m-d', strtotime('-1 day')),
                 'type' => 'auto',
                 'wt' => 3
             ]
@@ -123,7 +123,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
                 'id' => 1,
                 'app' => 'app1',
                 'label' => 'label1',
-                'date' => '2019-01-01'
+                'date' => date('Y-m-d')
             ]
         ];
         self::assertEquals($expected, $result);
@@ -144,7 +144,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
                 'app' => 'app1',
                 'label' => 'label1',
                 'type' => 'auto',
-                'date' => '2019-01-01',
+                'date' => date('Y-m-d'),
                 'wt' => '2',
             ],
             ['wt' => 'wt']
@@ -211,7 +211,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
     public function testGetSnapshotsByDates()
     {
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
-        $result = $Snapshot->getSnapshotsByDates(['2019-01-01', '2019-01-01'], 'wt');
+        $result = $Snapshot->getSnapshotsByDates([date('Y-m-d'), date('Y-m-d')], 'wt');
 
         $expected = [
             [
@@ -219,7 +219,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
                 'app' => 'app1',
                 'label' => 'label1',
                 'type' => 'auto',
-                'date' => '2019-01-01',
+                'date' => date('Y-m-d'),
                 'wt' => '2',
             ]
         ];
@@ -251,9 +251,9 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
     public function testGetSnapshotIdsByDates()
     {
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
-        $result = $Snapshot->getSnapshotIdsByDates(['2019-01-01'], 'app1', 'label1');
+        $result = $Snapshot->getSnapshotIdsByDates([date('Y-m-d')], 'app1', 'label1');
 
-        $expected = ['2019-01-01' => ['id' => 1, 'calls_count' => 1]];
+        $expected = [date('Y-m-d') => ['id' => 1, 'calls_count' => 1]];
         self::assertEquals($expected, $result);
     }
 
@@ -279,7 +279,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
         $result = $Snapshot->getDatesByAppAndLabel('app1', 'label1');
 
-        $expected = ['2019-01-01'];
+        $expected = [date('Y-m-d')];
         self::assertEquals($expected, $result);
     }
 

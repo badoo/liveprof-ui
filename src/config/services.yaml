@@ -6,6 +6,7 @@ parameters:
   aggregator.field_variations: [percent,min,max] # a list of applied stats functions
   aggregator.use_layout: true
   aggregator.log_file: ''
+  aggregator.minimum_profiles_count: 0
 
   aggregator.fields_descriptions:
     ct: Average calls count in this context during specified day (µs)
@@ -66,7 +67,7 @@ services:
 
   aggregator:
     class: \Badoo\LiveProfilerUI\Aggregator
-    arguments: ['@source', '@snapshot', '@method', '@method_tree', '@method_data', '@logger', '@packer', '@fields', '@field_handler','%aggregator.calls_count_field%']
+    arguments: ['@source', '@snapshot', '@method', '@method_tree', '@method_data', '@logger', '@packer', '@fields', '@field_handler','%aggregator.calls_count_field%','%aggregator.minimum_profiles_count%']
 
   # services for pages
   profile_list_page:

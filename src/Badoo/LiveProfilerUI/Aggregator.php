@@ -39,6 +39,8 @@ class Aggregator
     protected $FieldHandler;
     /** @var string */
     protected $calls_count_field = 'ct';
+    /** @var int */
+    protected $minimum_profiles_cnt = 0;
     /** @var string */
     protected $app = '';
     /** @var string */
@@ -74,7 +76,8 @@ class Aggregator
         DataPackerInterface $DataPacker,
         FieldList $FieldList,
         FieldHandlerInterface $FieldHandler,
-        string $calls_count_field
+        string $calls_count_field,
+        int $minimum_profiles_cnt = 0
     ) {
         $this->Source = $Source;
         $this->Snapshot = $Snapshot;
@@ -86,6 +89,7 @@ class Aggregator
         $this->FieldList = $FieldList;
         $this->FieldHandler = $FieldHandler;
         $this->calls_count_field = $calls_count_field;
+        $this->minimum_profiles_cnt = $minimum_profiles_cnt;
 
         $this->fields = $this->FieldList->getFields();
         $this->field_variations = $this->FieldList->getFieldVariations();
@@ -164,6 +168,11 @@ class Aggregator
 
         if ($this->perf_count > DataProviders\Source::SELECT_LIMIT) {
             $this->Logger->info("Too many profiles for $this->app:$this->label:$this->date");
+        }
+
+        if ($this->perf_count < $this->minimum_profiles_cnt) {
+            $this->Logger->info("Too few profiles for $this->app:$this->label:$this->date");
+            return false;
         }
 
         foreach ($perf_data as $record) {

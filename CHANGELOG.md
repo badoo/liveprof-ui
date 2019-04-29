@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.29
+
+There are next changes:
+
+- added a parameter to minimum profiles number for each snapshot
+
 ## 1.1.28
 
 There are next changes:
