@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.1.30
+
+There are next changes:
+
+- skip data with including php files
+
 ## 1.1.29
 
 There are next changes:

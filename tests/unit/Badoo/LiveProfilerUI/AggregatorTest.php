@@ -1023,4 +1023,62 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
         self::assertEquals([], $methods);
         self::assertEquals([], $call_map);
     }
+
+    public function providerIsIncludePHPFile() : array
+    {
+        return [
+            ['main()', false],
+            ['parent==>child', false],
+            ['main_autoload==>eval::file.php12345', true],
+            ['main_autoload==>load::file.php12345', true],
+            ['main_autoload==>run_init::file.php12345', true],
+            ['eval::file.php12345==>child', true],
+            ['load::file.php12345==>child', true],
+            ['run_init::file.php12345==>child', true],
+        ];
+    }
+
+    /**
+     * @dataProvider providerIsIncludePHPFile
+     * @param string $key
+     * @param bool $expected_result
+     * @throws \ReflectionException
+     */
+    public function testIsIncludePHPFile(string $key, bool $expected_result)
+    {
+        /** @var \Badoo\LiveProfilerUI\Aggregator $AggregatorMock */
+        $AggregatorMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Aggregator::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+
+        $result = $this->invokeMethod($AggregatorMock, 'isIncludePHPFile', [$key]);
+        self::assertEquals($expected_result, $result);
+    }
+
+    public function providerSplitMethods() : array
+    {
+        return [
+            ['main()', [0, 'main()']],
+            ['parent==>child', ['parent', 'child']],
+        ];
+    }
+
+    /**
+     * @dataProvider providerSplitMethods
+     * @param string $key
+     * @param array $expected_result
+     * @throws \ReflectionException
+     */
+    public function testSplitMethods(string $key, array $expected_result)
+    {
+        /** @var \Badoo\LiveProfilerUI\Aggregator $AggregatorMock */
+        $AggregatorMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Aggregator::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+
+        $result = $this->invokeMethod($AggregatorMock, 'splitMethods', [$key]);
+        self::assertEquals($expected_result, $result);
+    }
 }

@@ -212,12 +212,11 @@ class Aggregator
         }
 
         foreach ($data as $key => $stats) {
-            if ($key === 'main()') {
-                $caller = 0;
-                $callee = 'main()';
-            } else {
-                list($caller, $callee) = explode('==>', $key);
+            if ($this->isIncludePHPFile($key)) {
+                continue;
             }
+
+            list($caller, $callee) = $this->splitMethods($key);
 
             if (!isset($this->call_map[$caller][$callee])) {
                 if (!isset($this->method_data[$callee])) {
@@ -544,5 +543,32 @@ class Aggregator
         }
 
         return $snapshots;
+    }
+
+    /**
+     * Checks that method is an included php file
+     * @param string $key
+     * @return bool
+     */
+    protected function isIncludePHPFile(string $key) : bool
+    {
+        return (bool)preg_match('/(eval|run_init|load)::[\w\W]+\.php/', $key);
+    }
+
+    /**
+     * Splits a string into parent and child method names
+     * @param string $key
+     * @return array
+     */
+    protected function splitMethods(string $key) : array
+    {
+        if ($key === 'main()') {
+            $caller = 0;
+            $callee = 'main()';
+        } else {
+            list($caller, $callee) = explode('==>', $key);
+        }
+
+        return [$caller, $callee];
     }
 }
