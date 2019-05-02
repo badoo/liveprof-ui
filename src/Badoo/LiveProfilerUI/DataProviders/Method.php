@@ -123,4 +123,17 @@ class Method extends Base implements MethodInterface
 
         return $data;
     }
+
+    public function setLastUsedDate(array $ids, string $date) : bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        return $this->AggregatorStorage->update(
+            self::TABLE_NAME,
+            ['date' => $date],
+            ['id' => $ids, 'date' => ['value' => $date, 'operator' => '!=']]
+        );
+    }
 }

@@ -283,6 +283,15 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
         self::assertEquals($expected, $result);
     }
 
+    public function testGetMaxCallsCntByAppAndLabel()
+    {
+        $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
+        $result = $Snapshot->getMaxCallsCntByAppAndLabel('app1', 'label1');
+
+        $expected = 1;
+        self::assertEquals($expected, $result);
+    }
+
     public function providerGetAppList() : array
     {
         return [

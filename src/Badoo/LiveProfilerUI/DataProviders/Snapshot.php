@@ -261,6 +261,23 @@ class Snapshot extends Base implements SnapshotInterface
         return $snapshots ? array_column($snapshots, 'date') : [];
     }
 
+    public function getMaxCallsCntByAppAndLabel(string $app, string $label) : int
+    {
+        $result = $this->AggregatorStorage->getOne(
+            self::TABLE_NAME,
+            [['field' => 'calls_count', 'function' => 'max']],
+            [
+                'filter' => [
+                    ['app', $app],
+                    ['label', $label],
+                ],
+                'group' => ['app', 'label'],
+            ]
+        );
+
+        return $result ? (int)current($result) : 0;
+    }
+
     public function getAppList(string $label = '') : array
     {
         $filter = [];

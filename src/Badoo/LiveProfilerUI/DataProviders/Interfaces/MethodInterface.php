@@ -13,4 +13,5 @@ interface MethodInterface
     public function getListByIds(array $ids) : array;
     public function insertMany(array $inserts) : bool;
     public function injectMethodNames(array $records) : array;
+    public function setLastUsedDate(array $ids, string $date) : bool;
 }

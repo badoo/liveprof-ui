@@ -23,6 +23,7 @@ interface SnapshotInterface
     public function getSnapshotIdsByDates(array $dates, string $app, string $label) : array;
     public function getOldSnapshots(int $keep_days = 200, int $limit = 2000) : array;
     public function getDatesByAppAndLabel(string $app, string $label) : array;
+    public function getMaxCallsCntByAppAndLabel(string $app, string $label) : int;
     public function getAppList(string $label = '') : array;
     public function updateSnapshot(int $snapshot_id, array $snapshot_data) : bool;
     public function createSnapshot(array $snapshot_data) : int;

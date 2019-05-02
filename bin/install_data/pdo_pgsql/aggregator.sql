@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS aggregator_metods (
   id SERIAL NOT NULL PRIMARY KEY,
-  name CHAR(300) NOT NULL
+  name CHAR(300) NOT NULL,
+  date date NOT NULL DEFAULT '1970-01-01'
 );
 CREATE UNIQUE INDEX IF NOT EXISTS name_idx on aggregator_metods (name);
 

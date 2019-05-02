@@ -4,6 +4,13 @@
 
 There are next changes:
 
+## 1.2.1
+
+There are next changes:
+
+- added possibility to skip snapshots with too few calls count
+- added a field with last method used date 
+
 ## 1.1.30
 
 There are next changes:

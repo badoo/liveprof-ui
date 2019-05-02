@@ -376,12 +376,34 @@ class Storage implements StorageInterface
 
         $is_first = true;
         foreach ($params as $field => $value) {
-            $named_param = $QueryBuilder->createNamedParameter($value);
+            $operator = '=';
+            if (is_array($value)) {
+                if (isset($value['value'], $value['operator'])) {
+                    $operator = $value['operator'];
+                    $value = $value['value'];
+
+                    $named_param = $QueryBuilder->createNamedParameter($value);
+                } else {
+                    $operator = 'in';
+
+                    $named_params = [];
+                    foreach ($value as $item) {
+                        $named_param = $QueryBuilder->createNamedParameter($item);
+                        $named_params[] = $named_param;
+                        $QueryBuilder->setParameter($named_param, $item);
+                    }
+
+                    $named_param = '(' .implode(', ', $named_params) . ')';
+                }
+            } else {
+                $named_param = $QueryBuilder->createNamedParameter($value);
+            }
+
             if ($is_first) {
-                $QueryBuilder->where($field . ' = ' . $named_param);
+                $QueryBuilder->where($field . ' '. $operator . ' ' . $named_param);
                 $is_first = false;
             } else {
-                $QueryBuilder->andWhere($field . ' = ' . $named_param);
+                $QueryBuilder->andWhere($field . ' '. $operator . ' ' . $named_param);
             }
             $QueryBuilder->setParameter($named_param, $value);
         }

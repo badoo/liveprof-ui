@@ -170,7 +170,8 @@ class Aggregator
             $this->Logger->info("Too many profiles for $this->app:$this->label:$this->date");
         }
 
-        if ($this->perf_count < $this->minimum_profiles_cnt) {
+        if ($this->perf_count <= $this->minimum_profiles_cnt
+            && $this->Snapshot->getMaxCallsCntByAppAndLabel($this->app, $this->label) <= $this->minimum_profiles_cnt) {
             $this->Logger->info("Too few profiles for $this->app:$this->label:$this->date");
             return false;
         }
@@ -380,7 +381,10 @@ class Aggregator
                 $missing_names[] = $name;
             }
         }
+
+        $this->setMethodsLastUsedDate(array_column($existing_names, 'id'));
         $this->pushToMethodNamesMap($missing_names);
+
         return array_merge($existing_names, $this->getMethodNamesMap($missing_names));
     }
 
@@ -474,6 +478,17 @@ class Aggregator
         return $result;
     }
 
+    protected function setMethodsLastUsedDate(array $method_ids) : bool
+    {
+        $result = true;
+        while (!empty($method_ids)) {
+            $names_to_get = \array_slice($method_ids, 0, self::SAVE_PORTION_COUNT);
+            $method_ids = \array_slice($method_ids, self::SAVE_PORTION_COUNT);
+            $result = $result && $this->Method->setLastUsedDate($names_to_get, $this->date);
+        }
+        return $result;
+    }
+
     /**
      * Save methods
      * @param array $names
@@ -487,7 +502,8 @@ class Aggregator
             $names_to_save = [];
             foreach (\array_slice($names, 0, self::SAVE_PORTION_COUNT) as $name) {
                 $names_to_save[] = [
-                    'name' => $name
+                    'name' => $name,
+                    'date' => $this->date
                 ];
             }
             $names = \array_slice($names, self::SAVE_PORTION_COUNT);

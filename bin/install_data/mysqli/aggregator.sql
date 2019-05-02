@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `aggregator_metods` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(300) NOT NULL,
+  `date` date NOT NULL DEFAULT '1970-01-01',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_idx` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

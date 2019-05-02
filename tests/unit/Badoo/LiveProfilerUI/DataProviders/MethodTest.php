@@ -23,7 +23,7 @@ class MethodTest extends \unit\Badoo\BaseTestCase
             ->getMock();
 
         $this->AggregatorStorage->query(
-            'create table aggregator_metods (id integer, name text)'
+            'create table aggregator_metods (id integer, name text, date date)'
         );
         $this->AggregatorStorage->insert('aggregator_metods', ['id' => 2, 'name' => 'method']);
         $this->FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt'], [], []);
@@ -150,5 +150,13 @@ class MethodTest extends \unit\Badoo\BaseTestCase
         self::assertArrayHasKey(0, $result);
         self::assertInstanceOf(\Badoo\LiveProfilerUI\Entity\MethodData::class, $result[0]);
         self::assertEquals('method_name', $result[0]->getMethodName());
+    }
+
+    public function testsetLastUsedDate()
+    {
+        $MethodTree = new \Badoo\LiveProfilerUI\DataProviders\Method($this->AggregatorStorage, $this->FieldList);
+        $result = $MethodTree->setLastUsedDate([2], date('Y-m-d'));
+
+        self::assertTrue($result);
     }
 }
