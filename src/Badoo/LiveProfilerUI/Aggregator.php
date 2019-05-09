@@ -213,11 +213,11 @@ class Aggregator
         }
 
         foreach ($data as $key => $stats) {
-            if ($this->isIncludePHPFile($key)) {
+            list($caller, $callee) = $this->splitMethods($key);
+
+            if ($this->isIncludeFile((string)$caller) || $this->isIncludeFile((string)$callee)) {
                 continue;
             }
-
-            list($caller, $callee) = $this->splitMethods($key);
 
             if (!isset($this->call_map[$caller][$callee])) {
                 if (!isset($this->method_data[$callee])) {
@@ -382,7 +382,7 @@ class Aggregator
             }
         }
 
-        $this->setMethodsLastUsedDate(array_column($existing_names, 'id'));
+        $this->setMethodsLastUsedDate($existing_names);
         $this->pushToMethodNamesMap($missing_names);
 
         return array_merge($existing_names, $this->getMethodNamesMap($missing_names));
@@ -478,13 +478,22 @@ class Aggregator
         return $result;
     }
 
-    protected function setMethodsLastUsedDate(array $method_ids) : bool
+    protected function setMethodsLastUsedDate(array $methods) : bool
     {
+        $methods_to_update = array_filter(
+            $methods,
+            function ($elem) {
+                return $elem['date'] !== $this->date;
+            }
+        );
+
+        $method_ids_to_update = array_column($methods_to_update, 'id');
+
         $result = true;
-        while (!empty($method_ids)) {
-            $names_to_get = \array_slice($method_ids, 0, self::SAVE_PORTION_COUNT);
-            $method_ids = \array_slice($method_ids, self::SAVE_PORTION_COUNT);
-            $result = $result && $this->Method->setLastUsedDate($names_to_get, $this->date);
+        while (!empty($method_ids_to_update)) {
+            $to_update = \array_slice($method_ids_to_update, 0, self::SAVE_PORTION_COUNT);
+            $method_ids_to_update = \array_slice($method_ids_to_update, self::SAVE_PORTION_COUNT);
+            $result = $result && $this->Method->setLastUsedDate($to_update, $this->date);
         }
         return $result;
     }
@@ -566,9 +575,9 @@ class Aggregator
      * @param string $key
      * @return bool
      */
-    protected function isIncludePHPFile(string $key) : bool
+    protected function isIncludeFile(string $key) : bool
     {
-        return (bool)preg_match('/(eval|run_init|load)::[\w\W]+\.php/', $key);
+        return (bool)preg_match('/^(eval|run_init|load)::[\w\W]+\./', $key);
     }
 
     /**

@@ -1024,27 +1024,25 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
         self::assertEquals([], $call_map);
     }
 
-    public function providerIsIncludePHPFile() : array
+    public function providerIsIncludeFile() : array
     {
         return [
             ['main()', false],
             ['parent==>child', false],
-            ['main_autoload==>eval::file.php12345', true],
-            ['main_autoload==>load::file.php12345', true],
-            ['main_autoload==>run_init::file.php12345', true],
-            ['eval::file.php12345==>child', true],
-            ['load::file.php12345==>child', true],
-            ['run_init::file.php12345==>child', true],
+            ['eval::some_method', false],
+            ['eval::file.php12345', true],
+            ['load::file.php12345', true],
+            ['run_init::file.php12345', true],
         ];
     }
 
     /**
-     * @dataProvider providerIsIncludePHPFile
+     * @dataProvider providerIsIncludeFile
      * @param string $key
      * @param bool $expected_result
      * @throws \ReflectionException
      */
-    public function testIsIncludePHPFile(string $key, bool $expected_result)
+    public function testIsIncludeFile(string $key, bool $expected_result)
     {
         /** @var \Badoo\LiveProfilerUI\Aggregator $AggregatorMock */
         $AggregatorMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Aggregator::class)
@@ -1052,7 +1050,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
             ->setMethods(['__construct'])
             ->getMock();
 
-        $result = $this->invokeMethod($AggregatorMock, 'isIncludePHPFile', [$key]);
+        $result = $this->invokeMethod($AggregatorMock, 'isIncludeFile', [$key]);
         self::assertEquals($expected_result, $result);
     }
 

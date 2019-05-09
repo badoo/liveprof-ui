@@ -133,7 +133,7 @@ class Method extends Base implements MethodInterface
         return $this->AggregatorStorage->update(
             self::TABLE_NAME,
             ['date' => $date],
-            ['id' => $ids, 'date' => ['value' => $date, 'operator' => '!=']]
+            ['id' => $ids]
         );
     }
 }

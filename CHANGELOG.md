@@ -4,6 +4,18 @@
 
 There are next changes:
 
+## 1.2.3
+
+There are next changes:
+
+- fixed included files method
+
+## 1.2.2
+
+There are next changes:
+
+- fixed a field with last method used date
+
 ## 1.2.1
 
 There are next changes:
