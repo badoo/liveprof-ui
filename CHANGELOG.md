@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.4
+
+There are next changes:
+
+- fixed flame graph page
+
 ## 1.2.3
 
 There are next changes:

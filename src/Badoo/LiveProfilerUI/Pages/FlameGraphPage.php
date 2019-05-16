@@ -239,7 +239,7 @@ class FlameGraphPage extends BasePage
             $parents[] = $Item->getParentId();
         }
         $root_method_ids = array_diff($parents, $methods);
-        return $root_method_ids ? (int)current($root_method_ids) : 0;
+        return $root_method_ids ? (int)min($root_method_ids) : 0;
     }
 
     /**
