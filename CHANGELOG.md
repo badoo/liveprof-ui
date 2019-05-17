@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.7
+
+There are next changes:
+
+- improved main page
+
 ## 1.2.6
 
 There are next changes:

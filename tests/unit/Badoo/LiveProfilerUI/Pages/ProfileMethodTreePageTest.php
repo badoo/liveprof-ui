@@ -116,6 +116,23 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
             'date2' => $date2,
             'js_graph_data_all' => [],
             'all_apps' => [],
+            'available_graphs' => [
+                'wt' => [
+                    'type' => 'time',
+                    'label' => 'wt',
+                    'graph_label' => 'wt self + children calls graph',
+                ],
+                'ct' => [
+                    'type' => 'times',
+                    'label' => 'ct',
+                    'graph_label' => 'ct self + children calls graph',
+                ],
+                'calls_count' => [
+                    'type' => 'times',
+                    'label' => 'profiles count',
+                    'graph_label' => 'calls count'
+                ],
+            ],
         ];
         static::assertEquals($expected, $result);
     }
@@ -288,10 +305,10 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
                     'label' => 'ct',
                     'graph_label' => 'ct self + children calls graph'
                 ],
-                'mem' => [
-                    'type' => 'memory',
-                    'label' => 'mem',
-                    'graph_label' => 'mem self + children calls graph'
+                'calls_count' => [
+                    'type' => 'times',
+                    'label' => 'profiles count',
+                    'graph_label' => 'calls count'
                 ]
             ],
             'method_id' => 0,

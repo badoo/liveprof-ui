@@ -13,6 +13,10 @@
     .alert {
         display:none
     }
+    .aggregate-btm {
+        text-decoration: underline dashed;
+        cursor: pointer;
+    }
 </style>
 
 <?php include __DIR__ . '/navbar.block.php'; ?>
@@ -25,17 +29,21 @@
 <div class="alert alert-info" role="alert"></div>
 <div class="alert alert-danger" role="alert"></div>
 
-<form class="aggregate-snapshot-form">
-    <label for="app">App: </label>
-    <select id="app" name="app">
-        <option value="">-select app-</option>
-    </select>
-    <label for="label">Label: </label>
-    <select id="label" name="label">
-        <option value="">-select label-</option>
-    </select>
-    <button class="btn btn-default btn-sm" id="create-ticket-link">Aggregate today snapshot</button>
-</form>
+<div class="aggregate-form">
+    <p class="aggregate-btm">Aggregate today snapshot</p>
+    <form class="aggregate-snapshot-form" style="display: none;">
+        <label for="app">App: </label>
+        <select id="app" name="app">
+            <option value="">-select app-</option>
+        </select>
+        <label for="label">Label: </label>
+        <select id="label" name="label">
+            <option value="">-select label-</option>
+        </select>
+        <button class="btn btn-default btn-sm" id="create-ticket-link">Aggregate today snapshot</button>
+    </form>
+</div>
+
 
 <?php if (!empty($data['results'])) { ?>
     <table class="table sortable">
@@ -49,8 +57,8 @@
                 <span data-toggle="tooltip"  title="Calls count recorded during specified day" class="glyphicon glyphicon-question-sign"></span>
             </th>
             <?php
-                /** @var \Badoo\LiveProfilerUI\Entity\Snapshot $Snapshot */
-                $Snapshot = current($data['results']);
+            /** @var \Badoo\LiveProfilerUI\Entity\Snapshot $Snapshot */
+            $Snapshot = current($data['results']);
             ?>
             <?php foreach ($Snapshot->getFormattedValues() as $field => $value) { ?>
                 <th class="filter-false"><?= $field ?>
@@ -61,22 +69,22 @@
         </thead>
         <tbody>
         <?php foreach ($data['results'] as $Snapshot) { ?>
-        <tr>
-            <td>
-                <a href="/profiler/tree-view.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>&method_id=0"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
-                <a href="/profiler/result-diff.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>"><span class="glyphicon glyphicon-sort-by-attributes-alt" data-toggle="tooltip"  title="Goto diff interface"></span></a>
-                <a href="/profiler/list-view.phtml?snapshot_id=<?= $Snapshot->getId() ?>"><span class="glyphicon glyphicon-unchecked" data-toggle="tooltip"  title="Goto methods list"></span></a>
-                <a href="/profiler/result-flamegraph.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>&snapshot_id=<?= $Snapshot->getId() ?>"><span class="glyphicon glyphicon-fire" data-toggle="tooltip"  title="Goto flame graph"></span></a>
-                <a class="aggregate-snapshot-button" href="#" data-app="<?= $Snapshot->getApp() ?>" data-label="<?= $Snapshot->getLabel() ?>"><span class="glyphicon glyphicon-refresh" data-toggle="tooltip"  title="Aggregate last snapshot"></span></a>
-            </td>
-            <td><?= $Snapshot->getDate() ?></td>
-            <td><?= $Snapshot->getLabel() ?></td>
-            <td><?= $Snapshot->getApp() ?></td>
-            <td><?= $Snapshot->getCallsCount() ?></td>
-            <?php foreach ($Snapshot->getFormattedValues() as $field => $value) { ?>
-                <td><?= $value ?></td>
-            <?php } ?>
-        </tr>
+            <tr>
+                <td>
+                    <a href="/profiler/tree-view.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>&method_id=0"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Goto methods tree"></span></a>
+                    <a href="/profiler/result-diff.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>"><span class="glyphicon glyphicon-sort-by-attributes-alt" data-toggle="tooltip"  title="Goto diff interface"></span></a>
+                    <a href="/profiler/list-view.phtml?snapshot_id=<?= $Snapshot->getId() ?>"><span class="glyphicon glyphicon-unchecked" data-toggle="tooltip"  title="Goto methods list"></span></a>
+                    <a href="/profiler/result-flamegraph.phtml?app=<?= urlencode($Snapshot->getApp()) ?>&label=<?= urlencode($Snapshot->getLabel()) ?>&snapshot_id=<?= $Snapshot->getId() ?>"><span class="glyphicon glyphicon-fire" data-toggle="tooltip"  title="Goto flame graph"></span></a>
+                    <a class="aggregate-snapshot-button" href="#" data-app="<?= $Snapshot->getApp() ?>" data-label="<?= $Snapshot->getLabel() ?>"><span class="glyphicon glyphicon-refresh" data-toggle="tooltip"  title="Aggregate last snapshot"></span></a>
+                </td>
+                <td><?= $Snapshot->getDate() ?></td>
+                <td><?= $Snapshot->getLabel() ?></td>
+                <td><?= $Snapshot->getApp() ?></td>
+                <td><?= $Snapshot->getCallsCount() ?></td>
+                <?php foreach ($Snapshot->getFormattedValues() as $field => $value) { ?>
+                    <td><?= $value ?></td>
+                <?php } ?>
+            </tr>
         <?php } ?>
         </tbody>
     </table>
@@ -220,6 +228,31 @@
     }
 
     $(function(){
+        $('.aggregate-btm').on('click', function () {
+            $(this).hide();
+            $('.aggregate-form form').show();
+
+            $.getJSON("/profiler/get-source-app-list.json", null, function(data) {
+                $.each(data, function(index, item) {
+                    $("#app").append(
+                        $("<option></option>")
+                            .text(item)
+                            .val(item)
+                    );
+                });
+            });
+
+            $.getJSON("/profiler/get-source-label-list.json", null, function(data) {
+                $.each(data, function(index, item) {
+                    $("#label").append(
+                        $("<option></option>")
+                            .text(item)
+                            .val(item)
+                    );
+                });
+            });
+        });
+
         $.tablesorter.addParser({
             // set a unique id
             id: 'parse-values',
@@ -263,16 +296,16 @@
                 updateArrows: true,
                 output: '{startRow:input} – {endRow} / {totalRows} rows',
             }).bind('filterEnd', function() {
-                let found = $('.sortable tbody tr:visible').length;
-                let app = "<?= $data['app'] ?>";
-                let label = $('.tablesorter-filter[data-column=2]').val();
+            let found = $('.sortable tbody tr:visible').length;
+            let app = "<?= $data['app'] ?>";
+            let label = $('.tablesorter-filter[data-column=2]').val();
 
-                if (found === 0 && app !== "" && label !== "") {
-                    $('#empty-result-link a').attr("href", "/profiler/result-list.phtml?label=" + label + "&app=");
-                    $('#empty-result-link').show();
-                } else {
-                    $('#empty-result-link').hide();
-                }
+            if (found === 0 && app !== "" && label !== "") {
+                $('#empty-result-link a').attr("href", "/profiler/result-list.phtml?label=" + label + "&app=");
+                $('#empty-result-link').show();
+            } else {
+                $('#empty-result-link').hide();
+            }
         });
 
         $('[data-toggle="tooltip"]').tooltip();
@@ -299,26 +332,6 @@
 
             aggregate_snapshot(data);
             return false;
-        });
-
-        $.getJSON("/profiler/get-source-app-list.json", null, function(data) {
-            $.each(data, function(index, item) {
-                $("#app").append(
-                    $("<option></option>")
-                        .text(item)
-                        .val(item)
-                );
-            });
-        });
-
-        $.getJSON("/profiler/get-source-label-list.json", null, function(data) {
-            $.each(data, function(index, item) {
-                $("#label").append(
-                    $("<option></option>")
-                        .text(item)
-                        .val(item)
-                );
-            });
         });
     });
 </script>

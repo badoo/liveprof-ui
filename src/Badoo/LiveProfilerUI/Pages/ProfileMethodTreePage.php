@@ -151,6 +151,7 @@ class ProfileMethodTreePage extends BasePage
             'stat_intervals' => $this->getIntervalsFormData($link_base),
             'date1' => $this->data['date1'],
             'date2' => $this->data['date2'],
+            'available_graphs' => $this->getGraphsData(),
         ];
 
         $common_block_data = [
@@ -170,9 +171,6 @@ class ProfileMethodTreePage extends BasePage
 
         $method_data = $this->getMethodDataWithHistory($date_to_snapshot_map, $this->data['method_id']);
         if (!empty($method_data)) {
-            /** @var \Badoo\LiveProfilerUI\Entity\MethodData $MainMethod */
-            $MainMethod = current($method_data);
-            $view_data['available_graphs'] = $this->getGraphsData($MainMethod);
             $view_data['method_data'] = $this->View->fetchFile(
                 'profiler_result_view_part',
                 $common_block_data + ['data' => $method_data, 'hide_lines_column' => true],
@@ -249,10 +247,13 @@ class ProfileMethodTreePage extends BasePage
         return 0;
     }
 
-    protected function getGraphsData(\Badoo\LiveProfilerUI\Entity\MethodData $MainMethod) : array
+    protected function getGraphsData() : array
     {
+        $fields = $this->FieldList->getAllFieldsWithVariations();
+        $fields['calls_count'] = 'calls_count';
+
         $data = [];
-        foreach (array_keys($MainMethod->getHistoryData()) as $field) {
+        foreach ($fields as $field) {
             if ($field === 'calls_count') {
                 $data[$field] = [
                     'type' => 'times',
@@ -299,10 +300,10 @@ class ProfileMethodTreePage extends BasePage
             return [];
         }
 
-        $MethodData = $this->MethodData->getDataByMethodIdsAndSnapshotIds($snapshot_ids, [$method_id]);
-        $MethodData = $this->Method->injectMethodNames($MethodData);
+        $method_data = $this->MethodData->getDataByMethodIdsAndSnapshotIds($snapshot_ids, [$method_id]);
+        $method_data = $this->Method->injectMethodNames($method_data);
 
-        return $this->getProfilerRecordsWithHistory($MethodData, $dates_to_snapshots);
+        return $this->getProfilerRecordsWithHistory($method_data, $dates_to_snapshots);
     }
 
     protected function getMethodParentsWithHistory(array $dates_to_snapshots, int $method_id) : array
@@ -340,18 +341,20 @@ class ProfileMethodTreePage extends BasePage
     /**
      * @param \Badoo\LiveProfilerUI\Entity\MethodData[] $result
      * @param array $dates_to_snapshots
+     * @param int $method_id
      * @return array
      */
     protected function getProfilerRecordsWithHistory(array $result, array $dates_to_snapshots) : array
     {
-        $last_snapshot_id = end($dates_to_snapshots)['id'];
+        $all_fields = $this->FieldList->getAllFieldsWithVariations();
+
+        $snapshot_ids = array_column(array_filter($dates_to_snapshots), 'id');
+        $last_snapshot_id = end($snapshot_ids);
 
         $history = [];
         foreach ($result as $Row) {
             $history[$Row->getMethodId()][$Row->getSnapshotId()] = $Row;
         }
-
-        $all_fields = $this->FieldList->getAllFieldsWithVariations();
 
         $result = [];
         foreach ($history as $method_rows) {
