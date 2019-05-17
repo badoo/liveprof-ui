@@ -161,6 +161,36 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
         self::assertInstanceOf(\Badoo\LiveProfilerUI\Entity\Snapshot::class, $result);
     }
 
+    public function testListByIdsEmpty()
+    {
+        $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
+        $result = $Snapshot->getListByIds([]);
+
+        self::assertEmpty($result);
+        self::assertEquals([], $result);
+    }
+
+    public function testListByIdsResult()
+    {
+        $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
+        $result = $Snapshot->getListByIds([1]);
+
+        $expected = [
+            1 => [
+                'id' => 1,
+                'calls_count' => 1,
+                'app' => 'app1',
+                'label' => 'label1',
+                'date' => '2019-05-17',
+                'type' => 'auto',
+                'wt' => 2,
+            ]
+        ];
+
+        self::assertNotEmpty($result);
+        self::assertEquals($expected, $result);
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Can't get snapshot

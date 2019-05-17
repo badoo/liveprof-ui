@@ -114,6 +114,30 @@ class Snapshot extends Base implements SnapshotInterface
         );
     }
 
+    public function getListByIds(array $snapshot_ids) : array
+    {
+        if (empty($snapshot_ids)) {
+            return [];
+        }
+
+        $snapshots = $this->AggregatorStorage->getAll(
+            self::TABLE_NAME,
+            ['all'],
+            [
+                'filter' => [['id', $snapshot_ids]]
+            ]
+        );
+
+        $result = [];
+        if (!empty($snapshots)) {
+            foreach ($snapshots as $row) {
+                $result[$row['id']] = $row;
+            }
+        }
+
+        return $result;
+    }
+
     public function getOneByAppAndLabel(string $app, string $label) : \Badoo\LiveProfilerUI\Entity\Snapshot
     {
         $snapshot = $this->AggregatorStorage->getOne(

@@ -64,10 +64,10 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
             'exists_method_no_snapshots' => [
                 'method_name' => 'test',
                 'period' => 7,
-                'found_methods' => [1 => 'test'],
+                'found_methods' => [1 => ['name' => 'test']],
                 'methods_data' => [],
                 'expected' => [
-                    'methods' => [1 => 'test'],
+                    'methods' => [1 => ['name' => 'test']],
                     'method' => 'test',
                     'period' => 7,
                     'results' => [],
@@ -78,10 +78,10 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
             'exists_method' => [
                 'method_name' => 'test',
                 'period' => 7,
-                'found_methods' => [1 => 'test'],
+                'found_methods' => [1 => ['name' => 'test']],
                 'methods_data' => [$MethodDataMock],
                 'expected' => [
-                    'methods' => [1 => 'test'],
+                    'methods' => [1 => ['name' => 'test']],
                     'method' => 'test',
                     'period' => 7,
                     'results' => [
@@ -131,9 +131,9 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
         ];
         $SnapshotMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Snapshot::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getLastSnapshots'])
+            ->setMethods(['getListByIds'])
             ->getMock();
-        $SnapshotMock->method('getLastSnapshots')->willReturn([$snapshot]);
+        $SnapshotMock->method('getListByIds')->willReturn([1 => $snapshot]);
 
         $MethodDataMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\MethodData::class)
             ->disableOriginalConstructor()

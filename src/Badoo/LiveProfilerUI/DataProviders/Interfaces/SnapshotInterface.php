@@ -17,6 +17,7 @@ interface SnapshotInterface
     public function getList(string $app = '') : array;
     public function getLastSnapshots(string $app = '', string $from_date = '') : array;
     public function getOneById(int $snapshot_id) : Snapshot;
+    public function getListByIds(array $snapshot_ids) : array;
     public function getOneByAppAndLabel(string $app, string$label) : Snapshot;
     public function getOneByAppAndLabelAndDate(string $app, string $label, string $date) : Snapshot;
     public function getSnapshotsByDates(array $dates, string $param = '') : array;

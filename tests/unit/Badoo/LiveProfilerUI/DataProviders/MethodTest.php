@@ -25,7 +25,7 @@ class MethodTest extends \unit\Badoo\BaseTestCase
         $this->AggregatorStorage->query(
             'create table aggregator_metods (id integer, name text, date date)'
         );
-        $this->AggregatorStorage->insert('aggregator_metods', ['id' => 2, 'name' => 'method']);
+        $this->AggregatorStorage->insert('aggregator_metods', ['id' => 2, 'name' => 'method', 'date' => '1970-01-01']);
         $this->FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt'], [], []);
     }
 
@@ -42,7 +42,7 @@ class MethodTest extends \unit\Badoo\BaseTestCase
         $Method = new \Badoo\LiveProfilerUI\DataProviders\Method($this->AggregatorStorage, $this->FieldList);
         $result = $Method->findByName('method');
 
-        $expected = [2 => 'method'];
+        $expected = [2 => ['name' => 'method', 'id' => '2', 'date' => '1970-01-01']];
         self::assertEquals($expected, $result);
     }
 
@@ -52,12 +52,14 @@ class MethodTest extends \unit\Badoo\BaseTestCase
             ->disableOriginalConstructor()
             ->setMethods(['getAll'])
             ->getMock();
-        $StorageMock->method('getAll')->willReturn([['id' => 'method id', 'name' => 'method name']]);
+        $StorageMock->method('getAll')->willReturn([['id' => 2, 'name' => 'method name', 'date' => '1970-01-01']]);
 
         $Method = new \Badoo\LiveProfilerUI\DataProviders\Method($StorageMock, $this->FieldList);
         $result = $Method->findByName('method');
 
-        self::assertEquals(['method id' => 'method name'], $result);
+        $expected = [2 => ['name' => 'method name', 'id' => 2, 'date' => '1970-01-01']];
+
+        self::assertEquals($expected, $result);
     }
 
     public function testGetListByNames()

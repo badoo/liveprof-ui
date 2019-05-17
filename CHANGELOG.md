@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.5
+
+There are next changes:
+
+- improved method usage page
+
 ## 1.2.4
 
 There are next changes:

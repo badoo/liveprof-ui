@@ -78,26 +78,24 @@ class MethodUsagePage extends BasePage
 
         $results = [];
         if (!empty($methods)) {
-            $snapshot_list = $this->Snapshot->getLastSnapshots(
-                '',
-                date('Y-m-d', strtotime("-{$this->data['period']} day"))
-            );
-            $snapshots = [];
-            foreach ($snapshot_list as $snapshot) {
-                $snapshots[$snapshot['id']] = $snapshot;
-            }
-
             $method_data = $this->MethodData->getDataByMethodIdsAndSnapshotIds(
-                array_keys($snapshots),
+                [],
                 array_keys($methods),
-                50
+                100
             );
+
+            $snapshot_ids = [];
+            foreach ($method_data as $Row) {
+                $snapshot_id = $Row->getSnapshotId();
+                $snapshot_ids[$snapshot_id] = $snapshot_id;
+            }
+            $snapshots = $this->Snapshot->getListByIds($snapshot_ids);
 
             foreach ($method_data as $Row) {
                 $result = [];
                 $result['date'] = $snapshots[$Row->getSnapshotId()]['date'];
                 $result['method_id'] = $Row->getMethodId();
-                $result['method_name'] = $methods[$Row->getMethodId()];
+                $result['method_name'] = $methods[$Row->getMethodId()]['name'];
                 $result['app'] = $snapshots[$Row->getSnapshotId()]['app'];
                 $result['label'] = $snapshots[$Row->getSnapshotId()]['label'];
                 $values = $Row->getFormattedValues();

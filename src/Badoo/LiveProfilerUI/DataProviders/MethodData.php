@@ -42,18 +42,23 @@ class MethodData extends Base implements MethodDataInterface
         array $method_ids,
         int $limit = 0
     ) : array {
-        if (empty($snapshot_ids) || empty($method_ids)) {
+        if (empty($snapshot_ids) && empty($method_ids)) {
             return [];
+        }
+
+        $filters = [];
+        if (!empty($snapshot_ids)) {
+            $filters[] = ['snapshot_id', $snapshot_ids];
+        }
+        if (!empty($method_ids)) {
+            $filters[] = ['method_id', $method_ids];
         }
 
         $records = $this->AggregatorStorage->getAll(
             self::TABLE_NAME,
             ['all'],
             [
-                'filter' => [
-                    ['snapshot_id', $snapshot_ids],
-                    ['method_id', $method_ids],
-                ],
+                'filter' => $filters,
                 'order' => ['snapshot_id' => 'desc'],
                 'limit' => $limit
             ]

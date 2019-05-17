@@ -35,7 +35,7 @@ class Method extends Base implements MethodInterface
         $methods = [];
         if (!empty($result)) {
             foreach ($result as $row) {
-                $methods[$row['id']] = trim($row['name']);
+                $methods[$row['id']] = $row;
             }
         }
 

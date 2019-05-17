@@ -115,7 +115,17 @@ switch (getCurrentUri()) {
 
         /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $Page */
         $Page = $App->getPage('ajax_pages');
-        echo json_encode($Page->searchMethods($term));
+        $methods = $Page->searchMethods($term);
+
+        $result = [];
+        foreach ($methods as $method_id => $method) {
+            $result[] = [
+                'label' => $method['name'] . ' - ' . $method['date'],
+                'value' => $method['name'],
+            ];
+        }
+
+        echo json_encode($result);
         break;
 
     case '/profiler/get-source-app-list.json':
