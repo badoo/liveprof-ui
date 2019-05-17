@@ -217,14 +217,14 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             ->disableOriginalConstructor()
             ->setMethods(['getValue'])
             ->getMock();
-        $MethodTreeMock->method('getValue')->willReturn(300);
+        $MethodTreeMock->method('getValue')->willReturn(200);
         $data = [];
         for ($i = 0; $i < 3001; $i++) {
             $data[$i] = $MethodTreeMock;
         }
         return [
-            ['data' => [], 'expected' => 300],
-            ['data' => $data, 'expected' => 300],
+            ['data' => [], 'expected' => 200],
+            ['data' => $data, 'expected' => 200],
         ];
     }
 

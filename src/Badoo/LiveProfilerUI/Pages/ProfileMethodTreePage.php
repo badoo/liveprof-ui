@@ -341,7 +341,6 @@ class ProfileMethodTreePage extends BasePage
     /**
      * @param \Badoo\LiveProfilerUI\Entity\MethodData[] $result
      * @param array $dates_to_snapshots
-     * @param int $method_id
      * @return array
      */
     protected function getProfilerRecordsWithHistory(array $result, array $dates_to_snapshots) : array
