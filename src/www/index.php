@@ -69,8 +69,7 @@ switch (getCurrentUri()) {
 
     case '/profiler/method-usage.phtml':
         $data = [
-            'method' => isset($_GET['method']) ? trim($_GET['method']) : '',
-            'period' => isset($_GET['period']) ? (int)$_GET['period'] : 7,
+            'method' => isset($_GET['method']) ? trim($_GET['method']) : ''
         ];
         $Page = $App->getPage('method_usage_page');
         echo $Page->setData($data)->render();

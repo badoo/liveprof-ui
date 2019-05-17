@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.6
+
+There are next changes:
+
+- changed template of method usage page
+
 ## 1.2.5
 
 There are next changes:

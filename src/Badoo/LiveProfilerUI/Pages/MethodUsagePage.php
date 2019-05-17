@@ -43,7 +43,6 @@ class MethodUsagePage extends BasePage
     protected function cleanData() : bool
     {
         $this->data['method'] = isset($this->data['method']) ? trim($this->data['method']) : '';
-        $this->data['period'] = isset($this->data['period']) ? (int)$this->data['period'] : 7;
 
         return true;
     }
@@ -57,10 +56,6 @@ class MethodUsagePage extends BasePage
         $error = '';
         if (!$this->data['method']) {
             $error = 'Enter method name';
-        }
-
-        if ($this->data['period'] <= 0) {
-            $error = 'Invalid period';
         }
 
         $methods = [];
@@ -109,7 +104,6 @@ class MethodUsagePage extends BasePage
         return [
             'methods' => $methods,
             'method' => $this->data['method'],
-            'period' => $this->data['period'],
             'results' => $results,
             'field_descriptions' => $field_descriptions,
             'error' => $error

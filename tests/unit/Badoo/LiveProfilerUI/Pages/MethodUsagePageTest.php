@@ -19,43 +19,13 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
         $MethodDataMock->method('getFormattedValues')->willReturn(['wt' => 1, 'ct' => 1]);
 
         return [
-            'empty_method' => [
-                'method_name' => '',
-                'period' => 7,
-                'found_methods' => [],
-                'methods_data' => [],
-                'expected' => [
-                    'methods' => [],
-                    'method' => '',
-                    'period' => 7,
-                    'results' => [],
-                    'field_descriptions' => [],
-                    'error' => 'Enter method name'
-                ]
-            ],
-            'invalid_period' => [
-                'method_name' => 'test',
-                'period' => -1,
-                'found_methods' => [],
-                'methods_data' => [],
-                'expected' => [
-                    'methods' => [],
-                    'method' => 'test',
-                    'period' => -1,
-                    'results' => [],
-                    'field_descriptions' => [],
-                    'error' => 'Invalid period'
-                ]
-            ],
             'non_exists_method' => [
                 'method_name' => 'test',
-                'period' => 7,
                 'found_methods' => [],
                 'methods_data' => [],
                 'expected' => [
                     'methods' => [],
                     'method' => 'test',
-                    'period' => 7,
                     'results' => [],
                     'field_descriptions' => [],
                     'error' => 'Method "test" not found'
@@ -63,13 +33,11 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
             ],
             'exists_method_no_snapshots' => [
                 'method_name' => 'test',
-                'period' => 7,
                 'found_methods' => [1 => ['name' => 'test']],
                 'methods_data' => [],
                 'expected' => [
                     'methods' => [1 => ['name' => 'test']],
                     'method' => 'test',
-                    'period' => 7,
                     'results' => [],
                     'field_descriptions' => [],
                     'error' => ''
@@ -77,13 +45,11 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
             ],
             'exists_method' => [
                 'method_name' => 'test',
-                'period' => 7,
                 'found_methods' => [1 => ['name' => 'test']],
                 'methods_data' => [$MethodDataMock],
                 'expected' => [
                     'methods' => [1 => ['name' => 'test']],
                     'method' => 'test',
-                    'period' => 7,
                     'results' => [
                         [
                             'date' => 'date',
@@ -107,13 +73,12 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
     /**
      * @dataProvider providerGetTemplateData
      * @param $method_name
-     * @param $period
      * @param $found_methods
      * @param $methods_data
      * @param $expected
      * @throws \ReflectionException
      */
-    public function testGetTemplateData($method_name, $period, $found_methods, $methods_data, $expected)
+    public function testGetTemplateData($method_name, $found_methods, $methods_data, $expected)
     {
         $FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt', 'ct'], [], []);
 
@@ -143,7 +108,6 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
 
         $data = [
             'method' => $method_name,
-            'period' => $period,
         ];
 
         /** @var \Badoo\LiveProfilerUI\Pages\MethodUsagePage $PageMock */
@@ -173,12 +137,12 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
             ->getMock();
 
         /** @var \Badoo\LiveProfilerUI\Pages\MethodUsagePage $PageMock */
-        $PageMock->setData(['period' => '7', 'method' => ' method name ']);
+        $PageMock->setData(['method' => ' method name ']);
         $this->invokeMethod($PageMock, 'cleanData');
 
         $data = $this->getProtectedProperty($PageMock, 'data');
 
-        $expected = ['period' => 7, 'method' => 'method name'];
+        $expected = ['method' => 'method name'];
         self::assertEquals($expected, $data);
     }
 
