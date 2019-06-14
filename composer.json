@@ -1,7 +1,7 @@
 {
   "name": "badoo/liveprof-ui",
   "type": "library",
-  "description": "Aggregator and web interface for Live Profiler",
+  "description": "An aggregator and web interface for Live Profiler",
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
