@@ -177,13 +177,13 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
 
         $expected = [
             1 => [
-                'id' => 1,
-                'calls_count' => 1,
+                'id' => '1',
+                'calls_count' => '1',
                 'app' => 'app1',
                 'label' => 'label1',
-                'date' => '2019-05-17',
+                'date' => date('Y-m-d'),
                 'type' => 'auto',
-                'wt' => 2,
+                'wt' => '2',
             ]
         ];
 

@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.8
+
+There are next changes:
+
+- fixed tests, added php 7.3 in travis.yml
+
 ## 1.2.7
 
 There are next changes:
