@@ -70,6 +70,13 @@ class TopDiffPage extends BasePage
             [$this->calls_count_field]
         );// exclude calls count param (ct)
 
+        // add profiles count comparison for snapshot mode
+        $fields['calls_count'] = 'calls_count';
+
+        if ($this->data['mode'] !== 'snapshots' && $this->data['param'] === 'calls_count') {
+            $this->data['param'] = '';
+        }
+
         if (!$this->data['param']) {
             $this->data['param'] = current($fields);
         }

@@ -67,7 +67,7 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
                     'percent' => 100
                 ]),
             ],
-            'params' => ['wt' => 'wt'],
+            'params' => ['wt' => 'wt', 'calls_count' => 'calls_count'],
             'mode' => 'snapshots'
         ];
         static::assertEquals($expected, $result);
@@ -162,7 +162,7 @@ class TopDiffPageTest extends \unit\Badoo\BaseTestCase
                     'percent' => 0
                 ]),
             ],
-            'params' => ['wt' => 'wt'],
+            'params' => ['wt' => 'wt', 'calls_count' => 'calls_count'],
             'mode' => 'methods_exclude'
         ];
         static::assertEquals($expected, $result);

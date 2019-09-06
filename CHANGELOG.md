@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.9
+
+There are next changes:
+
+- added profiles count comparison on top diff page
+
 ## 1.2.8
 
 There are next changes:
