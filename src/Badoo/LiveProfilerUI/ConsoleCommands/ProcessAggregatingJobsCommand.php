@@ -28,7 +28,11 @@ class ProcessAggregatingJobsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $lock_filename = '/tmp/aggregator_processor.lock';
+        $output->writeln($this->getName() . ' started');
+
+        $App = new \Badoo\LiveProfilerUI\LiveProfilerUI();
+
+        $lock_filename = $App->getAggregatingJobsLockFile();
         !file_exists($lock_filename) && touch($lock_filename);
         $lock_fp = fopen($lock_filename, 'rb+');
         if (!flock($lock_fp, LOCK_EX | LOCK_NB)) {
@@ -37,10 +41,6 @@ class ProcessAggregatingJobsCommand extends Command
         }
 
         ini_set('memory_limit', '1G');
-
-        $output->writeln($this->getName() . ' started');
-
-        $App = new \Badoo\LiveProfilerUI\LiveProfilerUI();
 
         $JobStorage = $App->getJobDataProvider();
 

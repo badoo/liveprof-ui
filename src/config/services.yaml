@@ -7,6 +7,7 @@ parameters:
   aggregator.use_layout: true
   aggregator.log_file: ''
   aggregator.minimum_profiles_count: 0
+  aggregator.aggregating_jobs_lock_file: /app/db_data/aggregator_processor.lock
 
   aggregator.fields_descriptions:
     ct: Average calls count in this context during specified day (µs)

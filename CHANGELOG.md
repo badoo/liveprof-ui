@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.10
+
+There are next changes:
+
+- added a parameter to customise a lock name for the aggregating jobs script
+
 ## 1.2.9
 
 There are next changes:

@@ -170,4 +170,13 @@ class LiveProfilerUI
     {
         return (bool)$this->getContainer()->getParameter('aggregator.use_jobs_in_aggregation');
     }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function getAggregatingJobsLockFile() : string
+    {
+        return (string)$this->getContainer()->getParameter('aggregator.aggregating_jobs_lock_file');
+    }
 }
