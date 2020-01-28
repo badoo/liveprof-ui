@@ -32,7 +32,6 @@
         <tr>
             <th class="sorter-false" style="width: 20px;">#</th>
             <th class="sorter-text">date</th>
-            <th>method</th>
             <th>label</th>
             <th>app</th>
             <?php foreach ($data['results'][0]['fields'] as $field_name => $field_value) { ?>
@@ -53,7 +52,6 @@
                 </a>
             </td>
             <td><?= $result['date'] ?></td>
-            <td><?= $result['method_name'] ?></td>
             <td><?= $result['label'] ?></td>
             <td><?= $result['app'] ?></td>
             <?php foreach ($result['fields'] as $field) { ?>

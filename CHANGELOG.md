@@ -4,6 +4,13 @@
 
 There are next changes:
 
+## 1.2.11
+
+There are next changes:
+
+- optimized a method usage page for huge tables
+- added a calls_count param to display calls count recorded during specified day
+
 ## 1.2.10
 
 There are next changes:

@@ -25,19 +25,23 @@ class MethodUsagePage extends BasePage
     protected $MethodData;
     /** @var FieldList */
     protected $FieldList;
+    /** @var bool */
+    protected $use_method_usage_optimisation = false;
 
     public function __construct(
         View $View,
         SnapshotInterface $Snapshot,
         MethodInterface $Method,
         MethodDataInterface $MethodData,
-        FieldList $FieldList
+        FieldList $FieldList,
+        bool $use_method_usage_optimisation = false
     ) {
         $this->View = $View;
         $this->Snapshot = $Snapshot;
         $this->Method = $Method;
         $this->MethodData = $MethodData;
         $this->FieldList = $FieldList;
+        $this->use_method_usage_optimisation = $use_method_usage_optimisation;
     }
 
     protected function cleanData() : bool
@@ -73,10 +77,19 @@ class MethodUsagePage extends BasePage
 
         $results = [];
         if (!empty($methods)) {
+            $start_snapshot_id = 0;
+            if ($this->use_method_usage_optimisation) {
+                $last_two_days = \Badoo\LiveProfilerUI\DateGenerator::getDatesArray(date('Y-m-d'), 2, 2);
+                $start_snapshot_id = in_array(current($methods)['date'], $last_two_days, true)
+                    ? $this->Snapshot->getMinSnapshotIdByDates($last_two_days)
+                    : 0;
+            }
+
             $method_data = $this->MethodData->getDataByMethodIdsAndSnapshotIds(
                 [],
                 array_keys($methods),
-                100
+                200,
+                $start_snapshot_id
             );
 
             $snapshot_ids = [];
@@ -97,6 +110,7 @@ class MethodUsagePage extends BasePage
                 foreach ($fields as $field) {
                     $result['fields'][$field] = $values[$field];
                 }
+                $result['fields']['calls_count'] = $snapshots[$Row->getSnapshotId()]['calls_count'];
                 $results[] = $result;
             }
         }

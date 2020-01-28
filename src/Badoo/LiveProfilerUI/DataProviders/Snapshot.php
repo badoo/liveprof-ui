@@ -250,6 +250,25 @@ class Snapshot extends Base implements SnapshotInterface
         return $result;
     }
 
+    public function getMinSnapshotIdByDates(array $dates) : int
+    {
+        if (empty($dates)) {
+            return 0;
+        }
+
+        $snapshot = $this->AggregatorStorage->getOne(
+            self::TABLE_NAME,
+            [['field' => 'id', 'function' => 'min']],
+            [
+                'filter' => [
+                    ['date', $dates],
+                ],
+            ]
+        );
+
+        return $snapshot ? (int)$snapshot['id'] : 0;
+    }
+
     public function getOldSnapshots(int $keep_days = 200, int $limit = 2000) : array
     {
         $snapshots = $this->AggregatorStorage->getAll(

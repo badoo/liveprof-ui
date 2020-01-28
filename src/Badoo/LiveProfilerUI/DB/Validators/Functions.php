@@ -15,6 +15,7 @@ class Functions
         'sum',
         'date',
         'max',
+        'min',
     ];
 
     public static function validate(string $function) : bool

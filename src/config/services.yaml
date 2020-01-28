@@ -8,9 +8,11 @@ parameters:
   aggregator.log_file: ''
   aggregator.minimum_profiles_count: 0
   aggregator.aggregating_jobs_lock_file: /app/db_data/aggregator_processor.lock
+  aggregator.use_method_usage_optimisation: false # returns only last day usage if method run for last 2 days
 
   aggregator.fields_descriptions:
-    ct: Average calls count in this context during specified day (µs)
+    calls_count: Calls count recorded during specified day
+    ct: Average calls count in this context during specified day
     min_ct: Minimum calls count in this context during specified day (µs)
     max_ct: Maximim calls count in this context during specified day (µs)
     percent_ct: 90 percentile of calls count in this context during specified day (µs)
@@ -93,7 +95,7 @@ services:
 
   method_usage_page:
     class: \Badoo\LiveProfilerUI\Pages\MethodUsagePage
-    arguments: ['@view', '@snapshot', '@method', '@method_data', '@fields']
+    arguments: ['@view', '@snapshot', '@method', '@method_data', '@fields', '%aggregator.use_method_usage_optimisation%']
 
   top_diff_page:
     class: \Badoo\LiveProfilerUI\Pages\TopDiffPage

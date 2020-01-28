@@ -40,7 +40,8 @@ class MethodData extends Base implements MethodDataInterface
     public function getDataByMethodIdsAndSnapshotIds(
         array $snapshot_ids,
         array $method_ids,
-        int $limit = 0
+        int $limit = 0,
+        int $start_snapshot_id = 0
     ) : array {
         if (empty($snapshot_ids) && empty($method_ids)) {
             return [];
@@ -53,6 +54,9 @@ class MethodData extends Base implements MethodDataInterface
         if (!empty($method_ids)) {
             $filters[] = ['method_id', $method_ids];
         }
+        if ($start_snapshot_id) {
+            $filters[] = ['snapshot_id', $start_snapshot_id, '>='];
+        }
 
         $records = $this->AggregatorStorage->getAll(
             self::TABLE_NAME,
@@ -60,7 +64,7 @@ class MethodData extends Base implements MethodDataInterface
             [
                 'filter' => $filters,
                 'order' => ['snapshot_id' => 'desc'],
-                'limit' => $limit
+                'limit' => $limit,
             ]
         );
 

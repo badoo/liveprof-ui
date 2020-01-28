@@ -59,7 +59,8 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
                             'label' => 'label',
                             'fields' => [
                                 'ct' => 1,
-                                'wt' => 1
+                                'wt' => 1,
+                                'calls_count' => 1
                             ]
                         ]
                     ],
@@ -92,7 +93,8 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
             'id' => 1,
             'app' => 'app',
             'label' => 'label',
-            'date' => 'date'
+            'date' => 'date',
+            'calls_count' => 1
         ];
         $SnapshotMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Snapshot::class)
             ->disableOriginalConstructor()
