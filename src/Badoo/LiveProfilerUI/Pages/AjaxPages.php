@@ -160,6 +160,22 @@ class AjaxPages
         }
     }
 
+    public function allMethods() : array
+    {
+        try {
+            $methods = $this->Method->all();
+
+            $result = [];
+            foreach ($methods as $method) {
+                $result[$method['name']] = $method['date'];
+            }
+
+            return $result;
+        } catch (\Throwable $Ex) {
+            return [];
+        }
+    }
+
     public function getSourceAppList() : array
     {
         try {

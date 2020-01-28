@@ -42,6 +42,23 @@ class Method extends Base implements MethodInterface
         return $methods;
     }
 
+    public function all() : array
+    {
+        $result = $this->AggregatorStorage->getAll(
+            self::TABLE_NAME,
+            ['all'],
+            []
+        );
+        $methods = [];
+        if (!empty($result)) {
+            foreach ($result as $row) {
+                $methods[$row['id']] = $row;
+            }
+        }
+
+        return $methods;
+    }
+
     public function getListByNames(array $names) : array
     {
         if (empty($names)) {

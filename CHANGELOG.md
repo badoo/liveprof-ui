@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.12
+
+There are next changes:
+
+- added a method to return all saved methods
+
 ## 1.2.11
 
 There are next changes:

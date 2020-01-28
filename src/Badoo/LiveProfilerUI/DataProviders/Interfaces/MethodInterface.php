@@ -9,6 +9,7 @@ namespace Badoo\LiveProfilerUI\DataProviders\Interfaces;
 interface MethodInterface
 {
     public function findByName(string $method_name, bool $strict = false) : array;
+    public function all() : array;
     public function getListByNames(array $names) : array;
     public function getListByIds(array $ids) : array;
     public function insertMany(array $inserts) : bool;
