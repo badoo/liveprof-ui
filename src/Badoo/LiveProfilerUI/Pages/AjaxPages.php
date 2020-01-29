@@ -10,7 +10,9 @@ use Badoo\LiveProfilerUI\Aggregator;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\SourceInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\JobInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodInterface;
+use Badoo\LiveProfilerUI\DataProviders\Interfaces\MethodDataInterface;
 use Badoo\LiveProfilerUI\DataProviders\Interfaces\SnapshotInterface;
+use Badoo\LiveProfilerUI\FieldList;
 
 class AjaxPages
 {
@@ -18,28 +20,36 @@ class AjaxPages
     protected $Snapshot;
     /** @var MethodInterface */
     protected $Method;
+    /** @var MethodDataInterface */
+    protected $MethodData;
     /** @var JobInterface */
     protected $Job;
     /** @var Aggregator */
     protected $Aggregator;
     /** @var SourceInterface */
     protected $Source;
+    /** @var FieldList */
+    protected $FieldList;
     /** @var bool */
     protected $use_jobs;
 
     public function __construct(
         SnapshotInterface $Snapshot,
         MethodInterface $Method,
+        MethodDataInterface $MethodData,
         JobInterface $Job,
         Aggregator $Aggregator,
         SourceInterface $Source,
+        FieldList $FieldList,
         bool $use_jobs = false
     ) {
         $this->Snapshot = $Snapshot;
         $this->Method = $Method;
+        $this->MethodData = $MethodData;
         $this->Job = $Job;
         $this->Aggregator = $Aggregator;
         $this->Source = $Source;
+        $this->FieldList = $FieldList;
         $this->use_jobs = $use_jobs;
     }
 
@@ -155,6 +165,63 @@ class AjaxPages
         $term = ltrim($term, '\\');
         try {
             return $this->Method->findByName($term);
+        } catch (\Throwable $Ex) {
+            return [];
+        }
+    }
+
+    public function getMethodUsedApps(string $method_name) : array
+    {
+        $method_name = ltrim($method_name, '\\');
+        try {
+            $methods = $this->Method->findByName($method_name, true);
+            if (!$methods) {
+                return [];
+            }
+
+            $method = current($methods);
+
+            $last_two_days = \Badoo\LiveProfilerUI\DateGenerator::getDatesArray(date('Y-m-d'), 2, 2);
+            $start_snapshot_id = in_array(current($methods)['date'], $last_two_days, true)
+                ? $this->Snapshot->getMinSnapshotIdByDates($last_two_days)
+                : 0;
+
+            $method_data = $this->MethodData->getDataByMethodIdsAndSnapshotIds(
+                [],
+                [$method['id']],
+                100,
+                $start_snapshot_id
+            );
+
+            $snapshot_ids = [];
+            foreach ($method_data as $Row) {
+                $snapshot_id = $Row->getSnapshotId();
+                $snapshot_ids[$snapshot_id] = $snapshot_id;
+            }
+            $snapshots = $this->Snapshot->getListByIds($snapshot_ids);
+
+            $fields = $this->FieldList->getFields();
+
+            $results = [];
+            foreach ($method_data as $Row) {
+                $result = [];
+                $result['app'] = $snapshots[$Row->getSnapshotId()]['app'];
+                $result['label'] = $snapshots[$Row->getSnapshotId()]['label'];
+
+                $uniq_key = $result['app'] . '_' . $result['label'];
+                if (!empty($results[$uniq_key])) {
+                    continue;
+                }
+
+                $values = $Row->getFormattedValues();
+                foreach ($fields as $field) {
+                    $result['fields'][$field] = $values[$field];
+                }
+                $result['fields']['calls_count'] = $snapshots[$Row->getSnapshotId()]['calls_count'];
+
+                $results[$uniq_key] = $result;
+            }
+            return array_values($results);
         } catch (\Throwable $Ex) {
             return [];
         }

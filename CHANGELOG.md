@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.14
+
+There are next changes:
+
+- added method-used-apps.json
+
 ## 1.2.13
 
 There are next changes:

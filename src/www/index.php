@@ -127,6 +127,16 @@ switch (getCurrentUri()) {
         echo json_encode($result);
         break;
 
+    case '/profiler/method-used-apps.json':
+        $method = isset($_GET['method']) ? trim($_GET['method']) : '';
+        header('Content-Type: application/json;charset=UTF-8');
+
+        /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $Page */
+        $Page = $App->getPage('ajax_pages');
+
+        echo json_encode($Page->getMethodUsedApps($method));
+        break;
+
     case '/profiler/all-methods.json':
         header('Content-Type: application/json;charset=UTF-8');
 

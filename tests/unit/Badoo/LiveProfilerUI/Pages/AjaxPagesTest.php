@@ -476,6 +476,12 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
             ->setMethods()
             ->getMock();
 
+        /** @var \Badoo\LiveProfilerUI\DataProviders\MethodData $MethodDataMock */
+        $MethodDataMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\MethodData::class)
+            ->disableOriginalConstructor()
+            ->setMethods([])
+            ->getMock();
+
         /** @var \Badoo\LiveProfilerUI\DataProviders\Job $JobMock */
         $JobMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Job::class)
             ->disableOriginalConstructor()
@@ -494,14 +500,18 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
             ->setMethods()
             ->getMock();
 
+        $FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt'], ['min', 'max', 'percent'], []);
+
         $use_jobs = true;
 
         $Page = new \Badoo\LiveProfilerUI\Pages\AjaxPages(
             $SnapshotMock,
             $MethodMock,
+            $MethodDataMock,
             $JobMock,
             $AggregatorMock,
             $SourceMock,
+            $FieldList,
             $use_jobs
         );
 
