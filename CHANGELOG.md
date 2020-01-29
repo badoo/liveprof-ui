@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.13
+
+There are next changes:
+
+- fixed a fatal error in the aggregator script
+
 ## 1.2.12
 
 There are next changes:

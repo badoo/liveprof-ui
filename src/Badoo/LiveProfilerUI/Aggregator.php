@@ -265,6 +265,7 @@ class Aggregator
     protected function aggregateRow(array $map) : array
     {
         foreach ($this->fields as $param) {
+            $map[$param . 's'] = $map[$param . 's'] ?? '';
             $map[$param . 's'] = explode(',', rtrim($map[$param . 's'], ','));
             $map[$param] = array_sum($map[$param . 's']);
             foreach ($this->field_variations as $field_variation) {
