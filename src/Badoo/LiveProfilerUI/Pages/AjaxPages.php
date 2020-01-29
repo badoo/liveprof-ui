@@ -175,7 +175,7 @@ class AjaxPages
         $method_name = ltrim($method_name, '\\');
         try {
             $methods = $this->Method->findByName($method_name, true);
-            if (!$methods) {
+            if (empty($methods)) {
                 return [];
             }
 
@@ -207,13 +207,14 @@ class AjaxPages
                 $result = [];
                 $result['app'] = $snapshots[$Row->getSnapshotId()]['app'];
                 $result['label'] = $snapshots[$Row->getSnapshotId()]['label'];
+                $result['date'] = $snapshots[$Row->getSnapshotId()]['date'];
 
                 $uniq_key = $result['app'] . '_' . $result['label'];
                 if (!empty($results[$uniq_key])) {
                     continue;
                 }
 
-                $values = $Row->getFormattedValues();
+                $values = $Row->getValues();
                 foreach ($fields as $field) {
                     $result['fields'][$field] = $values[$field];
                 }

@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.16
+
+There are next changes:
+
+- fixed /profiler/method-used-apps.json
+
 ## 1.2.15
 
 There are next changes:
