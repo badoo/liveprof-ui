@@ -81,6 +81,7 @@ class ProfileMethodTreePage extends BasePage
         $this->data['method_id'] = isset($this->data['method_id']) ? (int)$this->data['method_id'] : 0;
 
         if (!empty($this->data['method_name']) && !$this->data['method_id']) {
+            $this->data['method_name'] = ltrim($this->data['method_name'], '\\');
             $methods = $this->Method->findByName($this->data['method_name'], true);
             if (!empty($methods)) {
                 $this->data['method_id'] = array_keys($methods)[0];

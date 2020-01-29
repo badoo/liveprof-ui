@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.15
+
+There are next changes:
+
+- improved the method tree page
+
 ## 1.2.14
 
 There are next changes:
