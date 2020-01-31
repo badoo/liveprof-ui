@@ -133,8 +133,37 @@ switch (getCurrentUri()) {
 
         /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $Page */
         $Page = $App->getPage('ajax_pages');
+        $method_data = $Page->getMethodUsedApps($method);
 
-        echo json_encode($Page->getMethodUsedApps($method));
+        $result = [];
+        if ($method_data) {
+            foreach ($method_data as $item) {
+                if (empty($item['fields']) || empty($item['fields']['calls_count'])) {
+                    continue;
+                }
+
+                $item['cpu'] = $item['fields']['cpu'] / 1000;
+                $item['ct'] = $item['fields']['ct'];
+                $item['calls_count'] = (int)$item['fields']['calls_count'];
+                unset($item['fields']);
+                // Keep 1 app with maximum cpu
+                if (isset($result[$item['app']]) && $result[$item['app']]['cpu'] > $item['cpu']) {
+                    continue;
+                }
+                $result[$item['app']] = $item;
+            }
+
+            uasort(
+                $result,
+                static function ($a, $b) {
+                    return $b['cpu'] <=> $a['cpu'];
+                }
+            );
+
+            $result = array_values($result);
+        }
+
+        echo json_encode($result);
         break;
 
     case '/profiler/all-methods.json':

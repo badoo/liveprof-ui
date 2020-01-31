@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.17
+
+There are next changes:
+
+- made /profiler/method-used-apps.json compatible to phpstorm plugin
+
 ## 1.2.16
 
 There are next changes:
