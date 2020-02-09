@@ -14,6 +14,10 @@ What is the historical trend for execution time of a page/function? and so on.
 
 You can find the full documentation in [Live Profiler UI wiki](https://github.com/badoo/liveprof-ui/wiki)
 
+Here is [a plugin](https://plugins.jetbrains.com/plugin/13767-live-profiler) for PhpStorm to see the method performance directly in IDE.
+
+[liveprof.org](http://liveprof.org/) shown all features and can be used for test purposes.
+
 [![Build Status](https://travis-ci.org/badoo/liveprof-ui.svg?branch=master)](https://travis-ci.org/badoo/liveprof-ui)
 [![GitHub release](https://img.shields.io/github/release/badoo/liveprof-ui.svg)](https://github.com/badoo/liveprof-ui/releases/latest)
 [![codecov](https://codecov.io/gh/badoo/liveprof-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/badoo/liveprof-ui)
