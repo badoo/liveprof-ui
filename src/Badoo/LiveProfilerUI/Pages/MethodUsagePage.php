@@ -105,7 +105,6 @@ class MethodUsagePage extends BasePage
                 $result = [];
                 $result['date'] = $snapshots[$Row->getSnapshotId()]['date'];
                 $result['method_id'] = $Row->getMethodId();
-                $result['method_name'] = $methods[$Row->getMethodId()]['name'];
                 $result['app'] = $snapshots[$Row->getSnapshotId()]['app'];
                 $result['label'] = $snapshots[$Row->getSnapshotId()]['label'];
                 $values = $Row->getFormattedValues();

@@ -50,7 +50,6 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
                     'results' => [
                         [
                             'date' => 'date',
-                            'method_name' => 'test',
                             'method_id' => 1,
                             'app' => 'app',
                             'label' => 'label',
