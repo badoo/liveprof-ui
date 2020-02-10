@@ -24,7 +24,6 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
                 'found_methods' => [],
                 'methods_data' => [],
                 'expected' => [
-                    'methods' => [],
                     'method' => 'test',
                     'results' => [],
                     'field_descriptions' => [],
@@ -33,22 +32,20 @@ class MethodUsagePageTest extends \unit\Badoo\BaseTestCase
             ],
             'exists_method_no_snapshots' => [
                 'method_name' => 'test',
-                'found_methods' => [1 => ['name' => 'test']],
+                'found_methods' => [1 => ['id' => 1, 'name' => 'test', 'date' => '2019-01-01']],
                 'methods_data' => [],
                 'expected' => [
-                    'methods' => [1 => ['name' => 'test']],
                     'method' => 'test',
                     'results' => [],
                     'field_descriptions' => [],
-                    'error' => ''
+                    'error' => 'There is no result for test. Last time it was called on 2019-01-01.'
                 ]
             ],
             'exists_method' => [
                 'method_name' => 'test',
-                'found_methods' => [1 => ['name' => 'test']],
+                'found_methods' => [1 => ['id' => 1, 'name' => 'test', 'date' => '2019-01-01']],
                 'methods_data' => [$MethodDataMock],
                 'expected' => [
-                    'methods' => [1 => ['name' => 'test']],
                     'method' => 'test',
                     'results' => [
                         [

@@ -62,13 +62,15 @@ class MethodUsagePage extends BasePage
             $error = 'Enter method name';
         }
 
-        $methods = [];
+        $method = [];
         if (!$error) {
             $this->data['method'] = ltrim($this->data['method'], '\\');
             $methods = $this->Method->findByName($this->data['method'], true);
 
             if (empty($methods)) {
                 $error = 'Method "' . $this->data['method'] . '" not found';
+            } else {
+                $method = current($methods);
             }
         }
 
@@ -76,18 +78,18 @@ class MethodUsagePage extends BasePage
         $field_descriptions = $this->FieldList->getFieldDescriptions();
 
         $results = [];
-        if (!empty($methods)) {
+        if (!empty($method)) {
             $start_snapshot_id = 0;
             if ($this->use_method_usage_optimisation) {
                 $last_two_days = \Badoo\LiveProfilerUI\DateGenerator::getDatesArray(date('Y-m-d'), 2, 2);
-                $start_snapshot_id = in_array(current($methods)['date'], $last_two_days, true)
+                $start_snapshot_id = in_array($method['date'], $last_two_days, true)
                     ? $this->Snapshot->getMinSnapshotIdByDates($last_two_days)
                     : 0;
             }
 
             $method_data = $this->MethodData->getDataByMethodIdsAndSnapshotIds(
                 [],
-                array_keys($methods),
+                [$method['id']],
                 200,
                 $start_snapshot_id
             );
@@ -113,10 +115,13 @@ class MethodUsagePage extends BasePage
                 $result['fields']['calls_count'] = $snapshots[$Row->getSnapshotId()]['calls_count'];
                 $results[] = $result;
             }
+
+            if (empty($results)) {
+                $error = 'There is no result for ' . $this->data['method'] . '. Last time it was called on ' . $method['date'] . '.';
+            }
         }
 
         return [
-            'methods' => $methods,
             'method' => $this->data['method'],
             'results' => $results,
             'field_descriptions' => $field_descriptions,

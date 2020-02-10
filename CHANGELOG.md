@@ -4,6 +4,12 @@
 
 There are next changes:
 
+## 1.2.18
+
+There are next changes:
+
+- show an error message on the method usage page if no results found
+
 ## 1.2.17
 
 There are next changes:
