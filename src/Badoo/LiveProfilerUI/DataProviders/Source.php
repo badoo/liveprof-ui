@@ -85,19 +85,25 @@ class Source implements SourceInterface
         return $result ? array_column($result, 'perfdata') : [];
     }
 
-    public function getLabelList() : array
+    public function getLabelList(?string $app = null) : array
     {
+        $filter = [
+            'filter' => [
+                ['timestamp', date('Y-m-d 00:00:00', strtotime('-1 day')), '>'],
+                ['label', '', '!=']
+            ],
+            'group' => ['label'],
+            'order' => ['label' => 'asc']
+        ];
+
+        if (isset($app)) {
+            $filter['filter'][] = ['app', $app, '='];
+        }
+
         $labels = $this->SourceStorage->getAll(
             self::TABLE_NAME,
             ['label'],
-            [
-                'filter' => [
-                    ['timestamp', date('Y-m-d 00:00:00', strtotime('-1 day')), '>'],
-                    ['label', '', '!=']
-                ],
-                'group' => ['label'],
-                'order' => ['label' => 'asc']
-            ]
+            $filter
         );
 
         return $labels ? array_column($labels, 'label') : [];

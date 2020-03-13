@@ -253,10 +253,10 @@ class AjaxPages
         }
     }
 
-    public function getSourceLabelList() : array
+    public function getSourceLabelList(?string $app = null) : array
     {
         try {
-            return $this->Source->getLabelList();
+            return $this->Source->getLabelList($app);
         } catch (\Exception $Ex) {
             return [];
         }

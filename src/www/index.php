@@ -188,7 +188,7 @@ switch (getCurrentUri()) {
 
         /** @var \Badoo\LiveProfilerUI\Pages\AjaxPages $Page */
         $Page = $App->getPage('ajax_pages');
-        echo json_encode($Page->getSourceLabelList());
+        echo json_encode($Page->getSourceLabelList($_GET['app']));
         break;
 
     case '/profiler/result-list.phtml':

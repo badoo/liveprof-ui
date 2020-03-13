@@ -241,16 +241,6 @@
                     );
                 });
             });
-
-            $.getJSON("/profiler/get-source-label-list.json", null, function(data) {
-                $.each(data, function(index, item) {
-                    $("#label").append(
-                        $("<option></option>")
-                            .text(item)
-                            .val(item)
-                    );
-                });
-            });
         });
 
         $.tablesorter.addParser({
@@ -331,6 +321,31 @@
             });
 
             aggregate_snapshot(data);
+            return false;
+        });
+
+        $('#app').on('change', function (e) {
+            var app = e.target.value;
+
+            $.ajax({
+                url: '/profiler/get-source-label-list.json',
+                data: {'app': app},
+                success: function (data) {
+                    if (data) {
+                        $("#label").html('');
+                        $.each(data, function (index, item) {
+                            $("#label").append(
+                                $("<option></option>")
+                                    .text(item)
+                                    .val(item)
+                            );
+                        });
+                    }
+                },
+                dataType: 'json',
+                method: 'get',
+            });
+
             return false;
         });
     });
