@@ -16,8 +16,6 @@ You can find the full documentation in [Live Profiler UI wiki](https://github.co
 
 Here is [a plugin](https://plugins.jetbrains.com/plugin/13767-live-profiler) for PhpStorm to see the method performance directly in IDE.
 
-[liveprof.org](http://liveprof.org/) shows all features and can be used for test purposes.
-
 [![Build Status](https://travis-ci.org/badoo/liveprof-ui.svg?branch=master)](https://travis-ci.org/badoo/liveprof-ui)
 [![GitHub release](https://img.shields.io/github/release/badoo/liveprof-ui.svg)](https://github.com/badoo/liveprof-ui/releases/latest)
 [![codecov](https://codecov.io/gh/badoo/liveprof-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/badoo/liveprof-ui)
@@ -27,7 +25,7 @@ Here is [a plugin](https://plugins.jetbrains.com/plugin/13767-live-profiler) for
 System Requirements
 ===================
 
-* PHP version 7.0 or later to use web interface and run aggregation scripts. 
+* PHP version 7.3 or later to use web interface and run aggregation scripts. 
 * PHP version 5.4 or later / hhvm version 3.25.0 or later to collect profiles using [Live Profiler](https://github.com/badoo/liveprof)
 * Connection to database with profiling result. You can collect profiles using [Live Profiler](https://github.com/badoo/liveprof) tool
 * Database extension (mysqli, pgsql, sqlite support included)
