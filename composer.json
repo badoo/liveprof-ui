@@ -10,7 +10,6 @@
     }
   ],
   "require": {
-    "badoo/liveprof": "^1.3",
     "php": ">=7.0",
     "symfony/dependency-injection": "~3.0|~4.0",
     "symfony/config": "~3.0|~4.0",
