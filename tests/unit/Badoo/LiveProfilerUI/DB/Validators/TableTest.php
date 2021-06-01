@@ -18,12 +18,10 @@ class TableTest extends \unit\Badoo\BaseTestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid table name: table
-     */
     public function testValidateError()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid table name: table');
         $table = 'table';
         Table::validate($table);
     }

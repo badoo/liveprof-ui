@@ -18,12 +18,10 @@ class DirectionTest extends \unit\Badoo\BaseTestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid order direction: Invalid
-     */
     public function testValidateError()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid order direction: Invalid');
         $direction = 'Invalid';
         Direction::validate($direction);
     }

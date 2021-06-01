@@ -14,7 +14,7 @@ class FileSourceTest extends \unit\Badoo\BaseTestCase
     /** @var \Badoo\LiveProfilerUI\Interfaces\DataPackerInterface */
     protected $DataPacker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -61,7 +61,7 @@ class FileSourceTest extends \unit\Badoo\BaseTestCase
         $this->DataPacker = new \Badoo\LiveProfilerUI\DataPacker();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

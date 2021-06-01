@@ -321,9 +321,9 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
         $this->setProtectedProperty($AggregatorMock, 'fields', $FieldList->getFields());
         $result = $this->invokeMethod($AggregatorMock, 'processPerfdata', [$data]);
 
-        self::assertAttributeEquals($methods, 'methods', $AggregatorMock);
-        self::assertAttributeEquals($call_map, 'call_map', $AggregatorMock);
-        self::assertAttributeEquals($method_data, 'method_data', $AggregatorMock);
+        self::assertEquals($methods, $this->getProtectedProperty($AggregatorMock, 'methods'));
+        self::assertEquals($call_map, $this->getProtectedProperty($AggregatorMock, 'call_map'));
+        self::assertEquals($method_data, $this->getProtectedProperty($AggregatorMock, 'method_data'));
 
         static::assertEquals($expected, $result);
     }
@@ -439,8 +439,8 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
 
         $this->invokeMethod($AggregatorMock, 'aggregate', []);
 
-        self::assertAttributeEquals($expected_call_map, 'call_map', $AggregatorMock);
-        self::assertAttributeEquals($expected_method_data, 'method_data', $AggregatorMock);
+        self::assertEquals($expected_call_map, $this->getProtectedProperty($AggregatorMock, 'call_map'));
+        self::assertEquals($expected_method_data, $this->getProtectedProperty($AggregatorMock, 'method_data'));
     }
 
     /**
@@ -613,7 +613,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
      */
     public function testGetAndPopulateMethodNamesMap()
     {
-        $method_names = ['method' => 1];
+        $method_names = ['method' => ['date' => 1]];
         $AggregatorMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Aggregator::class)
             ->disableOriginalConstructor()
             ->setMethods(['getMethodNamesMap', 'pushToMethodNamesMap'])
@@ -629,7 +629,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
         $method_names = ['method'];
         $result = $this->invokeMethod($AggregatorMock, 'getAndPopulateMethodNamesMap', [$method_names]);
 
-        $expected = ['method' => 1];
+        $expected = ['method' => ['date' => 1]];
         self::assertEquals($expected, $result);
     }
 
@@ -725,19 +725,19 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
         return [
             [
                 'exists_snapshot' => null,
-                'update_result' => 1,
+                'update_result' => true,
                 'create_result' => 1,
                 'expected' => 1
             ],
             [
                 'exists_snapshot' => null,
-                'update_result' => 1,
+                'update_result' => true,
                 'create_result' => 0,
                 'expected' => false
             ],
             [
                 'exists_snapshot' => $SnapshotMock,
-                'update_result' => 1,
+                'update_result' => true,
                 'create_result' => 0,
                 'expected' => 2
             ]
@@ -795,7 +795,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
             [
                 'method_data' => 'method_data',
                 'delete_result' => true,
-                'create_result' => true,
+                'create_result' => 1,
                 'save_tree' => true,
                 'save_data' => true,
                 'error_msg' => [],
@@ -804,7 +804,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
             [
                 'method_data' => 'method_data',
                 'delete_result' => false,
-                'create_result' => true,
+                'create_result' => 1,
                 'save_tree' => true,
                 'save_data' => true,
                 'error_msg' => ['Can\'t delete old data'],
@@ -813,7 +813,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
             [
                 'method_data' => 'method_data',
                 'delete_result' => true,
-                'create_result' => false,
+                'create_result' => 0,
                 'save_tree' => true,
                 'save_data' => true,
                 'error_msg' => ['Can\'t create or update snapshot'],
@@ -822,7 +822,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
             [
                 'method_data' => 'method_data',
                 'delete_result' => true,
-                'create_result' => true,
+                'create_result' => 1,
                 'save_tree' => false,
                 'save_data' => true,
                 'error_msg' => ['Can\'t save tree data'],
@@ -831,7 +831,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
             [
                 'method_data' => 'method_data',
                 'delete_result' => true,
-                'create_result' => true,
+                'create_result' => 1,
                 'save_tree' => true,
                 'save_data' => false,
                 'error_msg' => ['Can\'t save method data'],
@@ -840,7 +840,7 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
             [
                 'method_data' => null,
                 'delete_result' => true,
-                'create_result' => true,
+                'create_result' => 1,
                 'save_tree' => true,
                 'save_data' => true,
                 'error_msg' => ['Empty method data'],
@@ -984,12 +984,10 @@ class AggregatorTest extends \unit\Badoo\BaseTestCase
         static::assertEquals($expected, $result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Num of days must be > 0
-     */
     public function testGetSnapshotsDataForProcessingError()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Num of days must be > 0');
         /** @var \Badoo\LiveProfilerUI\Aggregator $AggregatorMock */
         $AggregatorMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Aggregator::class)
             ->disableOriginalConstructor()

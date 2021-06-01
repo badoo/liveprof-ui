@@ -80,11 +80,11 @@ class SnapshotsDiffPageTest extends \unit\Badoo\BaseTestCase
 
     /**
      * @throws \Exception
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Diff functionality is not available
      */
     public function testGetSnapshotsDiffNotSupported()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Diff functionality is not available');
         $FieldList = new \Badoo\LiveProfilerUI\FieldList(['wt', 'ct'], [], []);
 
         $data = [
@@ -238,7 +238,7 @@ class SnapshotsDiffPageTest extends \unit\Badoo\BaseTestCase
             ->disableOriginalConstructor()
             ->setMethods(['getValue'])
             ->getMock();
-        $MethodTreeMock->method('getValue')->willReturn(200);
+        $MethodTreeMock->method('getValue')->willReturn(200.0);
 
         return [
             [

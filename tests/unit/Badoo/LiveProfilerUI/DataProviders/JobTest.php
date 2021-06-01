@@ -15,7 +15,7 @@ class JobTest extends \unit\Badoo\BaseTestCase
     protected $AggregatorStorage;
     protected $FieldList;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -51,12 +51,10 @@ class JobTest extends \unit\Badoo\BaseTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @expectedExceptionMessage Can't get job
-     * @expectedException \InvalidArgumentException
-     */
     public function testGetNotExistsJob()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can\'t get job');
         $Source = new \Badoo\LiveProfilerUI\DataProviders\Job($this->AggregatorStorage, $this->FieldList);
         $result = $Source->getJob('app2', 'label2', '2019-01-02', ['new']);
 

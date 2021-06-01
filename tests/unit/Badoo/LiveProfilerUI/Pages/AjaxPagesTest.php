@@ -15,7 +15,7 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
         return [
             'exists_job' => [
                 'exists_job' => new Job(['id' => 1]),
-                'add_result' => true,
+                'add_result' => 0,
                 'expected' => [
                     'status' => false,
                     'message' => 'Job for snapshot (app, label, date) is already exists'
@@ -23,7 +23,7 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
             ],
             'successfully_added' => [
                 'exists_job' => null,
-                'add_result' => true,
+                'add_result' => 1,
                 'expected' => [
                     'status' => true,
                     'message' => 'Added a job for aggregating a snapshot (app, label, date)'
@@ -31,7 +31,7 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
             ],
             'add_error' => [
                 'exists_job' => null,
-                'add_result' => false,
+                'add_result' => 0,
                 'expected' => [
                     'status' => false,
                     'message' => 'Error in the snapshot (app, label, date) aggregating'
@@ -43,11 +43,11 @@ class AjaxPagesTest extends \unit\Badoo\BaseTestCase
     /**
      * @dataProvider providerRebuildSnapshot
      * @param Job|null $ExistsJob
-     * @param bool $add_result
+     * @param ште $add_result
      * @param array $expected
      * @throws \ReflectionException
      */
-    public function testRebuildSnapshot($ExistsJob, $add_result, $expected)
+    public function testRebuildSnapshot(?Job $ExistsJob, int $add_result, array $expected)
     {
         $JobMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DataProviders\Job::class)
             ->disableOriginalConstructor()

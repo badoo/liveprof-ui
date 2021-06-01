@@ -35,10 +35,10 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
      * @param $label
      * @param $snapshot_id
      * @throws \ReflectionException
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidData($app, $label, $snapshot_id)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $StorageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DB\Storage::class)
             ->disableOriginalConstructor()
             ->setMethods(['getOne'])
@@ -217,7 +217,7 @@ class FlameGraphPageTest extends \unit\Badoo\BaseTestCase
             ->disableOriginalConstructor()
             ->setMethods(['getValue'])
             ->getMock();
-        $MethodTreeMock->method('getValue')->willReturn(200);
+        $MethodTreeMock->method('getValue')->willReturn(200.0);
         $data = [];
         for ($i = 0; $i < 3001; $i++) {
             $data[$i] = $MethodTreeMock;

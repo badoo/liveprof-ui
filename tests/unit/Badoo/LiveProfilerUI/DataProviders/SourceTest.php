@@ -12,7 +12,7 @@ class SourceTest extends \unit\Badoo\BaseTestCase
     protected $SourceStorage;
     protected $DataPacker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

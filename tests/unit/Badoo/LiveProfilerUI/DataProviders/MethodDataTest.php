@@ -15,7 +15,7 @@ class MethodDataTest extends \unit\Badoo\BaseTestCase
     protected $AggregatorStorage;
     protected $FieldList;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -468,12 +468,12 @@ class ProfileMethodTreePageTest extends \unit\Badoo\BaseTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Empty snapshot_id, app and label
      * @throws \ReflectionException
      */
     public function testCleanDataInvalidData()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Empty snapshot_id, app and label');
         $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\ProfileMethodTreePage::class)
             ->disableOriginalConstructor()
             ->setMethods(['__construct'])
