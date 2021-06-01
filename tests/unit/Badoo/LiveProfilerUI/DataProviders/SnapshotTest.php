@@ -15,7 +15,7 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
     protected $AggregatorStorage;
     protected $FieldList;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -129,12 +129,10 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't get snapshot
-     */
     public function testGetOneById()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can\'t get snapshot');
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
         $result = $Snapshot->getOneById(5);
 
@@ -191,12 +189,10 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't get snapshot
-     */
     public function testGetOneByAppAndLabel()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can\'t get snapshot');
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
         $Snapshot->getOneByAppAndLabel('app', 'label');
     }
@@ -210,12 +206,10 @@ class SnapshotTest extends \unit\Badoo\BaseTestCase
         self::assertInstanceOf(\Badoo\LiveProfilerUI\Entity\Snapshot::class, $result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't get snapshot
-     */
     public function testGetOneByAppAndLabelAndDate()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can\'t get snapshot');
         $Snapshot = new \Badoo\LiveProfilerUI\DataProviders\Snapshot($this->AggregatorStorage, $this->FieldList);
         $result = $Snapshot->getOneByAppAndLabelAndDate('app', 'label', 'date');
 

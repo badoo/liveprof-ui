@@ -27,7 +27,7 @@ services:
 
   web:
     restart: always
-    build: './docker/web72'
+    build: 'docker/web'
     command:
       php -S 0.0.0.0:8000 -t src/www/ src/www/router.php
     ports:

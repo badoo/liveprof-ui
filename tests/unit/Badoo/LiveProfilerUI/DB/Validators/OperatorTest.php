@@ -18,12 +18,10 @@ class OperatorTest extends \unit\Badoo\BaseTestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid operator: !!
-     */
     public function testValidateError()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid operator: !!');
         $operator = '!!';
         Operator::validate($operator);
     }

@@ -18,12 +18,10 @@ class FieldTest extends \unit\Badoo\BaseTestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid field: _123_
-     */
     public function testValidateError()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid field: _123_');
         $field = '_123_';
         Field::validate($field);
     }

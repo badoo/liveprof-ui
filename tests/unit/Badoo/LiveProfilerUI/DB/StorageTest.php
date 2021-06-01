@@ -11,7 +11,7 @@ class StorageTest extends \unit\Badoo\BaseTestCase
     /** @var \Badoo\LiveProfilerUI\DB\Storage */
     protected $Storage;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -64,39 +64,31 @@ class StorageTest extends \unit\Badoo\BaseTestCase
         self::assertEquals($expected, $QueryBuilder->getSql());
     }
 
-    /**
-     * @expectedException \Badoo\LiveProfilerUI\Exceptions\DatabaseException
-     * @expectedExceptionMessage Can't insert into details
-     */
     public function testInsertError()
     {
+        $this->expectException(\Badoo\LiveProfilerUI\Exceptions\DatabaseException::class);
+        $this->expectExceptionMessage('Can\'t insert into details');
         $this->Storage->insert('details', ['a' => 1]);
     }
 
-    /**
-     * @expectedException \Badoo\LiveProfilerUI\Exceptions\DatabaseException
-     * @expectedExceptionMessage Can't insert into details
-     */
     public function testInsertManyError()
     {
+        $this->expectException(\Badoo\LiveProfilerUI\Exceptions\DatabaseException::class);
+        $this->expectExceptionMessage('Can\'t insert into details');
         $this->Storage->insertMany('details', [['a' => 1]]);
     }
 
-    /**
-     * @expectedException \Badoo\LiveProfilerUI\Exceptions\InvalidFieldValueException
-     * @expectedExceptionMessage Can't insert empty data
-     */
     public function testInsertManyEmptyData()
     {
+        $this->expectException(\Badoo\LiveProfilerUI\Exceptions\InvalidFieldValueException::class);
+        $this->expectExceptionMessage('Can\'t insert empty data');
         $this->Storage->insertMany('details', []);
     }
 
-    /**
-     * @expectedException \Badoo\LiveProfilerUI\Exceptions\InvalidFieldValueException
-     * @expectedExceptionMessage Can't insert empty data
-     */
     public function testInsertManyEmptyOneOfData()
     {
+        $this->expectException(\Badoo\LiveProfilerUI\Exceptions\InvalidFieldValueException::class);
+        $this->expectExceptionMessage('Can\'t insert empty data');
         $this->Storage->insertMany('details', [[]]);
     }
 
@@ -111,30 +103,24 @@ class StorageTest extends \unit\Badoo\BaseTestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't delete without any conditions
-     */
     public function testDeleteEmptyData()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can\'t delete without any conditions');
         $this->Storage->delete('details', []);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't update without any conditions
-     */
     public function testUpdateEmptyParams()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can\'t update without any conditions');
         $this->Storage->update('details', ['a' => 1], []);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't update without any fields
-     */
     public function testUpdateEmptyFields()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can\'t update without any fields');
         $this->Storage->update('details', [], ['a' => 1]);
     }
 

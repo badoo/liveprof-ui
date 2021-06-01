@@ -21,7 +21,7 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
     /**
      * @throws \Exception
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

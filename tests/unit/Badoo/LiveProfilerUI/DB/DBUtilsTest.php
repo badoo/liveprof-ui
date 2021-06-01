@@ -68,12 +68,10 @@ SQL;
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Not supported db type: invalid
-     */
     public function testPrepareCreateTablesInvalidType()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Not supported db type: invalid');
         \Badoo\LiveProfilerUI\DB\SqlTableBuilder::prepareCreateTables('invalid', '', ['wt'], 'ct');
     }
 }

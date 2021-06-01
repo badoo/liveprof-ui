@@ -8,12 +8,10 @@ namespace unit\Badoo\LiveProfilerUI;
 
 class ViewTest extends \unit\Badoo\BaseTestCase
 {
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Template file not found
-     */
     public function testFetchFileWrongTemplate()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Template file not found');
         $View = new \Badoo\LiveProfilerUI\View();
         $View->fetchFile('wrong_template', []);
     }
@@ -43,6 +41,6 @@ class ViewTest extends \unit\Badoo\BaseTestCase
         $View = new \Badoo\LiveProfilerUI\View($use_layout);
         $result = $View->fetchFile('error', ['error' => 'test error']);
 
-        self::assertContains($expected, $result);
+        self::assertStringContainsString($expected, $result);
     }
 }

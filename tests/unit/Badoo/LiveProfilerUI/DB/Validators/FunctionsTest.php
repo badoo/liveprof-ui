@@ -18,12 +18,10 @@ class FunctionsTest extends \unit\Badoo\BaseTestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid function name: div
-     */
     public function testValidateError()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid function name: div');
         $function = 'div';
         Functions::validate($function);
     }

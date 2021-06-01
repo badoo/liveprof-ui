@@ -35,11 +35,11 @@ class ProfileMethodListPageTest extends \unit\Badoo\BaseTestCase
      * @param $label
      * @param $snapshot_id
      * @throws \ReflectionException
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Can't get snapshot
      */
     public function testInvalidData($app, $label, $snapshot_id)
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can\'t get snapshot');
         $StorageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\DB\Storage::class)
             ->disableOriginalConstructor()
             ->setMethods(['getOne'])
@@ -189,12 +189,13 @@ class ProfileMethodListPageTest extends \unit\Badoo\BaseTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Empty snapshot_id, app and label
      * @throws \ReflectionException
      */
     public function testCleanDataInvalidData()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Empty snapshot_id, app and label');
+
         $PageMock = $this->getMockBuilder(\Badoo\LiveProfilerUI\Pages\ProfileMethodListPage::class)
             ->disableOriginalConstructor()
             ->setMethods(['__construct'])
