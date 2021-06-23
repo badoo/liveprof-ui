@@ -588,9 +588,9 @@ class Aggregator
      */
     protected function splitMethods(string $key) : array
     {
-        if ($key === 'main()') {
+        if (false === strpos('==>', $key)) {
             $caller = 0;
-            $callee = 'main()';
+            $callee = $key;
         } else {
             list($caller, $callee) = explode('==>', $key);
         }
