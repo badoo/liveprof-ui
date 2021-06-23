@@ -589,12 +589,9 @@ class Aggregator
     protected function splitMethods(string $key) : array
     {
         if (false === strpos('==>', $key)) {
-            $caller = 0;
-            $callee = $key;
-        } else {
-            list($caller, $callee) = explode('==>', $key);
-        }
-
-        return [$caller, $callee];
+            return [0, $key];
+        } 
+          
+        return explode('==>', $key);
     }
 }
