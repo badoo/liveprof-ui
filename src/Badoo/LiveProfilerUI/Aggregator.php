@@ -588,7 +588,7 @@ class Aggregator
      */
     protected function splitMethods(string $key) : array
     {
-        if (false === strpos('==>', $key)) {
+        if (false === strpos($key, '==>')) {
             return [0, $key];
         } 
           
