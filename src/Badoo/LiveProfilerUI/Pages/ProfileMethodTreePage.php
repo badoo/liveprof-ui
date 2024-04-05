@@ -373,6 +373,11 @@ class ProfileMethodTreePage extends BasePage
 
             // extract data from previous snapshots
             foreach ($dates_to_snapshots as $snapshot) {
+                // Some dates might not have snapshots available
+                if ($snapshot === null) {
+                    continue;
+                }
+
                 $values = [];
                 $snapshot_id = $snapshot['id'];
                 if ($snapshot_id && isset($method_rows[$snapshot_id])) {
