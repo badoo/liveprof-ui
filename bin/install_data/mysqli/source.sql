@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `details` (
   `app` varchar(32) DEFAULT NULL,
   `label` varchar(64) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `perfdata` text,
+  `perfdata` longtext,
   PRIMARY KEY (`id`),
   KEY `timestamp` (`timestamp`),
   KEY `app` (`app`),
