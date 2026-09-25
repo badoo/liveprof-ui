@@ -2,7 +2,7 @@ version: "2"
 services:
   # mysql storage
   db_mysql:
-    image: mysql:5.7
+    image: mysql:5.7@sha256:4bc6bc963e6d8443453676cae56536f4b8156d78bae03c0145cbe47c2aad73bb
     restart: always
     ports:
     - 3306:3306
@@ -14,7 +14,7 @@ services:
 
   # postgresql storage
   db_pgsql:
-    image: postgres
+    image: postgres@sha256:5a5a84b19854a9ffaa54082c166ff4ec27473a361e496e5ea167f298f2da9722
     restart: always
     ports:
     - 5432:5432
