@@ -1,4 +1,4 @@
-FROM php:8.0
+FROM php:8.0@sha256:0569e384b9064c04dec55dc6e41be41b494a878dfbb6577a7d76bd50cfd5bc00
 MAINTAINER Timur Shagiakhmetov <timur.shagiakhmetov@corp.badoo.com>
 
 RUN apt-get update && apt-get -y install git-core unzip \
