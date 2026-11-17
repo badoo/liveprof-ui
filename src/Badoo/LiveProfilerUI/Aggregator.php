@@ -230,7 +230,7 @@ class Aggregator
             }
 
             foreach ($this->fields as $profile_param => $aggregator_param) {
-                $value = $stats[$profile_param] > 0 ? $stats[$profile_param] : 0;
+                $value = array_key_exists($profile_param, $stats) && $stats[$profile_param] > 0 ? $stats[$profile_param] : 0;
                 $this->call_map[$caller][$callee][$aggregator_param . 's'] .= $value . ',';
                 if (array_key_exists($aggregator_param . 's', $this->method_data[$callee])) {
                     $this->method_data[$callee][$aggregator_param . 's'] .= $value . ',';
